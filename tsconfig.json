@@ -19,6 +19,9 @@
       }
     ],
     "paths": {
+      "@/components/*": ["./components/*"],
+      "@/stores/*": ["./stores/*"],
+      "@/hooks/*": ["./hooks/*"],
       "@/*": ["./src/*"]
     }
   },

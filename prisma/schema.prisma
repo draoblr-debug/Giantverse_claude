@@ -1,0 +1,120 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ── Sessions ──────────────────────────────────────────────
+
+model Session {
+  id              String    @id @default(cuid())
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  completedAt     DateTime?
+
+  // Participant identity
+  firstName       String
+  dateOfBirth     DateTime
+  birthName       String              // "Toyuho" — immutable
+  locale          String   @default("en")
+
+  // Discovery state
+  legacyName      String?             // null until accepted
+  archetype       String?             // e.g. "Kanryō"
+  order           Order?              // GIANT | HUNTER
+  confidence      Float?              // 0.0 – 1.0
+
+  // Relations
+  messages        Message[]
+  signals         Signal[]
+  participant     Participant? @relation(fields: [participantId], references: [id])
+  participantId   String?
+
+  @@index([birthName])
+}
+
+// ── Messages ──────────────────────────────────────────────
+
+model Message {
+  id          String    @id @default(cuid())
+  createdAt   DateTime  @default(now())
+  sessionId   String
+  session     Session   @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  role        Role                    // USER | ASSISTANT
+  content     String
+  turnIndex   Int                     // Conversation turn number
+
+  @@index([sessionId, turnIndex])
+}
+
+// ── Signals ───────────────────────────────────────────────
+// The AI's silent understanding, updated each turn.
+
+model Signal {
+  id          String      @id @default(cuid())
+  updatedAt   DateTime    @updatedAt
+  sessionId   String
+  session     Session     @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  dimension   Dimension   // VALUES | FEARS | DREAMS | POWER | PEOPLE | DECISIONS | LEADERSHIP | MOTIVATION
+  value       String      // Free-text signal captured
+  confidence  Float       // 0.0 – 1.0
+  turnIndex   Int         // Turn it was captured on
+
+  @@unique([sessionId, dimension])
+  @@index([sessionId])
+}
+
+// ── Participants (future auth) ─────────────────────────────
+
+model Participant {
+  id          String    @id @default(cuid())
+  createdAt   DateTime  @default(now())
+  email       String?   @unique
+  sessions    Session[]
+  submissions Submission[]
+}
+
+// ── Submissions (future gallery / competition) ─────────────
+
+model Submission {
+  id            String    @id @default(cuid())
+  createdAt     DateTime  @default(now())
+  participantId String
+  participant   Participant @relation(fields: [participantId], references: [id])
+
+  birthName     String
+  legacyName    String
+  archetype     String
+  order         Order
+  imageUrl      String?   // Hand-drawn artwork upload
+  approved      Boolean   @default(false)
+  featured      Boolean   @default(false)
+}
+
+// ── Enums ─────────────────────────────────────────────────
+
+enum Role {
+  USER
+  ASSISTANT
+}
+
+enum Order {
+  GIANT
+  HUNTER
+}
+
+enum Dimension {
+  VALUES
+  FEARS
+  DREAMS
+  POWER
+  PEOPLE
+  DECISIONS
+  LEADERSHIP
+  MOTIVATION
+}
