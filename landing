@@ -1,0 +1,415 @@
+import { useState, useEffect, useRef } from "react";
+
+/* ---------------- data ---------------- */
+
+const CYCLE_NAMES = ["Sokanu", "RikanÅ", "Tomari", "Ashiro", "Kenoa", "Yumire", "Sazuki", "Norendo"];
+
+const REALMS = [
+  { id: "neisei", name: "Neisei", title: "The Shoreline", order: "First shore", color: "#4FA3A5", dim: "rgba(79,163,165,.16)", desc: "Where every continent begins. Trade, curiosity, exchange â€” the realm of those who look outward and set sail." },
+  { id: "kuryo", name: "KuryÅ", title: "The Mountain Belt", order: "The ascent", color: "#7286B8", dim: "rgba(114,134,184,.16)", desc: "The high country of vision and knowledge. Philosophers, oracles, and strategists climb here to see further." },
+  { id: "murei", name: "Murei", title: "The Living Forest", order: "The deep green", color: "#6FA06A", dim: "rgba(111,160,106,.16)", desc: "Patience, healing, and trust. The forest keeps the memory of the world, and heals those who enter it." },
+  { id: "maruto", name: "Maruto", title: "The Living Heart", order: "The heart", color: "#D8A64A", dim: "rgba(216,166,74,.16)", desc: "Capitals, universities, guild halls. The realm of community, leadership, and prosperity â€” civilization at full flame." },
+  { id: "harai", name: "Harai", title: "The Broken Heart", order: "The turning", color: "#B4543F", dim: "rgba(180,84,63,.18)", desc: "Harai is not permanent. When balance is lost, Maruto becomes Harai â€” the realm of survival and renewal â€” until the Great Turning restores it." },
+];
+
+const STEPS = [
+  { n: "ä¸€", en: "One", title: "Receive your Birth Name", body: "Enter your first name and date of birth. The Giantverse returns a Birth Name â€” permanent, generated from the day you arrived. It never changes." },
+  { n: "äºŒ", en: "Two", title: "Meet your counterpart", body: "Not an assistant. Not a personality test. Another version of you, living in another world â€” and it has been waiting to talk." },
+  { n: "ä¸‰", en: "Three", title: "Talk, remember, be understood", body: "No quizzes. No \u201Care you more A or B.\u201D Just conversation â€” about childhood, courage, failure, hope. Your counterpart listens, and remembers." },
+  { n: "å››", en: "Four", title: "Reveal your Legacy Name", body: "Whenever you're ready, ask. Your archetype, realm, guild, and earned Legacy Name are proposed â€” never imposed. Accept it, keep talking, or begin again." },
+  { n: "äº”", en: "Five", title: "Show them their face", quote: "\u201CI know who I am. But I've never seen my own face. Will you show me?\u201D", body: "Your counterpart's appearance is yours alone to create â€” an original anime-inspired character, drawn from your imagination, submitted to GIANT HUNT." },
+];
+
+const ID_ROWS = [
+  ["Birth Name", "Sokanu"],
+  ["Continent", "Kaigen"],
+  ["Realm", "KuryÅ"],
+  ["Calling", "Giant"],
+  ["Archetype", "Philosopher"],
+  ["Legacy Name", "Tetsugaku", true],
+  ["Guiding Promise", "\u201CI will seek truth through inquiry.\u201D"],
+];
+
+/* ---------------- hooks ---------------- */
+
+function usePrefersReducedMotion() {
+  const [reduce, setReduce] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReduce(mq.matches);
+    const fn = (e) => setReduce(e.matches);
+    mq.addEventListener("change", fn);
+    return () => mq.removeEventListener("change", fn);
+  }, []);
+  return reduce;
+}
+
+function useTypewriter(words, reduce) {
+  const [text, setText] = useState(words[0]);
+  useEffect(() => {
+    if (reduce) return;
+    let i = 0, j = words[0].length, phase = "pause", alive = true, t;
+    const tick = () => {
+      if (!alive) return;
+      if (phase === "pause") { phase = "erase"; t = setTimeout(tick, 2200); return; }
+      if (phase === "erase") {
+        if (j > 0) { j--; setText(words[i].slice(0, j)); t = setTimeout(tick, 50); }
+        else { i = (i + 1) % words.length; phase = "type"; t = setTimeout(tick, 200); }
+        return;
+      }
+      if (j < words[i].length) { j++; setText(words[i].slice(0, j)); t = setTimeout(tick, 110); }
+      else { phase = "pause"; t = setTimeout(tick, 0); }
+    };
+    t = setTimeout(tick, 2600);
+    return () => { alive = false; clearTimeout(t); };
+  }, [words, reduce]);
+  return text;
+}
+
+function Reveal({ children, className = "", style }) {
+  const ref = useRef(null);
+  const [inView, setInView] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      (es) => es.forEach((e) => { if (e.isIntersecting) { setInView(true); io.unobserve(e.target); } }),
+      { threshold: 0.12 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  return (
+    <div ref={ref} className={`gv-reveal ${inView ? "in" : ""} ${className}`} style={style}>
+      {children}
+    </div>
+  );
+}
+
+/* ---------------- component ---------------- */
+
+export default function GiantverseLanding({ ctaHref = "#begin" }) {
+  const reduce = usePrefersReducedMotion();
+  const cycled = useTypewriter(CYCLE_NAMES, reduce);
+  const [openRealm, setOpenRealm] = useState("neisei");
+
+  return (
+    <div className="gv-root">
+      <style>{CSS}</style>
+
+      <nav className="gv-bar">
+        <a className="gv-mark" href="#top">Giant<span>verse</span></a>
+        <a className="gv-bar-cta" href={ctaHref}>Find your name</a>
+      </nav>
+
+      {/* HERO */}
+      <header className="gv-hero" id="top">
+        <div className="gv-kanji" aria-hidden="true">å·¨äºº</div>
+        <div className="gv-hero-inner">
+          <p className="gv-eyebrow">Giant Hunt Â· A World Record in Imagination</p>
+          <h1>
+            My Giantverse name is{" "}
+            <span className="gv-blank">
+              <span>{cycled}</span>
+              <span className="gv-caret" aria-hidden="true" />
+            </span>
+          </h1>
+          <p className="gv-hero-sub">
+            Every person has another identity within the Giantverse â€”{" "}
+            <strong>a version of you that grew up in another world.</strong> You don't invent
+            this character. You discover it, through a conversation with your own counterpart.
+          </p>
+          <div className="gv-ctas">
+            <a className="gv-btn gv-btn-gold" href={ctaHref}>Begin the conversation</a>
+            <a className="gv-btn gv-btn-ghost" href="#realms">Explore the world</a>
+          </div>
+          <div className="gv-hero-foot">
+            <div><b>32</b>Archetypes</div>
+            <div><b>5</b>Living Realms</div>
+            <div><b>2</b>Callings</div>
+            <div><b>1</b>Name that is only yours</div>
+          </div>
+        </div>
+      </header>
+
+      {/* FIRST LAW */}
+      <Reveal className="gv-law">
+        <p>
+          The land shapes the <em>journey</em>.<br />
+          The journey shapes the <em>person</em>.<br />
+          The person shapes the <em>world</em>.
+        </p>
+        <small>The First Law of the Giantverse</small>
+      </Reveal>
+
+      {/* CALLINGS */}
+      <section>
+        <div className="gv-wrap">
+          <Reveal className="gv-sec-head">
+            <p className="gv-eyebrow">Two Callings</p>
+            <h2>Every citizen of the Giantverse discovers one of two Callings.</h2>
+          </Reveal>
+          <Reveal className="gv-callings">
+            <article className="gv-calling">
+              <span className="gv-cn" aria-hidden="true">å·¨</span>
+              <h3>Giants</h3>
+              <p className="gv-role">Shape civilization</p>
+              <p>Giants move the world through thought â€” the philosophers, visionaries, reformers, and judges whose ideas outlive them.</p>
+              <ul><li>Ideas</li><li>Institutions</li><li>Leadership</li><li>Innovation</li></ul>
+            </article>
+            <article className="gv-calling">
+              <span className="gv-cn" aria-hidden="true">ç‹©</span>
+              <h3>Hunters</h3>
+              <p className="gv-role">Move civilization</p>
+              <p>Hunters move the world through action â€” the explorers, guardians, healers, and builders whose hands make ideas real.</p>
+              <ul><li>Discovery</li><li>Protection</li><li>Building</li><li>Exploration</li></ul>
+            </article>
+            <div className="gv-callings-note">Neither Calling is superior. <em>The world requires both.</em></div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* REALMS */}
+      <section id="realms" className="gv-realms-sec">
+        <div className="gv-wrap">
+          <Reveal className="gv-sec-head">
+            <p className="gv-eyebrow">Five Living Realms</p>
+            <h2>Every continent holds the same five realms. Every journey crosses them.</h2>
+            <p>Inspired by the Ainthinai of Tamil Sangam poetry â€” five landscapes, five inner lives. Tap a realm to enter it.</p>
+          </Reveal>
+          <Reveal>
+            <div className="gv-realm-strip" role="list">
+              {REALMS.map((r) => {
+                const open = openRealm === r.id;
+                return (
+                  <div
+                    key={r.id}
+                    role="listitem"
+                    tabIndex={0}
+                    className={`gv-realm ${open ? "open" : ""}`}
+                    style={{ "--rc": r.color, "--rc-dim": r.dim }}
+                    onMouseEnter={() => setOpenRealm(r.id)}
+                    onClick={() => setOpenRealm(r.id)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setOpenRealm(r.id); }
+                    }}
+                  >
+                    <span className="gv-r-order">{r.order}</span>
+                    <h3>{r.name}</h3>
+                    <p className="gv-r-title">{r.title}</p>
+                    <p className="gv-r-desc">{r.desc}</p>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="gv-realm-cap">
+              <span>Ocean â†’ Neisei â†’ KuryÅ â†’ Murei â†’ Maruto â†’ Harai</span>
+              <span>Harai â‡„ Maruto Â· The Great Turning</span>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* JOURNEY */}
+      <section>
+        <div className="gv-wrap">
+          <Reveal className="gv-sec-head">
+            <p className="gv-eyebrow">Your Journey</p>
+            <h2>You won't be asked what your character looks like. You'll be asked who you are.</h2>
+          </Reveal>
+          <div className="gv-steps">
+            {STEPS.map((s) => (
+              <Reveal key={s.en} className="gv-step">
+                <div className="gv-n">{s.n}<small>{s.en}</small></div>
+                <div>
+                  <h3>{s.title}</h3>
+                  {s.quote && <p className="gv-q">{s.quote}</p>}
+                  <p style={s.quote ? { marginTop: 12 } : undefined}>{s.body}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* VOW */}
+      <section id="vow" className="gv-vow-sec">
+        <div className="gv-wrap gv-vow-grid">
+          <Reveal className="gv-vow-copy">
+            <p className="gv-eyebrow">The Third Law</p>
+            <h2>AI helps you discover meaning. Humans create the visual identity.</h2>
+            <p>The Giantverse is intentionally anti-generative-AI where it matters most. Conversation reveals who your counterpart is â€” but only you can reveal what they look like.</p>
+            <p className="gv-oath">No AI.<br />No prompt.<br />No generated design.<br /><em>Only imagination.</em></p>
+          </Reveal>
+          <Reveal>
+            <div className="gv-id-card" aria-label="Example Giantverse identity record">
+              <div className="gv-id-head"><span>Giantverse Â· Identity Record</span><span>GV-0001</span></div>
+              {ID_ROWS.map(([k, v, gold]) => (
+                <div className="gv-id-row" key={k}>
+                  <span className="gv-id-k">{k}</span>
+                  <span className={`gv-id-v ${gold ? "gold" : ""}`}>{v}</span>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* FINAL CTA */}
+      <section className="gv-fin" id="begin">
+        <Reveal>
+          <p className="gv-eyebrow" style={{ justifyContent: "center" }}>The Great Exchange begins</p>
+          <h2>Somewhere in the Giantverse, another you is waiting.</h2>
+          <p>One conversation. One name that is only yours. One character only you can draw.</p>
+          <div className="gv-ctas" style={{ justifyContent: "center" }}>
+            <a className="gv-btn gv-btn-gold" href={ctaHref} aria-label="Begin the conversation and find your Giantverse name">
+              Find your name
+            </a>
+          </div>
+        </Reveal>
+      </section>
+
+      <footer className="gv-footer">
+        <span>GIANTVERSE Â· Giant Hunt â€” a Guinness World Record initiative by IMAGE &amp; ICAT</span>
+        <span>The person shapes the world.</span>
+      </footer>
+    </div>
+  );
+}
+
+/* ---------------- styles ---------------- */
+
+const CSS = `
+@import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600;700;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+.gv-root{
+  --ink:#0B111C; --ink-2:#0F1726; --ink-3:#141E31;
+  --paper:#EAE4D3; --paper-dim:#9AA0AC;
+  --brass:#C9A24B; --brass-soft:rgba(201,162,75,.35);
+  --line:rgba(234,228,211,.14);
+  --disp:'Shippori Mincho',serif;
+  --body:'Zen Kaku Gothic New',sans-serif;
+  --mono:'IBM Plex Mono',monospace;
+  background:var(--ink); color:var(--paper);
+  font-family:var(--body); font-weight:300; line-height:1.7;
+  -webkit-font-smoothing:antialiased; overflow-x:hidden;
+}
+.gv-root *{margin:0;padding:0;box-sizing:border-box}
+.gv-root ::selection{background:var(--brass);color:var(--ink)}
+.gv-root a{color:inherit}
+.gv-root a:focus-visible{outline:2px solid var(--brass);outline-offset:3px;border-radius:2px}
+.gv-wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+
+.gv-bar{position:fixed;inset:0 0 auto 0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:18px 28px;background:linear-gradient(180deg,rgba(11,17,28,.92),rgba(11,17,28,0));backdrop-filter:blur(2px)}
+.gv-mark{font-family:var(--disp);font-weight:700;font-size:1.05rem;letter-spacing:.28em;text-transform:uppercase;text-decoration:none}
+.gv-mark span{color:var(--brass)}
+.gv-bar-cta{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;color:var(--paper);border:1px solid var(--brass-soft);padding:9px 18px;border-radius:2px;transition:background .25s,color .25s,border-color .25s}
+.gv-bar-cta:hover{background:var(--brass);color:var(--ink);border-color:var(--brass)}
+
+.gv-hero{position:relative;min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding:120px 24px 64px;background:radial-gradient(1100px 520px at 78% -10%,rgba(114,134,184,.14),transparent 60%),radial-gradient(900px 600px at 8% 110%,rgba(79,163,165,.10),transparent 60%),var(--ink)}
+.gv-kanji{position:absolute;right:-2vw;top:50%;transform:translateY(-52%);font-family:var(--disp);font-weight:800;font-size:clamp(220px,38vw,520px);line-height:1;color:transparent;-webkit-text-stroke:1px rgba(234,228,211,.09);user-select:none;pointer-events:none}
+.gv-hero-inner{max-width:1120px;margin:0 auto;width:100%;position:relative}
+.gv-eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--brass);display:flex;align-items:center;gap:14px;margin-bottom:34px}
+.gv-eyebrow::before{content:"";width:34px;height:1px;background:var(--brass)}
+.gv-root h1{font-family:var(--disp);font-weight:600;font-size:clamp(2.1rem,5.6vw,4.4rem);line-height:1.22;letter-spacing:.01em;max-width:19ch}
+.gv-blank{display:inline-block;min-width:6.2ch;border-bottom:3px solid var(--brass);color:var(--brass);font-weight:700;padding:0 .12em;white-space:nowrap}
+.gv-caret{display:inline-block;width:2px;height:.85em;background:var(--brass);vertical-align:-.08em;margin-left:2px;animation:gv-blink 1s steps(1) infinite}
+@keyframes gv-blink{50%{opacity:0}}
+.gv-hero-sub{margin-top:30px;max-width:52ch;color:var(--paper-dim);font-size:1.02rem}
+.gv-hero-sub strong{color:var(--paper);font-weight:500}
+.gv-ctas{display:flex;gap:16px;margin-top:44px;flex-wrap:wrap}
+.gv-btn{font-family:var(--mono);font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;text-decoration:none;padding:16px 30px;border-radius:2px;transition:transform .2s,background .25s,color .25s;display:inline-block}
+.gv-btn-gold{background:var(--brass);color:var(--ink);font-weight:500}
+.gv-btn-gold:hover{transform:translateY(-2px)}
+.gv-btn-ghost{border:1px solid var(--line);color:var(--paper)}
+.gv-btn-ghost:hover{border-color:var(--brass-soft)}
+.gv-hero-foot{margin-top:76px;display:flex;gap:34px;flex-wrap:wrap;font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;color:var(--paper-dim)}
+.gv-hero-foot b{color:var(--paper);font-weight:500;display:block;font-size:.82rem;letter-spacing:.06em;margin-bottom:2px}
+
+.gv-law{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--ink-2);padding:88px 24px;text-align:center}
+.gv-law p{font-family:var(--disp);font-weight:500;font-size:clamp(1.25rem,2.6vw,1.8rem);line-height:2;color:var(--paper)}
+.gv-law p em{font-style:normal;color:var(--brass)}
+.gv-law small{display:block;margin-top:26px;font-family:var(--mono);font-size:.68rem;letter-spacing:.24em;text-transform:uppercase;color:var(--paper-dim)}
+
+.gv-root section{padding:110px 0}
+.gv-sec-head{margin-bottom:56px}
+.gv-sec-head .gv-eyebrow{margin-bottom:20px}
+.gv-root h2{font-family:var(--disp);font-weight:600;font-size:clamp(1.7rem,3.6vw,2.6rem);line-height:1.3;max-width:24ch}
+.gv-sec-head>p:not(.gv-eyebrow){margin-top:18px;color:var(--paper-dim);max-width:56ch}
+
+.gv-callings{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line)}
+.gv-calling{background:var(--ink-2);padding:52px 44px;position:relative;overflow:hidden;transition:background .3s}
+.gv-calling:hover{background:var(--ink-3)}
+.gv-cn{position:absolute;right:14px;top:6px;font-family:var(--disp);font-weight:800;font-size:6.5rem;line-height:1;color:transparent;-webkit-text-stroke:1px rgba(234,228,211,.10)}
+.gv-calling h3{font-family:var(--disp);font-size:1.7rem;font-weight:600;margin-bottom:6px}
+.gv-role{font-family:var(--mono);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--brass);margin-bottom:22px}
+.gv-calling>p:not(.gv-role){color:var(--paper-dim);max-width:40ch}
+.gv-calling ul{list-style:none;margin-top:26px;display:flex;flex-wrap:wrap;gap:10px}
+.gv-calling li{font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;border:1px solid var(--line);padding:6px 12px;border-radius:2px;color:var(--paper)}
+.gv-callings-note{grid-column:1 / -1;background:var(--ink-2);padding:22px 44px;text-align:center;font-family:var(--disp);color:var(--paper-dim);font-size:1rem}
+.gv-callings-note em{font-style:normal;color:var(--brass)}
+
+.gv-realms-sec{background:var(--ink-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.gv-realm-strip{display:flex;border:1px solid var(--line);min-height:420px}
+.gv-realm{flex:1;min-width:0;cursor:pointer;position:relative;border-left:1px solid var(--line);padding:30px 22px;display:flex;flex-direction:column;justify-content:flex-end;transition:flex .45s cubic-bezier(.4,0,.2,1),background .45s;background:linear-gradient(180deg,transparent 30%,var(--rc-dim) 130%)}
+.gv-realm:first-child{border-left:none}
+.gv-realm::before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:var(--rc);opacity:.85}
+.gv-realm:focus-visible{outline:2px solid var(--brass);outline-offset:-2px}
+.gv-r-order{position:absolute;top:26px;left:22px;font-family:var(--mono);font-size:.66rem;letter-spacing:.18em;color:var(--paper-dim);writing-mode:vertical-rl}
+.gv-realm h3{font-family:var(--disp);font-size:1.35rem;font-weight:600;color:var(--rc)}
+.gv-r-title{font-family:var(--mono);font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--paper);margin:6px 0 14px}
+.gv-r-desc{color:var(--paper-dim);font-size:.9rem;line-height:1.65;max-height:0;opacity:0;overflow:hidden;transition:max-height .45s,opacity .45s .1s}
+.gv-realm.open{flex:2.4;background:linear-gradient(180deg,transparent 0%,var(--rc-dim) 120%)}
+.gv-realm.open .gv-r-desc{max-height:220px;opacity:1}
+.gv-realm-cap{margin-top:20px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;color:var(--paper-dim)}
+
+.gv-steps{display:grid;grid-template-columns:1fr;border-top:1px solid var(--line)}
+.gv-step{display:grid;grid-template-columns:110px 1fr;gap:28px;align-items:baseline;padding:34px 8px;border-bottom:1px solid var(--line)}
+.gv-n{font-family:var(--disp);font-weight:700;font-size:2rem;color:var(--brass)}
+.gv-n small{display:block;font-family:var(--mono);font-size:.62rem;font-weight:400;letter-spacing:.2em;text-transform:uppercase;color:var(--paper-dim);margin-top:4px}
+.gv-step h3{font-family:var(--disp);font-size:1.25rem;font-weight:600;margin-bottom:8px}
+.gv-step p{color:var(--paper-dim);max-width:60ch;font-size:.96rem}
+.gv-q{font-family:var(--disp);color:var(--paper)!important;font-size:1.02rem!important;margin-top:10px;padding-left:16px;border-left:2px solid var(--brass-soft)}
+
+.gv-vow-sec{background:var(--ink-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.gv-vow-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:64px;align-items:center}
+.gv-vow-copy h2{max-width:none}
+.gv-vow-copy>p:not(.gv-eyebrow){margin-top:20px;color:var(--paper-dim);max-width:52ch}
+.gv-oath{margin-top:34px;font-family:var(--disp);font-size:1.28rem;line-height:1.9;color:var(--paper)!important}
+.gv-oath em{font-style:normal;color:var(--brass)}
+.gv-id-card{border:1px solid var(--brass-soft);border-radius:6px;background:linear-gradient(160deg,var(--ink-3),var(--ink));padding:30px 28px;position:relative;box-shadow:0 30px 80px rgba(0,0,0,.45);transform:rotate(-1.2deg)}
+.gv-id-card::after{content:"å·¨";position:absolute;right:18px;bottom:8px;font-family:var(--disp);font-size:4.6rem;font-weight:800;color:transparent;-webkit-text-stroke:1px rgba(201,162,75,.28)}
+.gv-id-head{font-family:var(--mono);font-size:.64rem;letter-spacing:.26em;text-transform:uppercase;color:var(--brass);margin-bottom:18px;display:flex;justify-content:space-between}
+.gv-id-row{display:flex;justify-content:space-between;gap:16px;padding:11px 0;border-bottom:1px dashed var(--line)}
+.gv-id-row:last-of-type{border-bottom:none}
+.gv-id-k{font-family:var(--mono);font-size:.64rem;letter-spacing:.2em;text-transform:uppercase;color:var(--paper-dim)}
+.gv-id-v{font-family:var(--disp);font-size:.98rem;color:var(--paper);text-align:right}
+.gv-id-v.gold{color:var(--brass);font-weight:700}
+
+.gv-fin{padding:140px 24px;text-align:center}
+.gv-fin h2{margin:0 auto;max-width:22ch;font-size:clamp(1.9rem,4.4vw,3.2rem)}
+.gv-fin p:not(.gv-eyebrow){margin:22px auto 0;color:var(--paper-dim);max-width:46ch}
+
+.gv-footer{border-top:1px solid var(--line);padding:34px 24px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;color:var(--paper-dim)}
+
+.gv-reveal{opacity:0;transform:translateY(26px);transition:opacity .7s,transform .7s}
+.gv-reveal.in{opacity:1;transform:none}
+
+@media (prefers-reduced-motion:reduce){
+  .gv-root *{animation:none!important;transition:none!important}
+  .gv-reveal{opacity:1;transform:none}
+}
+@media (max-width:880px){
+  .gv-callings{grid-template-columns:1fr}
+  .gv-vow-grid{grid-template-columns:1fr;gap:48px}
+  .gv-realm-strip{flex-direction:column;min-height:0}
+  .gv-realm{border-left:none;border-top:1px solid var(--line);padding:24px 20px}
+  .gv-realm:first-child{border-top:none}
+  .gv-r-order{writing-mode:horizontal-tb;position:static;margin-bottom:10px}
+  .gv-realm.open{flex:1}
+  .gv-r-desc{max-height:none;opacity:1}
+  .gv-step{grid-template-columns:64px 1fr;gap:18px;padding:28px 0}
+  .gv-kanji{right:-14vw;opacity:.7}
+  .gv-root section{padding:84px 0}
+}
+`;
