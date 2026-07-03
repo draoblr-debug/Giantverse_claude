@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { NameDecoder } from "@/components/marketing/NameDecoder";
 
 export const metadata = {
   title: "Giantverse — Discover Your Name",
@@ -16,8 +15,6 @@ export default function LandingPage() {
           Every person carries a name that was always theirs. Begin the ritual to discover yours.
         </p>
       </div>
-
-      <NameDecoder />
 
       <Link
         href="/birth"
