@@ -6,6 +6,10 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useSessionStore } from "@/stores/session.store";
 import { selectSurveyQuestions } from "@/engines/survey/survey-selection.engine";
 import { answersToSignals, type SurveyAnswers } from "@/engines/survey/survey-scoring.engine";
+import { buildScoreHistory } from "@/engines/archetype/journey-history";
+import type { TurnSnapshot } from "@/lib/journey-renderer";
+import { ArchetypeJourneyPlayer } from "@/components/experience/ArchetypeJourneyPlayer";
+import type { Signal } from "@/types/archetype.types";
 
 const LIKERT_LABELS = ["Strongly\nDisagree", "Disagree", "Neutral", "Agree", "Strongly\nAgree"];
 
@@ -16,10 +20,14 @@ type RevealedResult = {
     label: string;
     romajiName: string;
     order: "GIANT" | "HUNTER";
+    description: string;
     guidingPromise: string;
     traits: [string, string, string, string];
+    traitDescriptions: [string, string, string, string];
   };
+  signals: Signal[];
   scoreMap: Record<string, number>;
+  scoreHistory: TurnSnapshot[];
 };
 
 export function SurveyShell() {
@@ -95,7 +103,7 @@ export function SurveyShell() {
       if (!legacyRes.ok) throw new Error("Could not build your legacy name.");
       const { legacyName, archetype } = await legacyRes.json();
 
-      setRevealed({ legacyName, archetype, scoreMap });
+      setRevealed({ legacyName, archetype, signals, scoreMap, scoreHistory: buildScoreHistory(signals) });
       setSubmitting(false);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong.");
@@ -106,8 +114,8 @@ export function SurveyShell() {
 
   function handleConfirm() {
     if (!revealed) return;
-    const { legacyName, archetype, scoreMap } = revealed;
-    acceptLegacyName(legacyName, archetype.id, archetype.order, archetype.label, archetype.guidingPromise, archetype.traits, scoreMap);
+    const { legacyName, archetype, scoreMap, scoreHistory } = revealed;
+    acceptLegacyName(legacyName, archetype.id, archetype.order, archetype.label, archetype.guidingPromise, archetype.traits, scoreMap, scoreHistory);
     router.push("/ending");
   }
 
@@ -134,21 +142,50 @@ export function SurveyShell() {
   }
 
   if (revealed) {
+    const { archetype } = revealed;
     return (
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex flex-1 flex-col items-center justify-center gap-4 px-6 text-center"
+        className="flex w-full flex-1 flex-col items-center gap-6 overflow-y-auto px-6 py-10 text-center"
       >
-        <p className="text-sm tracking-wide text-zinc-500 uppercase dark:text-zinc-400">
-          Based on your answers, your Legacy Name is
-        </p>
-        <h2 className="text-3xl font-semibold">{revealed.legacyName}</h2>
-        <p className="text-sm opacity-50">
-          {revealed.archetype.label} ({revealed.archetype.romajiName})
-        </p>
+        <div className="flex flex-col items-center gap-1">
+          <p className="text-sm tracking-wide text-zinc-500 uppercase dark:text-zinc-400">
+            Based on your answers, your Legacy Name is
+          </p>
+          <h2 className="text-3xl font-semibold">{revealed.legacyName}</h2>
+          <p className="text-sm opacity-50">
+            {archetype.label} ({archetype.romajiName}) &middot; Order of {archetype.order === "GIANT" ? "Giants" : "Hunters"}
+          </p>
+        </div>
 
-        <div className="mt-4 flex flex-wrap justify-center gap-2">
+        {/* Journey map: replayable, step-scrubbable trace of how the answers
+            drifted across all 32 archetypes before settling on this one —
+            every archetype is labeled, not just the visited ones, so the
+            "hidden" options are visible too. */}
+        <ArchetypeJourneyPlayer
+          signals={revealed.signals}
+          scoreHistory={revealed.scoreHistory}
+          finalArchetypeId={archetype.id}
+          scoreMap={revealed.scoreMap}
+        />
+
+        {/* Explanation — so the participant can judge the match themselves,
+            not just accept a name. */}
+        <div className="flex max-w-md flex-col gap-4 rounded-lg border border-zinc-200 p-5 text-left dark:border-zinc-800">
+          <p className="text-sm leading-relaxed opacity-80">{archetype.description}</p>
+          <p className="text-sm leading-relaxed italic opacity-70">&ldquo;{archetype.guidingPromise}&rdquo;</p>
+          <div className="grid grid-cols-2 gap-3">
+            {archetype.traits.map((trait, i) => (
+              <div key={trait}>
+                <p className="text-xs font-semibold uppercase tracking-wide opacity-70">{trait}</p>
+                <p className="text-xs opacity-50">{archetype.traitDescriptions[i]}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="flex flex-wrap justify-center gap-2">
           <button
             type="button"
             onClick={handleConfirm}
@@ -164,7 +201,7 @@ export function SurveyShell() {
             Retake the Survey
           </button>
         </div>
-        <p className="mt-1 max-w-xs text-xs opacity-40">
+        <p className="max-w-xs text-xs opacity-40">
           Not feeling it? Retake the survey with a fresh set of questions.
         </p>
       </motion.div>

@@ -33,8 +33,10 @@ export async function POST(req: NextRequest) {
       label: archetype.label,
       romajiName: archetype.romajiName,
       order: archetype.order,
+      description: archetype.description,
       guidingPromise: archetype.guidingPromise,
       traits: archetype.traits,
+      traitDescriptions: archetype.traitDescriptions,
     },
   });
 }

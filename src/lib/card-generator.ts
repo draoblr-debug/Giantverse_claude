@@ -1,6 +1,9 @@
+import { renderJourneyMap, type TurnSnapshot } from "@/lib/journey-renderer";
+
 export type CardParams = {
   birthName: string;
   legacyName: string;
+  archetypeId?: string; // canonical id, anchors the journey map's final dock
   archetypeLabel: string;
   archetypeRomaji: string;
   order: "GIANT" | "HUNTER";
@@ -9,6 +12,7 @@ export type CardParams = {
   traitDescriptions: [string, string, string, string];
   realName: string;
   gvId: string;
+  scoreHistory?: TurnSnapshot[]; // per-turn snapshots; when present, the journey glyph replaces the starburst
 };
 
 const GOLD = "#C9A84C";
@@ -190,6 +194,35 @@ export async function drawCard(canvas: HTMLCanvasElement, params: CardParams): P
     }
   }
   if (line) ctx.fillText(line, promiseX, cy);
+
+  // ── JOURNEY MAP GLYPH ─────────────────────────────────────────────
+  // Replaces the decorative starburst on the right of the promise band
+  // (measured on the 941×1672 template: zone x 592–931, y 1262–1526).
+  // Traces the participant's per-turn drift across the 32 archetypes,
+  // docking on the winning spoke.
+  if (params.scoreHistory?.length) {
+    try {
+      const coverX = px(0.6291); // 592
+      const coverY = py(0.7548); // 1262
+      const coverW = px(0.9894) - coverX; // → 931, inside the right border
+      const coverH = py(0.9127) - coverY; // → 1526, above the footer separator
+      ctx.fillStyle = "#010505"; // sampled band background
+      ctx.fillRect(coverX, coverY, coverW, coverH);
+
+      const glyphSize = px(0.2657); // 250 on the reference template
+      const glyph = renderJourneyMap(params.scoreHistory, {
+        finalArchetypeId: params.archetypeId,
+        size: Math.round(glyphSize),
+        transparent: true,
+        detail: "mini",
+        accentColor: GOLD,
+      });
+      // centered in the covered zone
+      ctx.drawImage(glyph, coverX + (coverW - glyphSize) / 2, coverY + (coverH - glyphSize) / 2);
+    } catch {
+      // Journey glyph is decorative — never let it break the card render.
+    }
+  }
 
   // ── REAL WORLD IDENTITY ───────────────────────────────────────────
   // Footer zone: 1528–1672 (91.4%–100%). Real name at ~96.7%.

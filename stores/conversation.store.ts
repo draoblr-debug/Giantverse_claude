@@ -2,6 +2,7 @@ import { create } from "zustand";
 import type { ChatMessage } from "@/types/conversation.types";
 import type { Dimension, Signal } from "@/types/archetype.types";
 import { useSessionStore } from "@/stores/session.store";
+import { buildScoreHistory } from "@/engines/archetype/journey-history";
 
 function base64ToUtf8(base64: string): string {
   const binary = atob(base64);
@@ -173,7 +174,7 @@ export const useConversationStore = create<ConversationStore>((set, get) => ({
   },
 
   acceptName: () => {
-    const { proposedLegacyName, proposedArchetype, proposedScores } = get();
+    const { proposedLegacyName, proposedArchetype, proposedScores, signals } = get();
     if (!proposedLegacyName || !proposedArchetype) return;
     useSessionStore.getState().acceptLegacyName(
       proposedLegacyName,
@@ -183,6 +184,7 @@ export const useConversationStore = create<ConversationStore>((set, get) => ({
       "",
       ["", "", "", ""] as unknown as [string, string, string, string],
       proposedScores ?? undefined,
+      signals.length ? buildScoreHistory(signals) : undefined,
     );
     set({ legacyNameAccepted: true });
   },

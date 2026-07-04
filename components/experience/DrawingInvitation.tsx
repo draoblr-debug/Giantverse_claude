@@ -16,7 +16,7 @@ export function DrawingInvitation() {
   const [ready, setReady] = useState(false);
   const [downloading, setDownloading] = useState(false);
 
-  const { birthName, legacyName, archetypeLabel, archetype, order, guidingPromise, traits, firstName, scores, resetExperience } =
+  const { birthName, legacyName, archetypeLabel, archetype, order, guidingPromise, traits, firstName, scores, scoreHistory, resetExperience } =
     useSessionStore();
 
   // Resonant Constellation: this archetype's inspiration set, plus a
@@ -48,6 +48,7 @@ export function DrawingInvitation() {
     drawCard(canvas, {
       birthName,
       legacyName,
+      archetypeId: archetype,
       archetypeLabel,
       archetypeRomaji: romaji,
       order,
@@ -56,6 +57,7 @@ export function DrawingInvitation() {
       traitDescriptions,
       realName: firstName,
       gvId,
+      scoreHistory: scoreHistory ?? undefined,
     }).then(() => {
       const display = displayCanvasRef.current;
       if (display) {
@@ -67,7 +69,7 @@ export function DrawingInvitation() {
       }
       setReady(true);
     });
-  }, [legacyName, birthName, archetypeLabel, archetype, order, guidingPromise, traits, firstName]);
+  }, [legacyName, birthName, archetypeLabel, archetype, order, guidingPromise, traits, firstName, scoreHistory]);
 
   if (!legacyName) return null;
 

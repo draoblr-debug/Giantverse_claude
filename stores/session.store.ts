@@ -14,6 +14,7 @@ export const useSessionStore = create<SessionStore>((set, get) => ({
   traits: null,
   order: null,
   scores: null,
+  scoreHistory: null,
 
   initSession: async (firstName, day, month) => {
     const res = await fetch("/api/session", {
@@ -41,8 +42,17 @@ export const useSessionStore = create<SessionStore>((set, get) => ({
     }
   },
 
-  acceptLegacyName: (legacyName, archetypeId, order, archetypeLabel, guidingPromise, traits, scores) => {
-    set({ legacyName, archetype: archetypeId, order, archetypeLabel, guidingPromise, traits, scores: scores ?? null });
+  acceptLegacyName: (legacyName, archetypeId, order, archetypeLabel, guidingPromise, traits, scores, scoreHistory) => {
+    set({
+      legacyName,
+      archetype: archetypeId,
+      order,
+      archetypeLabel,
+      guidingPromise,
+      traits,
+      scores: scores ?? null,
+      scoreHistory: scoreHistory ?? null,
+    });
   },
 
   resetExperience: () => {
@@ -60,6 +70,7 @@ export const useSessionStore = create<SessionStore>((set, get) => ({
       traits: null,
       order: null,
       scores: null,
+      scoreHistory: null,
     });
   },
 }));
