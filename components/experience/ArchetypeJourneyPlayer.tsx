@@ -17,7 +17,7 @@ type Props = {
 
 const STEP_MS = 650;
 
-export function ArchetypeJourneyPlayer({ signals, scoreHistory, finalArchetypeId, scoreMap, size = 380 }: Props) {
+export function ArchetypeJourneyPlayer({ signals, scoreHistory, finalArchetypeId, scoreMap, size = 480 }: Props) {
   const total = scoreHistory.length;
   const [step, setStep] = useState(total); // 0 = Start, total = Final
   const [playing, setPlaying] = useState(false);
@@ -82,7 +82,7 @@ export function ArchetypeJourneyPlayer({ signals, scoreHistory, finalArchetypeId
 
   return (
     <div className="flex w-full flex-col items-center gap-4">
-      <div className="flex w-full max-w-[420px] flex-col gap-1 text-left">
+      <div className="flex w-full max-w-[520px] flex-col gap-1 text-left">
         <h3 className="text-lg font-serif">{total} questions. One name.</h3>
         <div className="flex gap-2">
           <button
@@ -103,7 +103,7 @@ export function ArchetypeJourneyPlayer({ signals, scoreHistory, finalArchetypeId
         </div>
       </div>
 
-      <canvas ref={canvasRef} className="h-auto w-full max-w-[420px] rounded-lg" />
+      <canvas ref={canvasRef} className="h-auto w-full max-w-[520px] rounded-lg" />
 
       <div className="flex flex-wrap justify-center gap-1.5">
         {stepButtons.map(({ label, index }) => (
@@ -134,7 +134,7 @@ export function ArchetypeJourneyPlayer({ signals, scoreHistory, finalArchetypeId
       </div>
 
       {step === total && finalArchetype && (
-        <div className="flex w-full max-w-[420px] flex-col gap-3 rounded-lg border border-zinc-200 p-4 text-left dark:border-zinc-800">
+        <div className="flex w-full max-w-[520px] flex-col gap-3 rounded-lg border border-zinc-200 p-4 text-left dark:border-zinc-800">
           <p className="text-sm leading-relaxed">
             You are the <strong>{finalArchetype.label}</strong> &middot; {finalArchetype.romajiName}
             {realm && (

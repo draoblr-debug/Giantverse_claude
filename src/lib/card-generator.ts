@@ -1,4 +1,4 @@
-import { renderJourneyMap, type TurnSnapshot } from "@/lib/journey-renderer";
+import { renderJourneyMap, getSpokeAngle, type TurnSnapshot } from "@/lib/journey-renderer";
 
 export type CardParams = {
   birthName: string;
@@ -209,6 +209,41 @@ export async function drawCard(canvas: HTMLCanvasElement, params: CardParams): P
       ctx.fillStyle = "#010505"; // sampled band background
       ctx.fillRect(coverX, coverY, coverW, coverH);
 
+      // Beyond the winning archetype, label the 3 next-strongest runner-ups
+      // (by the final turn's scores) so the mini glyph's rim isn't just
+      // unlabeled dots — a little context on what else the answers brushed.
+      // Picked greedily for angular spread too: two labels on adjacent
+      // spokes overlap and become unreadable on the card's small canvas,
+      // so a candidate too close to an already-picked spoke (or to the
+      // final spoke) is skipped in favor of the next-highest score.
+      const lastTurn = params.scoreHistory[params.scoreHistory.length - 1];
+      const MIN_LABEL_SEPARATION_DEG = 24;
+      const angleDiff = (a: number, b: number) => {
+        const d = Math.abs(a - b) % 360;
+        return d > 180 ? 360 - d : d;
+      };
+      const rankedCandidates = Object.entries(lastTurn.scores)
+        .filter(([id]) => id !== params.archetypeId)
+        .sort((a, b) => b[1] - a[1])
+        .map(([id]) => id);
+      const finalAngle = params.archetypeId ? getSpokeAngle(params.archetypeId) : undefined;
+      const chosenAngles = finalAngle !== undefined ? [finalAngle] : [];
+      const runnerUpIds: string[] = [];
+      for (const id of rankedCandidates) {
+        if (runnerUpIds.length >= 3) break;
+        const angle = getSpokeAngle(id);
+        const tooClose = angle !== undefined && chosenAngles.some((a) => angleDiff(a, angle) < MIN_LABEL_SEPARATION_DEG);
+        if (tooClose) continue;
+        runnerUpIds.push(id);
+        if (angle !== undefined) chosenAngles.push(angle);
+      }
+      // Not enough well-separated candidates (small/lopsided score set) —
+      // fill the rest by score alone rather than showing fewer than 3.
+      for (const id of rankedCandidates) {
+        if (runnerUpIds.length >= 3) break;
+        if (!runnerUpIds.includes(id)) runnerUpIds.push(id);
+      }
+
       const glyphSize = px(0.2657); // 250 on the reference template
       const glyph = renderJourneyMap(params.scoreHistory, {
         finalArchetypeId: params.archetypeId,
@@ -216,6 +251,7 @@ export async function drawCard(canvas: HTMLCanvasElement, params: CardParams): P
         transparent: true,
         detail: "mini",
         accentColor: GOLD,
+        highlightArchetypeIds: runnerUpIds,
       });
       // centered in the covered zone
       ctx.drawImage(glyph, coverX + (coverW - glyphSize) / 2, coverY + (coverH - glyphSize) / 2);
