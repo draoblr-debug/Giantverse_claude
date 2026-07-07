@@ -1,6 +1,7 @@
 import { buildSystemPrompt } from "@/engines/prompt/system-prompt.builder";
 import { selectNextProbe } from "@/engines/conversation/probe.engine";
 import { extract, summarize, update } from "@/engines/conversation/memory.engine";
+import { detectTension } from "@/engines/archetype/tension.engine";
 import { streamCounterpartReply } from "@/services/ai/ai.service";
 import type { ChatMessage } from "@/types/conversation.types";
 import type { Dimension, Signal } from "@/types/archetype.types";
@@ -40,6 +41,7 @@ export async function receive(params: {
     birthName,
     probeDimension,
     signalSummary: summarize(signals),
+    tension: detectTension(signals),
   });
 
   const fullHistory = [...history, { role: "user" as const, content: message }];

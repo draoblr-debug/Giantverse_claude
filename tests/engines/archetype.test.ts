@@ -6,14 +6,14 @@ import { canReveal } from "@/engines/archetype/confidence.engine";
 import type { Signal } from "@/types/archetype.types";
 
 describe("archetype-definitions", () => {
-  it("defines exactly 20 archetypes", () => {
-    expect(Object.keys(ARCHETYPE_DEFINITIONS)).toHaveLength(20);
+  it("defines exactly 32 archetypes", () => {
+    expect(Object.keys(ARCHETYPE_DEFINITIONS)).toHaveLength(32);
   });
 
-  it("splits evenly into 10 GIANT and 10 HUNTER archetypes", () => {
+  it("splits evenly into 16 GIANT and 16 HUNTER archetypes", () => {
     const orders = Object.values(ARCHETYPE_DEFINITIONS).map((a) => a.order);
-    expect(orders.filter((o) => o === "GIANT")).toHaveLength(10);
-    expect(orders.filter((o) => o === "HUNTER")).toHaveLength(10);
+    expect(orders.filter((o) => o === "GIANT")).toHaveLength(16);
+    expect(orders.filter((o) => o === "HUNTER")).toHaveLength(16);
   });
 
   it("every archetype id matches its own key", () => {
@@ -24,10 +24,10 @@ describe("archetype-definitions", () => {
 });
 
 describe("scoreArchetypes", () => {
-  it("returns all 20 archetypes sorted by descending normalized score", () => {
+  it("returns all 32 archetypes sorted by descending normalized score", () => {
     const signals: Signal[] = [{ dimension: "DECISIONS", value: "loves process", confidence: 0.9, turnIndex: 0 }];
     const scores = scoreArchetypes(signals);
-    expect(scores).toHaveLength(20);
+    expect(scores).toHaveLength(32);
     for (let i = 1; i < scores.length; i++) {
       expect(scores[i - 1].normalized).toBeGreaterThanOrEqual(scores[i].normalized);
     }

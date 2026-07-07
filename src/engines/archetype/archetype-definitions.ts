@@ -23,6 +23,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
     traits: ["Consensus", "Equity", "Voice", "Collective Will"],
     traitDescriptions: ["Agreement over division.", "Fair for all.", "Everyone deserves to speak.", "Strength in unity."],
     confidenceThreshold: 0.35,
+    shadow: { trait: "Indecision", description: "So determined that everyone agrees, nothing gets decided at all." },
   },
   kizoku: {
     id: "kizoku", label: "Aristocrat", order: "GIANT",
@@ -35,6 +36,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
     traits: ["Command", "Tradition", "Presence", "Certainty"],
     traitDescriptions: ["Lead with authority.", "Honor what came before.", "Power in the room.", "Doubt is the enemy."],
     confidenceThreshold: 0.35,
+    shadow: { trait: "Elitism", description: "Mistakes inherited certainty for earned worth, and dismisses anyone without the pedigree to match." },
   },
   kanryo: {
     id: "kanryo", label: "Bureaucrat", order: "GIANT",
@@ -47,6 +49,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
     traits: ["Order", "Diligence", "Fairness", "Process"],
     traitDescriptions: ["Structure prevents chaos.", "Work until it's right.", "Rules protect everyone.", "Follow the proven path."],
     confidenceThreshold: 0.35,
+    shadow: { trait: "Rigidity", description: "Clings to the process long after it stops serving the people it was built to protect." },
   },
   gijutsu: {
     id: "gijutsu", label: "Technocrat", order: "GIANT",
@@ -59,6 +62,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
     traits: ["Precision", "Efficiency", "Logic", "Systems"],
     traitDescriptions: ["Every detail matters.", "No wasted motion.", "Reason over emotion.", "Build what scales."],
     confidenceThreshold: 0.35,
+    shadow: { trait: "Coldness", description: "Optimizes the system so completely that the people inside it become variables, not lives." },
   },
   tetsugaku: {
     id: "tetsugaku", label: "Philosopher", order: "GIANT",
@@ -71,6 +75,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
     traits: ["Inquiry", "Depth", "Truth", "Wisdom"],
     traitDescriptions: ["Questions drive truth.", "Beyond surface, into essence.", "Seek it. Honor it.", "Understanding serves all."],
     confidenceThreshold: 0.35,
+    shadow: { trait: "Paralysis", description: "Keeps asking the next question until the moment for an answer has already passed." },
   },
   gaiko: {
     id: "gaiko", label: "Diplomat", order: "GIANT",
@@ -83,6 +88,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
     traits: ["Harmony", "Tact", "Balance", "Perspective"],
     traitDescriptions: ["Peace over conflict.", "Words matter most.", "Hold all sides.", "Every view has value."],
     confidenceThreshold: 0.35,
+    shadow: { trait: "Conflict-Avoidance", description: "Smooths over a rupture that needed to be named, and calls the silence peace." },
   },
   kenchiku: {
     id: "kenchiku", label: "Architect", order: "GIANT",
@@ -95,6 +101,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
     traits: ["Vision", "Structure", "Legacy", "Craft"],
     traitDescriptions: ["See what isn't yet.", "Build to last.", "Leave something behind.", "Make it worth making."],
     confidenceThreshold: 0.35,
+    shadow: { trait: "Detachment", description: "Falls in love with the design and forgets the people who have to live inside it." },
   },
   kaikaku: {
     id: "kaikaku", label: "Reformer", order: "GIANT",
@@ -107,6 +114,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
     traits: ["Justice", "Courage", "Change", "Conviction"],
     traitDescriptions: ["Wrong must be righted.", "Fear nothing worth fighting.", "Break what is broken.", "Stand for it always."],
     confidenceThreshold: 0.35,
+    shadow: { trait: "Zealotry", description: "Burns down what was merely imperfect, mistaking any resistance for the enemy." },
   },
   sabaki: {
     id: "sabaki", label: "Judge", order: "GIANT",
@@ -119,6 +127,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
     traits: ["Fairness", "Discernment", "Integrity", "Accountability"],
     traitDescriptions: ["Weigh without bias.", "See through the noise.", "Say what is true.", "Own every outcome."],
     confidenceThreshold: 0.35,
+    shadow: { trait: "Self-Righteousness", description: "Hides behind the letter of the rule to avoid the harder, human work of mercy." },
   },
   senryaku: {
     id: "senryaku", label: "Strategist", order: "GIANT",
@@ -131,6 +140,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
     traits: ["Foresight", "Patience", "Mastery", "Precision"],
     traitDescriptions: ["See three moves ahead.", "The long game wins.", "Excellence takes time.", "Every move counts."],
     confidenceThreshold: 0.35,
+    shadow: { trait: "Manipulation", description: "Starts treating the people around them as pieces to be played, not ends in themselves." },
   },
 
   // ── Order of Hunters ─────────────────────────────────────────────
@@ -145,6 +155,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
     traits: ["Curiosity", "Courage", "Discovery", "Freedom"],
     traitDescriptions: ["Seek the unknown.", "Fear is the trail.", "New worlds await.", "No walls, no limits."],
     confidenceThreshold: 0.35,
+    shadow: { trait: "Rootlessness", description: "Never stays anywhere long enough to build something that could have lasted." },
   },
   mamori: {
     id: "mamori", label: "Guardian", order: "HUNTER",
@@ -157,6 +168,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
     traits: ["Loyalty", "Protection", "Sacrifice", "Devotion"],
     traitDescriptions: ["Faithful to the end.", "Stand between harm and love.", "Give what is needed.", "Serve without condition."],
     confidenceThreshold: 0.35,
+    shadow: { trait: "Smothering", description: "Protects so completely that the people they love never learn to stand on their own." },
   },
   kensetsu: {
     id: "kensetsu", label: "Builder", order: "HUNTER",
@@ -169,6 +181,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
     traits: ["Craft", "Persistence", "Creation", "Hands-On"],
     traitDescriptions: ["Make it real.", "Never stop building.", "Ideas need form.", "Do the work."],
     confidenceThreshold: 0.35,
+    shadow: { trait: "Obsession", description: "Cannot put the work down long enough to notice what it has quietly cost them." },
   },
   hatsumei: {
     id: "hatsumei", label: "Inventor", order: "HUNTER",
@@ -181,6 +194,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
     traits: ["Innovation", "Curiosity", "Experimentation", "Ingenuity"],
     traitDescriptions: ["What if we tried…", "Questions fuel progress.", "Failure teaches most.", "Find another way."],
     confidenceThreshold: 0.35,
+    shadow: { trait: "Restlessness", description: "Abandons every idea the moment a shinier one appears, and finishes nothing." },
   },
   teisatsu: {
     id: "teisatsu", label: "Scout", order: "HUNTER",
@@ -193,6 +207,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
     traits: ["Boldness", "Awareness", "Initiative", "Momentum"],
     traitDescriptions: ["Go before others dare.", "Read the terrain.", "Act without waiting.", "Keep moving forward."],
     confidenceThreshold: 0.35,
+    shadow: { trait: "Recklessness", description: "Leaps first so often they stop checking whether anyone can actually follow." },
   },
   shisha: {
     id: "shisha", label: "Messenger", order: "HUNTER",
@@ -205,6 +220,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
     traits: ["Connection", "Truth", "Bridge-Building", "Purpose"],
     traitDescriptions: ["Link what is apart.", "Carry only what's real.", "Every gap can close.", "Meaning in every word."],
     confidenceThreshold: 0.35,
+    shadow: { trait: "Overextension", description: "Carries everyone else's message so faithfully that their own voice goes quiet." },
   },
   shokunin: {
     id: "shokunin", label: "Artisan", order: "HUNTER",
@@ -217,6 +233,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
     traits: ["Mastery", "Discipline", "Craft", "Instinct"],
     traitDescriptions: ["Excellence is the standard.", "Practice without end.", "Skill over shortcut.", "Trust what you know."],
     confidenceThreshold: 0.35,
+    shadow: { trait: "Perfectionism", description: "Refuses to call the work finished, and refuses anyone else's hands on it either." },
   },
   iyashi: {
     id: "iyashi", label: "Healer", order: "HUNTER",
@@ -229,6 +246,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
     traits: ["Compassion", "Empathy", "Restoration", "Care"],
     traitDescriptions: ["Feel what others feel.", "Hold space for pain.", "Mend what is broken.", "No one heals alone."],
     confidenceThreshold: 0.35,
+    shadow: { trait: "Self-Erasure", description: "Absorbs everyone else's pain until there's nothing left to tend their own." },
   },
   kaitaku: {
     id: "kaitaku", label: "Pathfinder", order: "HUNTER",
@@ -241,6 +259,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
     traits: ["Pioneer Spirit", "Vision", "Resilience", "Boldness"],
     traitDescriptions: ["Blaze the first trail.", "See beyond today.", "Fall, rise, continue.", "No frontier too far."],
     confidenceThreshold: 0.35,
+    shadow: { trait: "Isolation", description: "Pushes so far past the frontier that no one is left who remembers why they went." },
   },
   seizon: {
     id: "seizon", label: "Survivor", order: "HUNTER",
@@ -253,6 +272,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
     traits: ["Grit", "Adaptability", "Resourcefulness", "Unbreakable Resolve"],
     traitDescriptions: ["Endure what breaks others.", "Bend but don't break.", "Make use of anything.", "Nothing keeps you down."],
     confidenceThreshold: 0.35,
+    shadow: { trait: "Distrust and Isolation", description: "Treats every calm moment as the quiet before the next disaster, and lets no one close enough to prove otherwise." },
   },
 
   // ── Order of Giants (extended) ───────────────────────────────────
@@ -267,6 +287,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
     traits: ["Imagination", "Foresight", "Boldness", "Hope"],
     traitDescriptions: ["See what doesn't exist yet.", "Sketch tomorrow's shape.", "Refuse to bow to convention.", "Keep imagining."],
     confidenceThreshold: 0.35,
+    shadow: { trait: "Escapism", description: "Gets so lost sketching tomorrow that today is left to fend for itself." },
   },
   kenja: {
     id: "kenja", label: "Sage", order: "GIANT",
@@ -279,6 +300,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
     traits: ["Insight", "Patience", "Humility", "Understanding"],
     traitDescriptions: ["Let truth arrive slowly.", "Wait for wisdom to settle.", "Offer gently.", "Understanding serves all."],
     confidenceThreshold: 0.35,
+    shadow: { trait: "Passivity", description: "Waits so long for the truth to settle that it's no longer useful by the time they speak it." },
   },
   sosai: {
     id: "sosai", label: "Chancellor", order: "GIANT",
@@ -291,6 +313,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
     traits: ["Responsibility", "Stability", "Leadership", "Governance"],
     traitDescriptions: ["Hold the center.", "Weight of many futures.", "Vision meets reality.", "Institutions need a spine."],
     confidenceThreshold: 0.35,
+    shadow: { trait: "Control", description: "Mistakes holding the center for holding on too tightly, and resists any change the institution actually needs." },
   },
   yogen: {
     id: "yogen", label: "Oracle", order: "GIANT",
@@ -303,6 +326,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
     traits: ["Intuition", "Insight", "Perspective", "Foresight"],
     traitDescriptions: ["See patterns before they're named.", "Connections others miss.", "Perspective not command.", "Speak before the storm."],
     confidenceThreshold: 0.35,
+    shadow: { trait: "Unfalsifiable Certainty", description: "Mistakes a hunch for a prophecy, and loses the trust of anyone who asks for proof." },
   },
   rekishi: {
     id: "rekishi", label: "Historian", order: "GIANT",
@@ -315,6 +339,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
     traits: ["Memory", "Accuracy", "Continuity", "Truth"],
     traitDescriptions: ["Remember what others forget.", "Hold the accurate record.", "History can't be rewritten.", "What happened, happened."],
     confidenceThreshold: 0.35,
+    shadow: { trait: "Resentment", description: "Cannot let the past go, and lets old grievance calcify into bitterness dressed as memory." },
   },
   hozon: {
     id: "hozon", label: "Custodian", order: "GIANT",
@@ -327,6 +352,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
     traits: ["Stewardship", "Heritage", "Devotion", "Care"],
     traitDescriptions: ["Hold what others release.", "Last hand on the sacred.", "Devotion not nostalgia.", "Some things must not be lost."],
     confidenceThreshold: 0.35,
+    shadow: { trait: "Stagnation", description: "Guards the tradition so fiercely that nothing — not even necessary growth — is allowed through." },
   },
 
   // ── Order of Hunters (extended) ──────────────────────────────────
@@ -341,6 +367,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
     traits: ["Direction", "Precision", "Calm", "Orientation"],
     traitDescriptions: ["Read the unseen currents.", "Find the safe passage.", "Steady when others panic.", "Always know the heading."],
     confidenceThreshold: 0.35,
+    shadow: { trait: "Overcontrol", description: "Trusts only their own reading of the current, and stops listening for anyone else's." },
   },
   banri: {
     id: "banri", label: "Warden", order: "HUNTER",
@@ -353,6 +380,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
     traits: ["Vigilance", "Discipline", "Sanctuary", "Responsibility"],
     traitDescriptions: ["Guard the unseen threshold.", "Constant, thankless watch.", "Hold the line absolutely.", "Boundaries are sacred."],
     confidenceThreshold: 0.35,
+    shadow: { trait: "Suspicion", description: "Stands watch so long they start seeing threats at a threshold nothing is actually crossing." },
   },
   nogyo: {
     id: "nogyo", label: "Farmer", order: "HUNTER",
@@ -365,6 +393,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
     traits: ["Patience", "Growth", "Humility", "Sustenance"],
     traitDescriptions: ["Repeated care, season by season.", "No harvest without tending.", "Unglamorous and necessary.", "Trust the slow work."],
     confidenceThreshold: 0.35,
+    shadow: { trait: "Complacency", description: "Mistakes 'give it time' for permission to never intervene, even as something dies." },
   },
   yuei: {
     id: "yuei", label: "Ranger", order: "HUNTER",
@@ -377,6 +406,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
     traits: ["Balance", "Observation", "Respect", "Nature"],
     traitDescriptions: ["Walk between wild and world.", "Nature trusts you.", "Move lightly.", "Neither dominates the other."],
     confidenceThreshold: 0.35,
+    shadow: { trait: "Non-Commitment", description: "Stays so carefully balanced between two worlds that they never fully belong to either." },
   },
   monogatari: {
     id: "monogatari", label: "Storyteller", order: "HUNTER",
@@ -389,6 +419,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
     traits: ["Imagination", "Memory", "Connection", "Identity"],
     traitDescriptions: ["Keep the soul alive in words.", "Stories outlast facts.", "Around your fire, they remember.", "Who we are endures."],
     confidenceThreshold: 0.35,
+    shadow: { trait: "Mythologizing", description: "Polishes the story so bright that the truth underneath quietly disappears." },
   },
   takumi: {
     id: "takumi", label: "Craftsman", order: "HUNTER",
@@ -401,5 +432,6 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
     traits: ["Excellence", "Precision", "Dedication", "Quality"],
     traitDescriptions: ["Chase perfect in the detail.", "Never stop refining.", "Discipline is devotion.", "Good enough is never enough."],
     confidenceThreshold: 0.35,
+    shadow: { trait: "Diminishing Returns", description: "Keeps refining what was already good enough, and calls the compulsion discipline." },
   },
 };
