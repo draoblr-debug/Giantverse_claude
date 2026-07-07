@@ -32,6 +32,9 @@ export type ArchetypeProfile = {
   traits: [string, string, string, string];
   traitDescriptions: [string, string, string, string];
   confidenceThreshold: number;
+  // What this archetype becomes under pressure, when its own strength is
+  // taken to an unchecked extreme. Not a flaw list — a warning label.
+  shadow: { trait: string; description: string };
 };
 
 export type ArchetypeScore = {

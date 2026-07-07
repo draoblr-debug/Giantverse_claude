@@ -5,6 +5,7 @@ import { renderJourneyMap, type TurnSnapshot } from "@/lib/journey-renderer";
 import { ARCHETYPE_DEFINITIONS } from "@/engines/archetype/archetype-definitions";
 import { REALMS } from "@/engines/realms";
 import { computeConvergence } from "@/engines/archetype/convergence";
+import { getArchetypeRelations } from "@/engines/archetype/archetype-wheel";
 import type { Signal } from "@/types/archetype.types";
 
 type Props = {
@@ -27,6 +28,7 @@ export function ArchetypeJourneyPlayer({ signals, scoreHistory, finalArchetypeId
   const finalArchetype = ARCHETYPE_DEFINITIONS[finalArchetypeId];
   const realm = finalArchetype?.realmBias ? REALMS[finalArchetype.realmBias] : null;
   const convergence = computeConvergence(signals, scoreMap, finalArchetypeId);
+  const relations = finalArchetype ? getArchetypeRelations(finalArchetypeId) : null;
 
   // Draw whenever the visible step changes. At "Final" the map docks on
   // the winning archetype; at any earlier step it shows the tentative
@@ -157,6 +159,37 @@ export function ArchetypeJourneyPlayer({ signals, scoreHistory, finalArchetypeId
                 <p className="text-xs leading-relaxed opacity-70">{convergence.reasoning}</p>
               </div>
             </>
+          )}
+
+          {relations && (
+            <div className="flex flex-col gap-3 border-t border-zinc-200 pt-3 dark:border-zinc-800">
+              <div>
+                <p className="mb-1 text-[10px] font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+                  Allies
+                </p>
+                <p className="text-xs leading-relaxed opacity-70">
+                  {relations.allies[0].label} and {relations.allies[1].label} — the archetypes you naturally drift
+                  toward as you grow.
+                </p>
+              </div>
+
+              <div>
+                <p className="mb-1 text-[10px] font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+                  Opposite
+                </p>
+                <p className="text-xs leading-relaxed opacity-70">
+                  <strong>{relations.opposite.label}</strong> answers the same question you do, differently:{" "}
+                  <em>{relations.centralQuestion}</em>
+                </p>
+              </div>
+
+              <div className="rounded-md border border-red-400/30 bg-red-400/5 p-3">
+                <p className="mb-1 text-[10px] font-semibold uppercase tracking-wide text-red-500">
+                  Shadow — {finalArchetype.shadow.trait}
+                </p>
+                <p className="text-xs leading-relaxed opacity-70">{finalArchetype.shadow.description}</p>
+              </div>
+            </div>
           )}
         </div>
       )}
