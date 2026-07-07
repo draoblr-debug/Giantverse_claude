@@ -94,16 +94,42 @@ function bezierSegments(pts: Array<{ x: number; y: number }>) {
   return segs;
 }
 
+// Quadrant layout — a psychological-profile grid (Agency × Communion)
+// rather than an arbitrary definitions-file order. Bearings follow the
+// compass convention toXY() uses (0=N, 90=E, 180=S, 270=W, clockwise),
+// which maps directly onto screen quadrants: [0,90)=NE, [90,180)=SE,
+// [180,270)=SW, [270,360)=NW.
+//
+//   NE 0–90    High Agency + High Communion  — active, outgoing Hunters
+//   SE 90–180  Low Agency + High Communion   — grounded, supportive Hunters
+//   SW 180–270 Low Agency + Low Communion    — introspective, philosophical Giants
+//   NW 270–360 High Agency + Low Communion   — governing, systemic Giants
+//
+// Giants therefore occupy the whole west half (SW+NW, 180–360) and
+// Hunters the whole east half (NE+SE, 0–180), same as before — only the
+// order within each half changes, which is what actually places each
+// archetype into its named quadrant.
+const QUADRANT_NE_HUNTERS = ["tansa", "shisha", "koro", "teisatsu", "monogatari", "hatsumei", "mamori", "shokunin"];
+const QUADRANT_SE_HUNTERS = ["iyashi", "yuei", "kensetsu", "nogyo", "takumi", "seizon", "kaitaku", "banri"];
+const QUADRANT_SW_GIANTS = ["gaiko", "tetsugaku", "senryaku", "riso", "yogen", "kenja", "rekishi", "hozon"];
+const QUADRANT_NW_GIANTS = ["gijutsu", "minshu", "kizoku", "kanryo", "kenchiku", "sabaki", "sosai", "kaikaku"];
+
 // Spoke layout built once from canonical archetype definitions.
 // Guild → color in first-seen order; Calling color as fallback.
 const SPOKES: Record<string, Spoke> = (() => {
-  const all = Object.values(ARCHETYPE_DEFINITIONS).map((a) => ({
-    id: a.id,
-    title: a.label,
-    surname: a.romajiName,
-    calling: (a.order === "GIANT" ? "Giant" : "Hunter") as "Giant" | "Hunter",
-    guild: a.guild,
-  }));
+  const byId = new Map(
+    Object.values(ARCHETYPE_DEFINITIONS).map((a) => [
+      a.id,
+      {
+        id: a.id,
+        title: a.label,
+        surname: a.romajiName,
+        calling: (a.order === "GIANT" ? "Giant" : "Hunter") as "Giant" | "Hunter",
+        guild: a.guild,
+      },
+    ]),
+  );
+  const all = [...byId.values()];
 
   const palette = new Map<string, string>();
   let slot = 0;
@@ -115,9 +141,10 @@ const SPOKES: Record<string, Spoke> = (() => {
   const colorOf = (a: (typeof all)[number]) =>
     (a.guild && palette.get(a.guild)) || CALLING_COLORS[a.calling];
 
+  const hunters = [...QUADRANT_NE_HUNTERS, ...QUADRANT_SE_HUNTERS].map((id) => byId.get(id)).filter((a): a is (typeof all)[number] => Boolean(a));
+  const giants = [...QUADRANT_SW_GIANTS, ...QUADRANT_NW_GIANTS].map((id) => byId.get(id)).filter((a): a is (typeof all)[number] => Boolean(a));
+
   const spokes: Record<string, Spoke> = {};
-  const giants = all.filter((a) => a.calling === "Giant");
-  const hunters = all.filter((a) => a.calling === "Hunter");
   hunters.forEach((a, i) => {
     const step = 180 / hunters.length;
     spokes[a.id] = { id: a.id, angleDeg: step / 2 + i * step, title: a.title, surname: a.surname, calling: a.calling, color: colorOf(a) };
