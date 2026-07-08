@@ -7,7 +7,7 @@ export const metadata = {
 
 export default function LandingPage() {
   return (
-    <div className="container">
+    <div className="legacy-container">
       <div className="head-bdr"></div>
       <div className="container-fluid">
         <table width="100%" cellPadding="0" cellSpacing="0" border={0}>

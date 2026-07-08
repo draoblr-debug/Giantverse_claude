@@ -1,4 +1,4 @@
-﻿@charset "utf-8";
+@charset "utf-8";
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Poppins:wght@400;500;600;700&display=swap');
 
 body {
@@ -293,7 +293,7 @@ body{width:100%;height:auto;min-height:100vh;background:rgb(var(--bs-thm-clr-1))
 
 /* Layout
 ------------------------------------------------------------------------------------------------*/
-.container{background:url("/Images/bg1.jpg") no-repeat top center rgb(var(--bs-thm-clr-1));background-size:auto 640px;}
+.legacy-container{background:url("/Images/bg1.jpg") no-repeat top center rgb(var(--bs-thm-clr-1));background-size:auto 640px;}
 .container2{background:url("/Images/bg2.jpg") no-repeat top center rgb(var(--bs-thm-clr-1));background-size:auto 640px;}
 .head-bdr, .foot-bdr{ width:100%;height:55px;max-width:550px;margin:0px auto;}
 .head-bdr{
