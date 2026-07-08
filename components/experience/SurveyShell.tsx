@@ -130,13 +130,23 @@ export function SurveyShell() {
 
   if (submitting) {
     return (
-      <div className="flex flex-1 flex-col items-center justify-center gap-4 text-center">
-        <motion.div
-          className="h-10 w-10 rounded-full border-2 border-current border-t-transparent opacity-40"
-          animate={{ rotate: 360 }}
-          transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-        />
-        <p className="text-sm opacity-50">Crystallising your name…</p>
+      <div className="legacy-container">
+        <div className="head-bdr"></div>
+        <div className="global-loader">
+          <table width="100%" cellPadding="0" cellSpacing="0" border={0}>
+            <tbody>
+              <tr>
+                <td>
+                  <div className="gl-cont">
+                    <div className="gl-cirle"></div>
+                    <p className="f-12 mb-0 txt-center">Crystallising your name...</p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div className="foot-bdr"></div>
       </div>
     );
   }
@@ -144,139 +154,152 @@ export function SurveyShell() {
   if (revealed) {
     const { archetype } = revealed;
     return (
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="flex w-full flex-1 flex-col items-center gap-6 overflow-y-auto px-6 py-10 text-center"
-      >
-        <div className="flex flex-col items-center gap-1">
-          <p className="text-sm tracking-wide text-zinc-500 uppercase dark:text-zinc-400">
-            Based on your answers, your Legacy Name is
-          </p>
-          <h2 className="text-3xl font-semibold">{revealed.legacyName}</h2>
-          <p className="text-sm opacity-50">
-            {archetype.label} ({archetype.romajiName}) &middot; Order of {archetype.order === "GIANT" ? "Giants" : "Hunters"}
-          </p>
+      <div className="legacy-container">
+        <div className="head-bdr"></div>
+        <div className="container-fluid">
+          <table width="100%" cellPadding="0" cellSpacing="0" border={0}>
+            <tbody>
+              <tr>
+                <td>
+                  <div className="content">
+                    <p className="txt-thm-clr-50-2 txt-center txt-upp mb-0">Based on your answers, your Legacy Name is</p>
+                    <h1 className="h5 txt-center fw-700">{revealed.legacyName}</h1>
+                    <p className="txt-thm-clr-50-2 txt-center mb-4">
+                      {archetype.label} ({archetype.romajiName}) &middot; Order of {archetype.order === "GIANT" ? "Giant" : "Hunter"}
+                    </p>
+                    
+                    <ArchetypeJourneyPlayer
+                      signals={revealed.signals}
+                      scoreHistory={revealed.scoreHistory}
+                      finalArchetypeId={archetype.id}
+                      scoreMap={revealed.scoreMap}
+                    />
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-
-        {/* Journey map: replayable, step-scrubbable trace of how the answers
-            drifted across all 32 archetypes before settling on this one —
-            every archetype is labeled, not just the visited ones, so the
-            "hidden" options are visible too. */}
-        <ArchetypeJourneyPlayer
-          signals={revealed.signals}
-          scoreHistory={revealed.scoreHistory}
-          finalArchetypeId={archetype.id}
-          scoreMap={revealed.scoreMap}
-        />
-
-        {/* Explanation — so the participant can judge the match themselves,
-            not just accept a name. */}
-        <div className="flex max-w-md flex-col gap-4 rounded-lg border border-zinc-200 p-5 text-left dark:border-zinc-800">
-          <p className="text-sm leading-relaxed opacity-80">{archetype.description}</p>
-          <p className="text-sm leading-relaxed italic opacity-70">&ldquo;{archetype.guidingPromise}&rdquo;</p>
-          <div className="grid grid-cols-2 gap-3">
-            {archetype.traits.map((trait, i) => (
-              <div key={trait}>
-                <p className="text-xs font-semibold uppercase tracking-wide opacity-70">{trait}</p>
-                <p className="text-xs opacity-50">{archetype.traitDescriptions[i]}</p>
+        <div className="container-fluid mxw-900">
+          <div className="content">
+            <div className="wht-cont pse-3 pb-3 mt-4">
+              <p className="txt-thm-clr-2 line-ht-20 mb-2">{archetype.description}</p>
+              <p className="txt-thm-clr-70-2 fst-italic line-ht-20 mb-2">&ldquo;{archetype.guidingPromise}&rdquo;</p>
+            </div>
+            <div className="mxw-450 m-auto wht-cont pse-3 mt-4">
+              <div className="grid-list">
+                <div className="row float-none">
+                  {archetype.traits.map((trait, i) => (
+                    <div className="col-4" key={trait}>
+                      <p className="f-12 txt-upp mb-0 txt-thm-clr-70-2">{trait}</p>
+                      <p className="f-12 txt-thm-clr-50-2">{archetype.traitDescriptions[i]}</p>
+                    </div>
+                  ))}
+                </div>
               </div>
-            ))}
+            </div>
+            <div className="txt-center mt-4 mb-4">
+              <button type="button" className="btn pse-3 bdr-rds2 me-2" onClick={handleConfirm}>This Is Me</button>
+              <button type="button" className="btn-outline pse-3 bdr-rds2" onClick={handleRetake}>Retake the Survey</button>
+            </div>
+            <p className="mxw-300 m-auto f-12 txt-thm-clr-50-2 txt-center mb-4">
+              Not feeling it? Retake the survey with a fresh set of questions.
+            </p>
           </div>
         </div>
-
-        <div className="flex flex-wrap justify-center gap-2">
-          <button
-            type="button"
-            onClick={handleConfirm}
-            className="rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white dark:bg-zinc-100 dark:text-zinc-900"
-          >
-            This Is Me
-          </button>
-          <button
-            type="button"
-            onClick={handleRetake}
-            className="rounded-md border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 dark:border-zinc-700 dark:text-zinc-300"
-          >
-            Retake the Survey
-          </button>
-        </div>
-        <p className="max-w-xs text-xs opacity-40">
-          Not feeling it? Retake the survey with a fresh set of questions.
-        </p>
-      </motion.div>
+        <div className="foot-bdr"></div>
+      </div>
     );
   }
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center px-6">
-      {/* Progress bar */}
-      <div className="mb-10 w-full max-w-lg">
-        <div className="h-0.5 w-full rounded-full bg-zinc-200 dark:bg-zinc-800">
-          <motion.div
-            className="h-full rounded-full bg-zinc-900 dark:bg-zinc-100"
-            animate={{ width: `${progress * 100}%` }}
-            transition={{ duration: 0.3 }}
-          />
-        </div>
-        <p className="mt-2 text-right text-xs opacity-30">
-          {step + 1} / {total}
-        </p>
+    <div className="legacy-container">
+      <div className="head-bdr"></div>
+      <div className="container-fluid">
+        <table width="100%" cellPadding="0" cellSpacing="0" border={0}>
+          <tbody>
+            <tr>
+              <td>
+                <div className="content">
+                  <div className="logo m-auto">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/Images/thegianthunt.png" alt="The Giant Hunt" title="The Giant Hunt" />
+                  </div>
+                  <div className="g-logo5 m-auto mb-1">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/Images/g-img2.png" alt="Giantverse" title="Giantverse" />
+                    <div className="g-logo6 m-auto">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src="/Images/g-img3.png" alt="Giantverse" title="Giantverse" />
+                    </div>
+                  </div>
+                  <div className="survey-cont">
+                    <div className="progress-bar">
+                      <motion.div
+                        style={{ width: `${progress * 100}%` }}
+                        animate={{ width: `${progress * 100}%` }}
+                        transition={{ duration: 0.3 }}
+                      ></motion.div>
+                    </div>
+                    <p className="f-12 txt-thm-clr-50-2 txt-rt">{step + 1} / {total}</p>
+                    <div className="survey-wrapper p-relative" style={{ minHeight: "350px" }}>
+                      <AnimatePresence mode="wait">
+                        <motion.div
+                          key={step}
+                          initial={{ opacity: 0, y: 16 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -12 }}
+                          transition={{ duration: 0.35 }}
+                          className="w-full"
+                        >
+                          <div className="question-answer-cont active !transition-none">
+                            <h1 className="f-16 line-ht-24 txt-center mt-3 mb-4">{question.text}</h1>
+                            {question.type === "yesno" ? (
+                              <div className="btn-group">
+                                {(["Yes", "No"] as const).map((label) => (
+                                  <button
+                                    key={label}
+                                    type="button"
+                                    className="btn-outline mse-2"
+                                    onClick={() => handleAnswer(label === "Yes" ? 1 : 0)}
+                                  >
+                                    {label}
+                                  </button>
+                                ))}
+                              </div>
+                            ) : (
+                              <div className="btn-group2">
+                                {LIKERT_LABELS.map((label, i) => (
+                                  <button
+                                    key={i}
+                                    type="button"
+                                    className="btn-indicator"
+                                    onClick={() => handleAnswer(i + 1)}
+                                  >
+                                    <span className="indicator"></span>
+                                    <span>{label.replace("\n", " ")}</span>
+                                  </button>
+                                ))}
+                              </div>
+                            )}
+                            {step === 0 && (
+                              <p className="f-12 line-ht-15 txt-thm-clr-50-2 txt-center mt-4 mb-0">
+                                {firstName}, answer honestly — there are no right answers.
+                              </p>
+                            )}
+                            {error && <p className="f-12 line-ht-15 txt-center mt-4 mb-0 text-red-500">{error}</p>}
+                          </div>
+                        </motion.div>
+                      </AnimatePresence>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-
-      {/* Question */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={step}
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -12 }}
-          transition={{ duration: 0.35 }}
-          className="flex w-full max-w-lg flex-col items-center gap-8 text-center"
-        >
-          <p className="text-xl font-medium leading-relaxed">{question.text}</p>
-
-          {question.type === "yesno" ? (
-            <div className="flex gap-4">
-              {(["Yes", "No"] as const).map((label) => (
-                <button
-                  key={label}
-                  type="button"
-                  onClick={() => handleAnswer(label === "Yes" ? 1 : 0)}
-                  className="min-w-[96px] rounded-full border border-current px-6 py-2.5 text-sm font-medium transition-opacity hover:opacity-60"
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
-          ) : (
-            <div className="flex w-full items-end justify-between gap-2">
-              {LIKERT_LABELS.map((label, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => handleAnswer(i + 1)}
-                  className="group flex flex-col items-center gap-2"
-                >
-                  <span className="block h-8 w-8 rounded-full border border-current transition-colors group-hover:bg-zinc-900 group-hover:text-white dark:group-hover:bg-zinc-100 dark:group-hover:text-zinc-900" />
-                  <span className="max-w-[60px] text-center text-[10px] leading-tight opacity-50 whitespace-pre-line">
-                    {label}
-                  </span>
-                </button>
-              ))}
-            </div>
-          )}
-        </motion.div>
-      </AnimatePresence>
-
-      {error && <p className="mt-8 text-sm text-red-500">{error}</p>}
-
-      {/* Greeting on first step */}
-      {step === 0 && (
-        <p className="mt-12 text-sm opacity-30">
-          {firstName}, answer honestly — there are no right answers.
-        </p>
-      )}
+      <div className="foot-bdr"></div>
     </div>
   );
 }
