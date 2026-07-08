@@ -90,10 +90,7 @@ export function DrawingInvitation() {
   }
 
   return (
-    <div
-      className="flex flex-1 flex-col items-center justify-center gap-6 px-4 py-8"
-      style={{ background: "#0a0a0a", minHeight: "100vh" }}
-    >
+    <div className="legacy-container ending-cont w-full min-h-screen flex flex-col items-center justify-center py-10 px-4">
       {/* Off-screen full-res canvas for download */}
       <canvas ref={canvasRef} style={{ display: "none" }} />
 
@@ -101,121 +98,89 @@ export function DrawingInvitation() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: ready ? 1 : 0, y: ready ? 0 : 20 }}
         transition={{ duration: 0.6 }}
-        className="flex flex-col items-center gap-6"
+        className="w-full max-w-[1000px] flex flex-col items-center"
       >
-        {/* Scaled display canvas */}
-        <canvas ref={displayCanvasRef} style={{ borderRadius: 6, maxWidth: "100%" }} />
+        <div className="poster-cont ptb-6 mxw-900 m-auto">
+          {/* Scaled display canvas replacing the static Poster image */}
+          <canvas ref={displayCanvasRef} className="w-full" style={{ borderRadius: 6, maxWidth: "100%" }} />
+        </div>
 
         {ready && (
-          <div className="flex flex-col items-center gap-3">
+          <>
             {/* Resonant Constellation: Realm + Inspiration Graph */}
             {(realm || inspiration.personalities.length > 0 || inspiration.book || inspiration.film) && (
-              <div
-                className="flex w-full max-w-md flex-col items-center gap-4 rounded-md px-6 py-5 text-center"
-                style={{ border: "1px solid #3a2f12", background: "#000506" }}
-              >
+              <div className="wht-cont mxw-450 m-auto txt-center">
                 {realm && (
-                  <div>
-                    <p className="text-[10px] uppercase tracking-widest" style={{ color: "#7A6128" }}>
-                      Realm Resonance
+                  <>
+                    <p className="f-10 mb-0 txt-thm-clr-6 txt-upp">Realm Resonance</p>
+                    <p className="txt-thm-clr-5 line-ht-20 mb-2">
+                      {realm.name} <span className="txt-thm-clr-6 line-ht-20">({realm.japanese})</span> — {realm.tagline}
                     </p>
-                    <p className="mt-1 text-sm" style={{ color: "#C9A84C" }}>
-                      {realm.name} <span style={{ color: "#7A6128" }}>({realm.japanese})</span> — {realm.tagline}
-                    </p>
-                  </div>
+                  </>
                 )}
 
-                <div>
-                  <p className="text-[10px] uppercase tracking-widest font-bold" style={{ color: "#C9A84C" }}>
-                    Resonant Constellation
-                  </p>
-                  <p className="mt-1 text-[11px] leading-relaxed" style={{ color: "#7A6128" }}>
-                    Not who you are — but echoes worth sitting with.
-                  </p>
-                </div>
-
-                <div className="flex flex-col gap-3 sm:flex-row sm:justify-center sm:gap-8">
+                <p className="f-10 txt-thm-clr-5 txt-upp fw-700">Resonant Constellation</p>
+                <p className="f-10 mb-0 txt-thm-clr-6 mb-2">Not who you are — but echoes worth sitting with.</p>
+                
+                <div className="row float-none">
                   {inspiration.personalities.length > 0 && (
-                    <div>
-                      <p className="text-[10px] uppercase tracking-wider" style={{ color: "#7A6128" }}>
-                        Kindred Spirits
-                      </p>
-                      <p className="mt-1 text-xs" style={{ color: "#C9A84C" }}>
-                        {inspiration.personalities.join(" · ")}
-                      </p>
+                    <div className="col-4">
+                      <p className="f-10 mb-0 txt-thm-clr-6 txt-upp">Kindred Spirits</p>
+                      <p className="f-12 mb-0 txt-thm-clr-5 line-ht-15">{inspiration.personalities.join(" · ")}</p>
                     </div>
                   )}
                   {inspiration.book && (
-                    <div>
-                      <p className="text-[10px] uppercase tracking-wider" style={{ color: "#7A6128" }}>
-                        A Book to Explore
-                      </p>
-                      <p className="mt-1 text-xs" style={{ color: "#C9A84C" }}>{inspiration.book}</p>
+                    <div className="col-2">
+                      <p className="f-10 mb-0 txt-thm-clr-6 line-ht-15 txt-upp">A Book to Explore</p>
+                      <p className="f-12 mb-0 txt-thm-clr-5 line-ht-15">{inspiration.book}</p>
                     </div>
                   )}
                   {inspiration.film && (
-                    <div>
-                      <p className="text-[10px] uppercase tracking-wider" style={{ color: "#7A6128" }}>
-                        A Film to Watch
-                      </p>
-                      <p className="mt-1 text-xs" style={{ color: "#C9A84C" }}>{inspiration.film}</p>
+                    <div className="col-2">
+                      <p className="f-10 mb-0 txt-thm-clr-6 txt-upp">A Film to Watch</p>
+                      <p className="f-12 mb-0 txt-thm-clr-5 line-ht-15">{inspiration.film}</p>
                     </div>
                   )}
                 </div>
 
                 {bridgeEntities.length > 0 && secondProfile && (
-                  <p
-                    className="border-t pt-3 text-[11px] italic leading-relaxed"
-                    style={{ color: "#7A6128", borderColor: "#3a2f12" }}
-                  >
+                  <p className="border-t pt-3 mt-3 f-10 italic line-ht-15 txt-thm-clr-6" style={{ borderColor: "#3a2f12" }}>
                     Your answers also echoed the{" "}
-                    <strong style={{ color: "#C9A84C" }}>{secondProfile.label}</strong> — you share{" "}
+                    <strong className="txt-thm-clr-5">{secondProfile.label}</strong> — you share{" "}
                     {bridgeEntities[0].entity} with that path, among others.
                   </p>
                 )}
               </div>
             )}
 
-            <p className="max-w-xs text-center text-sm leading-relaxed" style={{ color: "#7A6128" }}>
-              Now there&apos;s only one thing I don&apos;t know — what do I look like?
-              In my world, I can&apos;t see my own face. But you can.
-              Would you draw me?
+            <p className="txt-thm-clr-6 line-ht-24 mxw-320 m-auto mt-3 mb-4 txt-center">
+              Now there&apos;s only one thing I don&apos;t know — what do I look like? In my world, I can&apos;t see my own face. But you can. Would you draw me?
             </p>
-
-            <div className="flex gap-3 mt-2">
+            
+            <div className="txt-center mb-6">
               <button
                 type="button"
+                className="btn pse-3 fw-600 bdr-rds2 me-2"
                 onClick={handleDownload}
                 disabled={downloading}
-                style={{
-                  background: "#C9A84C", color: "#0a0a0a",
-                  border: "none", borderRadius: 6,
-                  padding: "10px 24px", fontWeight: "bold",
-                  fontSize: 13, cursor: downloading ? "wait" : "pointer",
-                  letterSpacing: "0.05em",
-                }}
+                style={{ cursor: downloading ? "wait" : "pointer" }}
               >
                 {downloading ? "Saving…" : "⬇ Save & Share"}
               </button>
-
               <button
                 type="button"
+                className="btn-outline pse-4 bdr-rds2"
                 onClick={() => { resetExperience(); router.push("/birth"); }}
-                style={{
-                  background: "transparent", color: "#7A6128",
-                  border: "1px solid #7A6128", borderRadius: 6,
-                  padding: "10px 20px", fontSize: 13, cursor: "pointer",
-                }}
               >
                 Begin Again
               </button>
             </div>
-          </div>
+          </>
         )}
       </motion.div>
 
       {!ready && (
-        <div style={{ color: "#7A6128", fontSize: 13 }}>Crystallising your identity…</div>
+        <div className="txt-center txt-thm-clr-6 mt-4" style={{ fontSize: 13 }}>Crystallising your identity…</div>
       )}
     </div>
   );
