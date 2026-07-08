@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { useSessionStore } from "@/stores/session.store";
-import { ResonanceRipple } from "@/components/animations/ResonanceRipple";
 import { NameCrystallize } from "@/components/animations/NameCrystallize";
 import { FadeSequence } from "@/components/animations/FadeSequence";
 
@@ -31,35 +30,63 @@ export function BirthNameReveal() {
   if (!birthName) return null;
 
   return (
-    <div className="relative flex flex-1 flex-col items-center justify-center gap-10 p-8">
-      <ResonanceRipple />
-
-      <div className="relative flex flex-col items-center gap-6 text-center">
-        <FadeSequence>
-          <p className="text-sm tracking-wide text-zinc-500 uppercase dark:text-zinc-400">
-            A resonance has been found
-          </p>
-        </FadeSequence>
-
-        <h1 className="text-5xl font-semibold tracking-tight">
-          <NameCrystallize name={birthName} />
-        </h1>
-
-        <AnimatePresence>
-          {showCta && (
-            <motion.button
-              type="button"
-              onClick={() => router.push("/survey")}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="mt-4 rounded-md bg-zinc-900 px-5 py-2.5 text-sm font-medium text-white dark:bg-zinc-100 dark:text-zinc-900"
-            >
-              Meet Yourself
-            </motion.button>
-          )}
-        </AnimatePresence>
+    <div className="legacy-container container2">
+      <div className="head-bdr"></div>
+      <div className="container-fluid">
+        <div className="ps-circle-cont">
+          <span className="ps-circle"></span>
+          <span className="ps-circle"></span>
+          <span className="ps-circle"></span>
+        </div>
+        <table width="100%" cellPadding="0" cellSpacing="0" border={0} className="p-relative">
+          <tbody>
+            <tr>
+              <td>
+                <div className="content">
+                  <div className="logo m-auto mb-2">
+                    <img src="/Images/thegianthunt.png" alt="The Giant Hunt" title="The Giant Hunt" />
+                  </div>
+                  <div className="g-logo3"></div>
+                  
+                  <FadeSequence>
+                    <p className="f-12 txt-center txt-thm-clr-50-2 txt-upp letter-spacing2 mb-3">
+                      A resonance has been found
+                    </p>
+                  </FadeSequence>
+                  
+                  <h1 className="txt-center fw-600 creative-title">
+                    <NameCrystallize name={birthName} charClassName="h1 fw-600" />
+                  </h1>
+                  
+                  {/* Fixed height container to prevent layout shift when button appears */}
+                  <div className="txt-center mt-7 mb-3" style={{ minHeight: "44px" }}>
+                    <AnimatePresence>
+                      {showCta && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.5 }}
+                        >
+                          <button
+                            type="button"
+                            onClick={() => router.push("/survey")}
+                            className="btn bdr-rds1"
+                          >
+                            Meet Yourself
+                          </button>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                  
+                  <div className="g-logo4"></div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
+      <div className="foot-bdr"></div>
     </div>
   );
 }
