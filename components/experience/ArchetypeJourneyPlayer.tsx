@@ -83,116 +83,100 @@ export function ArchetypeJourneyPlayer({ signals, scoreHistory, finalArchetypeId
   ];
 
   return (
-    <div className="flex w-full flex-col items-center gap-4">
-      <div className="flex w-full max-w-[520px] flex-col gap-1 text-left">
-        <h3 className="text-lg font-serif">{total} questions. One name.</h3>
-        <div className="flex gap-2">
-          <button
-            type="button"
-            onClick={play}
-            disabled={playing}
-            className="flex items-center gap-1.5 rounded-md border border-zinc-300 px-3 py-1.5 text-xs font-medium uppercase tracking-wide disabled:opacity-40 dark:border-zinc-700"
-          >
-            ▷ Play
-          </button>
-          <button
-            type="button"
-            onClick={play}
-            className="flex items-center gap-1.5 rounded-md border border-zinc-300 px-3 py-1.5 text-xs font-medium uppercase tracking-wide dark:border-zinc-700"
-          >
-            ↺ Replay
-          </button>
-        </div>
+    <>
+      <h6 className="f-18 txt-thm-clr-2 font-type2 txt-center mt-3">16 questions. One name.</h6>
+      <div className="mb-3 txt-center">
+        <button
+          type="button"
+          onClick={play}
+          disabled={playing}
+          className="btn-outline-sm me-2"
+        >
+          &#9655; Play
+        </button>
+        <button
+          type="button"
+          onClick={play}
+          className="btn-outline-sm"
+        >
+          &#8634; Replay
+        </button>
       </div>
 
-      <canvas ref={canvasRef} className="h-auto w-full max-w-[520px] rounded-lg" />
+      <div className="survey-answers-cont mb-3 p-relative m-auto" style={{ maxWidth: "600px" }}>
+        <canvas ref={canvasRef} className="w-full" style={{ borderRadius: "8px" }} />
+      </div>
 
-      <div className="flex flex-wrap justify-center gap-1.5">
-        {stepButtons.map(({ label, index }) => (
-          <button
-            key={label}
-            type="button"
-            onClick={() => goToStep(index)}
-            className={`rounded-md border px-2.5 py-1 font-mono text-[11px] transition-colors ${
-              step === index
-                ? "border-amber-400 bg-amber-400 text-zinc-900"
-                : "border-zinc-300 text-zinc-500 dark:border-zinc-700 dark:text-zinc-400"
-            }`}
-          >
-            {label === "Start" ? "○ Start" : label}
-          </button>
-        ))}
+      <div className="survey-button-cont txt-center mt-4">
+        {stepButtons.map(({ label, index }) => {
+          const isActive = step === index || (step === total && index === total);
+          return (
+            <button
+              key={label}
+              type="button"
+              onClick={() => goToStep(index)}
+              className={isActive ? "btn-outline-sm2 question-btn active" : "btn-outline-sm2 question-btn"}
+            >
+              {label === "Start" ? "0 Start" : label}
+            </button>
+          );
+        })}
         <button
           type="button"
           onClick={() => goToStep(total)}
-          className={`rounded-md border px-2.5 py-1 font-mono text-[11px] font-semibold transition-colors ${
-            step === total
-              ? "border-amber-400 bg-amber-400 text-zinc-900"
-              : "border-zinc-300 text-zinc-500 dark:border-zinc-700 dark:text-zinc-400"
-          }`}
+          className={step === total ? "btn-outline-sm2 question-btn active" : "btn-outline-sm2 question-btn"}
         >
           + Final
         </button>
       </div>
 
       {step === total && finalArchetype && (
-        <div className="flex w-full max-w-[520px] flex-col gap-3 rounded-lg border border-zinc-200 p-4 text-left dark:border-zinc-800">
-          <p className="text-sm leading-relaxed">
-            You are the <strong>{finalArchetype.label}</strong> &middot; {finalArchetype.romajiName}
+        <div className="wht-cont pse-3 pb-3 mt-4 text-left m-auto" style={{ maxWidth: "700px" }}>
+          <p className="txt-thm-clr-2 line-ht-20 mb-2">
+            You are the <span className="fw-700">{finalArchetype.label}</span> &middot; {finalArchetype.romajiName}
             {realm && (
               <>
-                {" "}
-                — of <span className="opacity-80">{realm.name}</span>
+                {" "}— of {realm.name}
               </>
             )}
             .
           </p>
           {convergence && (
             <>
-              <p className="text-sm opacity-60">
-                But your path also carries <strong>{convergence.secondary.label}</strong> within it.
+              <p className="txt-thm-clr-70-2 line-ht-20 mb-2">
+                But your path also carries {convergence.secondary.label} within it.
               </p>
-              <div className="rounded-md border border-amber-400/30 bg-amber-400/5 p-3">
-                <p className="mb-1 text-[10px] font-semibold uppercase tracking-wide text-amber-500">
-                  Final Convergence Reasoning
-                </p>
-                <p className="text-xs leading-relaxed opacity-70">{convergence.reasoning}</p>
+              <div className="alert-warning mb-3">
+                <p className="alert-title f-10 fw-700 txt-upp">Final Convergence Reasoning</p>
+                <p className="f-12 line-ht-20 txt-thm-clr-70-2 mb-0">{convergence.reasoning}</p>
               </div>
             </>
           )}
 
           {relations && (
-            <div className="flex flex-col gap-3 border-t border-zinc-200 pt-3 dark:border-zinc-800">
-              <div>
-                <p className="mb-1 text-[10px] font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                  Allies
-                </p>
-                <p className="text-xs leading-relaxed opacity-70">
-                  {relations.allies[0].label} and {relations.allies[1].label} — the archetypes you naturally drift
-                  toward as you grow.
+            <>
+              <div className="mt-3">
+                <p className="f-10 fw-700 txt-upp txt-thm-clr-50-2 mb-1">Allies</p>
+                <p className="f-12 line-ht-20 txt-thm-clr-70-2 mb-2">
+                  {relations.allies[0].label} and {relations.allies[1].label} — the archetypes you naturally drift toward as you grow.
                 </p>
               </div>
 
-              <div>
-                <p className="mb-1 text-[10px] font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                  Opposite
-                </p>
-                <p className="text-xs leading-relaxed opacity-70">
-                  <strong>{relations.opposite.label}</strong> answers the same question you do, differently:{" "}
-                  <em>{relations.centralQuestion}</em>
+              <div className="mt-3">
+                <p className="f-10 fw-700 txt-upp txt-thm-clr-50-2 mb-1">Opposite</p>
+                <p className="f-12 line-ht-20 txt-thm-clr-70-2 mb-2">
+                  <span className="fw-700">{relations.opposite.label}</span> answers the same question you do, differently: <span className="fst-italic">{relations.centralQuestion}</span>
                 </p>
               </div>
 
-              <div className="rounded-md border border-red-400/30 bg-red-400/5 p-3">
-                <p className="mb-1 text-[10px] font-semibold uppercase tracking-wide text-red-500">
-                  Shadow — {finalArchetype.shadow.trait}
-                </p>
-                <p className="text-xs leading-relaxed opacity-70">{finalArchetype.shadow.description}</p>
+              <div className="alert-warning mt-3" style={{ borderLeftColor: "#dc3545", backgroundColor: "rgba(220, 53, 69, 0.05)" }}>
+                <p className="alert-title f-10 fw-700 txt-upp" style={{ color: "#dc3545" }}>Shadow — {finalArchetype.shadow.trait}</p>
+                <p className="f-12 line-ht-20 txt-thm-clr-70-2 mb-0">{finalArchetype.shadow.description}</p>
               </div>
-            </div>
+            </>
           )}
         </div>
       )}
-    </div>
+    </>
   );
 }

@@ -182,11 +182,9 @@ export function SurveyShell() {
         </div>
         <div className="container-fluid mxw-900">
           <div className="content">
-            <div className="wht-cont pse-3 pb-3 mt-4">
-              <p className="txt-thm-clr-2 line-ht-20 mb-2">{archetype.description}</p>
+            <div className="mxw-450 m-auto wht-cont pse-3 mt-4 pb-3">
+              <p className="txt-thm-clr-70-2 line-ht-20 mb-2">{archetype.description}</p>
               <p className="txt-thm-clr-70-2 fst-italic line-ht-20 mb-2">&ldquo;{archetype.guidingPromise}&rdquo;</p>
-            </div>
-            <div className="mxw-450 m-auto wht-cont pse-3 mt-4">
               <div className="grid-list">
                 <div className="row float-none">
                   {archetype.traits.map((trait, i) => (
