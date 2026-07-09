@@ -1,5 +1,197 @@
-import { BirthNameReveal } from "@/components/experience/BirthNameReveal";
+"use client";
 
-export default function BirthNameRevealPage() {
-  return <BirthNameReveal />;
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useSessionStore } from "@/stores/session.store";
+import { useAssessmentStore } from "@/stores/assessment.store";
+import { buildScoreHistory } from "@/engines/archetype/journey-history";
+import { ArchetypeJourneyPlayer } from "@/components/experience/ArchetypeJourneyPlayer";
+import type { TurnSnapshot } from "@/lib/journey-renderer";
+import type { Signal } from "@/types/archetype.types";
+
+type RevealedResult = {
+  legacyName: string;
+  archetype: {
+    id: string;
+    label: string;
+    romajiName: string;
+    order: "GIANT" | "HUNTER";
+    description: string;
+    guidingPromise: string;
+    traits: [string, string, string, string];
+    traitDescriptions: [string, string, string, string];
+  };
+  signals: Signal[];
+  scoreMap: Record<string, number>;
+  scoreHistory: TurnSnapshot[];
+  source: "survey" | "chat";
+};
+
+export default function SharedRevealPage() {
+  const router = useRouter();
+  const { birthName, acceptLegacyName } = useSessionStore();
+  const result = useAssessmentStore((state) => state.result);
+  const clearResult = useAssessmentStore((state) => state.clearResult);
+
+  const [revealed, setRevealed] = useState<RevealedResult | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!birthName) {
+      router.replace("/birth");
+      return;
+    }
+    if (!result) {
+      router.replace("/choose");
+      return;
+    }
+
+    let isMounted = true;
+
+    async function processResult() {
+      try {
+        const archetypeRes = await fetch("/api/archetype", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ signals: result!.signals }),
+        });
+
+        if (!archetypeRes.ok) throw new Error("Could not determine your archetype.");
+        const { topArchetype, scores } = await archetypeRes.json();
+        const scoreMap: Record<string, number> = Object.fromEntries(
+          (scores as { id: string; normalized: number }[]).map((s) => [s.id, s.normalized]),
+        );
+
+        const legacyRes = await fetch("/api/legacy-name", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ birthName, archetypeId: topArchetype.id }),
+        });
+
+        if (!legacyRes.ok) throw new Error("Could not build your legacy name.");
+        const { legacyName, archetype } = await legacyRes.json();
+
+        if (isMounted) {
+          setRevealed({ 
+            legacyName, 
+            archetype, 
+            signals: result!.signals, 
+            scoreMap, 
+            scoreHistory: buildScoreHistory(result!.signals),
+            source: result!.source
+          });
+        }
+      } catch (err) {
+        if (isMounted) {
+          setError(err instanceof Error ? err.message : "Something went wrong.");
+        }
+      }
+    }
+
+    processResult();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [birthName, result, router]);
+
+  function handleConfirm() {
+    if (!revealed) return;
+    const { legacyName, archetype, scoreMap, scoreHistory } = revealed;
+    acceptLegacyName(legacyName, archetype.id, archetype.order, archetype.label, archetype.guidingPromise, archetype.traits, scoreMap, scoreHistory);
+    clearResult(); // clean up assessment
+    router.push("/ending");
+  }
+
+  if (error) {
+    return (
+      <div className="legacy-container">
+        <div className="head-bdr"></div>
+        <div className="container-fluid">
+          <p className="txt-center text-red-500 mt-5">{error}</p>
+          <div className="txt-center mt-4 mb-4">
+            <button type="button" className="btn pse-3 bdr-rds2" onClick={() => router.push("/choose")}>Try Again</button>
+          </div>
+        </div>
+        <div className="foot-bdr"></div>
+      </div>
+    );
+  }
+
+  if (!revealed) {
+    return (
+      <div className="legacy-container">
+        <div className="head-bdr"></div>
+        <div className="global-loader">
+          <table width="100%" cellPadding="0" cellSpacing="0" border={0}>
+            <tbody>
+              <tr>
+                <td>
+                  <div className="gl-cont">
+                    <div className="gl-cirle"></div>
+                    <p className="f-12 mb-0 txt-center">Crystallising your name...</p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div className="foot-bdr"></div>
+      </div>
+    );
+  }
+
+  const { archetype } = revealed;
+  return (
+    <div className="legacy-container">
+      <div className="head-bdr"></div>
+      <div className="container-fluid">
+        <table width="100%" cellPadding="0" cellSpacing="0" border={0}>
+          <tbody>
+            <tr>
+              <td>
+                <div className="content">
+                  <p className="txt-thm-clr-50-2 txt-center txt-upp mb-0">Based on your answers, your Legacy Name is</p>
+                  <h1 className="h5 txt-center fw-700">{revealed.legacyName}</h1>
+                  <p className="txt-thm-clr-50-2 txt-center mb-4">
+                    {archetype.label} ({archetype.romajiName}) &middot; Order of {archetype.order === "GIANT" ? "Giant" : "Hunter"}
+                  </p>
+                  
+                  <ArchetypeJourneyPlayer
+                    signals={revealed.signals}
+                    scoreHistory={revealed.scoreHistory}
+                    finalArchetypeId={archetype.id}
+                    scoreMap={revealed.scoreMap}
+                    hideSurveyProgression={revealed.source === "chat"}
+                  />
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div className="container-fluid mxw-900">
+        <div className="content">
+          <div className="mxw-450 m-auto wht-cont pse-3 mt-4 pb-3">
+            <p className="txt-thm-clr-70-2 line-ht-20 mb-2">{archetype.description}</p>
+            <p className="txt-thm-clr-70-2 fst-italic line-ht-20 mb-2">&ldquo;{archetype.guidingPromise}&rdquo;</p>
+            <div className="grid-list">
+              <div className="row float-none">
+                {archetype.traits.map((trait, i) => (
+                  <div className="col-4" key={trait}>
+                    <p className="f-12 txt-upp mb-0 txt-thm-clr-70-2">{trait}</p>
+                    <p className="f-12 txt-thm-clr-50-2">{archetype.traitDescriptions[i]}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className="txt-center mt-4 mb-4">
+            <button type="button" className="btn pse-3 bdr-rds2 me-2" onClick={handleConfirm}>This Is Me</button>
+          </div>
+        </div>
+      </div>
+      <div className="foot-bdr"></div>
+    </div>
+  );
 }

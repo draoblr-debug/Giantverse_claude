@@ -14,11 +14,12 @@ type Props = {
   finalArchetypeId: string;
   scoreMap: Record<string, number>;
   size?: number;
+  hideSurveyProgression?: boolean;
 };
 
 const STEP_MS = 650;
 
-export function ArchetypeJourneyPlayer({ signals, scoreHistory, finalArchetypeId, scoreMap, size = 480 }: Props) {
+export function ArchetypeJourneyPlayer({ signals, scoreHistory, finalArchetypeId, scoreMap, size = 480, hideSurveyProgression = false }: Props) {
   const total = scoreHistory.length;
   const [step, setStep] = useState(total); // 0 = Start, total = Final
   const [playing, setPlaying] = useState(false);
@@ -56,6 +57,12 @@ export function ArchetypeJourneyPlayer({ signals, scoreHistory, finalArchetypeId
     };
   }, []);
 
+  useEffect(() => {
+    if (hideSurveyProgression) {
+      setStep(total);
+    }
+  }, [hideSurveyProgression, total]);
+
   function play() {
     if (timerRef.current) clearInterval(timerRef.current);
     setPlaying(true);
@@ -84,51 +91,57 @@ export function ArchetypeJourneyPlayer({ signals, scoreHistory, finalArchetypeId
 
   return (
     <>
-      <h6 className="f-18 txt-thm-clr-2 font-type2 txt-center mt-3">16 questions. One name.</h6>
-      <div className="mb-3 txt-center">
-        <button
-          type="button"
-          onClick={play}
-          disabled={playing}
-          className="btn-outline-sm me-2"
-        >
-          &#9655; Play
-        </button>
-        <button
-          type="button"
-          onClick={play}
-          className="btn-outline-sm"
-        >
-          &#8634; Replay
-        </button>
-      </div>
+      {!hideSurveyProgression && (
+        <>
+          <h6 className="f-18 txt-thm-clr-2 font-type2 txt-center mt-3">16 questions. One name.</h6>
+          <div className="mb-3 txt-center">
+            <button
+              type="button"
+              onClick={play}
+              disabled={playing}
+              className="btn-outline-sm me-2"
+            >
+              &#9655; Play
+            </button>
+            <button
+              type="button"
+              onClick={play}
+              className="btn-outline-sm"
+            >
+              &#8634; Replay
+            </button>
+          </div>
+        </>
+      )}
 
       <div className="survey-answers-cont mb-3 p-relative m-auto" style={{ maxWidth: "600px" }}>
         <canvas ref={canvasRef} className="w-full" style={{ borderRadius: "8px" }} />
       </div>
 
-      <div className="survey-button-cont txt-center mt-4">
-        {stepButtons.map(({ label, index }) => {
-          const isActive = step === index || (step === total && index === total);
-          return (
-            <button
-              key={label}
-              type="button"
-              onClick={() => goToStep(index)}
-              className={isActive ? "btn-outline-sm2 question-btn active" : "btn-outline-sm2 question-btn"}
-            >
-              {label === "Start" ? "0 Start" : label}
-            </button>
-          );
-        })}
-        <button
-          type="button"
-          onClick={() => goToStep(total)}
-          className={step === total ? "btn-outline-sm2 question-btn active" : "btn-outline-sm2 question-btn"}
-        >
-          + Final
-        </button>
-      </div>
+      {!hideSurveyProgression && (
+        <div className="survey-button-cont txt-center mt-4">
+          {stepButtons.map(({ label, index }) => {
+            const isActive = step === index || (step === total && index === total);
+            return (
+              <button
+                key={label}
+                type="button"
+                onClick={() => goToStep(index)}
+                className={isActive ? "btn-outline-sm2 question-btn active" : "btn-outline-sm2 question-btn"}
+              >
+                {label === "Start" ? "0 Start" : label}
+              </button>
+            );
+          })}
+          <button
+            type="button"
+            onClick={() => goToStep(total)}
+            className={step === total ? "btn-outline-sm2 question-btn active" : "btn-outline-sm2 question-btn"}
+          >
+            + Final
+          </button>
+        </div>
+      )}
 
       {step === total && finalArchetype && (
         <div className="wht-cont pse-3 pb-3 mt-4 text-left m-auto" style={{ maxWidth: "700px" }}>

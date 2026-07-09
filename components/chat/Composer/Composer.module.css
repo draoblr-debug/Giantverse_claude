@@ -1,0 +1,120 @@
+.composerWrapper {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 16px 24px 32px 24px;
+  background: linear-gradient(to top, rgba(10, 10, 10, 0.9) 50%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+}
+
+.composerContainer {
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.suggestionsButton {
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
+  padding: 6px 12px;
+  border-radius: 16px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.suggestionsButton:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.suggestionsButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 26px;
+  padding: 8px 16px;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.inputWrapper:focus-within {
+  border-color: rgba(99, 102, 241, 0.5);
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 15px rgba(99, 102, 241, 0.2);
+}
+
+.textarea {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 16px;
+  font-family: inherit;
+  resize: none;
+  min-height: 52px;
+  max-height: 140px;
+  padding: 14px 44px 14px 0; /* right padding for the send button */
+  line-height: 1.5;
+  outline: none;
+  overflow-y: auto;
+}
+
+.textarea::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.textarea::-webkit-scrollbar {
+  width: 4px;
+}
+.textarea::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+.sendButton {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: not-allowed;
+  transition: all 0.2s ease;
+}
+
+.sendActive {
+  background: var(--color-accent-primary);
+  color: white;
+  cursor: pointer;
+}
+
+.sendActive:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+}

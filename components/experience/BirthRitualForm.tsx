@@ -33,7 +33,7 @@ export function BirthRitualForm() {
     setSubmitError(null);
     try {
       await initSession(values.firstName, values.day, values.month);
-      router.push("/reveal");
+      router.push("/choose");
     } catch (err) {
       setSubmitError(err instanceof Error ? err.message : "Something went wrong.");
     }

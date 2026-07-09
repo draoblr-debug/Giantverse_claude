@@ -66,13 +66,23 @@ export function BirthNameReveal() {
                           initial={{ opacity: 0, y: 8 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: 0.5 }}
+                          style={{ display: "flex", flexDirection: "column", gap: "10px", alignItems: "center" }}
                         >
                           <button
                             type="button"
                             onClick={() => router.push("/survey")}
-                            className="btn bdr-rds1"
+                            className="btn bdr-rds1 wdth-100p"
+                            style={{ maxWidth: "250px" }}
                           >
-                            Meet Yourself
+                            Begin Survey
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => router.push("/scenario-chat")}
+                            className="btn bdr-rds1 wdth-100p"
+                            style={{ maxWidth: "250px" }}
+                          >
+                            Chat With The Oracle
                           </button>
                         </motion.div>
                       )}

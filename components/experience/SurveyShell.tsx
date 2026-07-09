@@ -6,33 +6,16 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useSessionStore } from "@/stores/session.store";
 import { selectSurveyQuestions } from "@/engines/survey/survey-selection.engine";
 import { answersToSignals, type SurveyAnswers } from "@/engines/survey/survey-scoring.engine";
-import { buildScoreHistory } from "@/engines/archetype/journey-history";
-import type { TurnSnapshot } from "@/lib/journey-renderer";
-import { ArchetypeJourneyPlayer } from "@/components/experience/ArchetypeJourneyPlayer";
 import type { Signal } from "@/types/archetype.types";
+import { useAssessmentStore } from "@/stores/assessment.store";
 
 const LIKERT_LABELS = ["Strongly\nDisagree", "Disagree", "Neutral", "Agree", "Strongly\nAgree"];
 
-type RevealedResult = {
-  legacyName: string;
-  archetype: {
-    id: string;
-    label: string;
-    romajiName: string;
-    order: "GIANT" | "HUNTER";
-    description: string;
-    guidingPromise: string;
-    traits: [string, string, string, string];
-    traitDescriptions: [string, string, string, string];
-  };
-  signals: Signal[];
-  scoreMap: Record<string, number>;
-  scoreHistory: TurnSnapshot[];
-};
 
 export function SurveyShell() {
   const router = useRouter();
-  const { sessionId, birthName, firstName, acceptLegacyName } = useSessionStore();
+  const { sessionId, birthName, firstName } = useSessionStore();
+  const setResult = useAssessmentStore((state) => state.setResult);
 
   // Bumped on "Retake the Survey" so the question sample reshuffles
   // instead of drawing the identical set again.
@@ -50,7 +33,6 @@ export function SurveyShell() {
   const [answers, setAnswers] = useState<SurveyAnswers>({});
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [revealed, setRevealed] = useState<RevealedResult | null>(null);
   const answeredStep = useRef(-1); // guards double-clicks within one step
 
   useEffect(() => {
@@ -60,7 +42,7 @@ export function SurveyShell() {
   if (!birthName) return null;
 
   const question = questions[step];
-  if (!question && !submitting && !revealed) return null;
+  if (!question && !submitting) return null;
   const total = questions.length;
   const progress = step / total;
 
@@ -81,30 +63,8 @@ export function SurveyShell() {
 
     try {
       const signals = answersToSignals(nextAnswers, questions);
-
-      const archetypeRes = await fetch("/api/archetype", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ signals }),
-      });
-
-      if (!archetypeRes.ok) throw new Error("Could not determine your archetype.");
-      const { topArchetype, scores } = await archetypeRes.json();
-      const scoreMap: Record<string, number> = Object.fromEntries(
-        (scores as { id: string; normalized: number }[]).map((s) => [s.id, s.normalized]),
-      );
-
-      const legacyRes = await fetch("/api/legacy-name", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ birthName, archetypeId: topArchetype.id }),
-      });
-
-      if (!legacyRes.ok) throw new Error("Could not build your legacy name.");
-      const { legacyName, archetype } = await legacyRes.json();
-
-      setRevealed({ legacyName, archetype, signals, scoreMap, scoreHistory: buildScoreHistory(signals) });
-      setSubmitting(false);
+      setResult({ source: "survey", signals });
+      router.push("/reveal");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong.");
       setSubmitting(false);
@@ -112,15 +72,7 @@ export function SurveyShell() {
     }
   }
 
-  function handleConfirm() {
-    if (!revealed) return;
-    const { legacyName, archetype, scoreMap, scoreHistory } = revealed;
-    acceptLegacyName(legacyName, archetype.id, archetype.order, archetype.label, archetype.guidingPromise, archetype.traits, scoreMap, scoreHistory);
-    router.push("/ending");
-  }
-
   function handleRetake() {
-    setRevealed(null);
     setAnswers({});
     setStep(0);
     setError(null);
@@ -151,64 +103,6 @@ export function SurveyShell() {
     );
   }
 
-  if (revealed) {
-    const { archetype } = revealed;
-    return (
-      <div className="legacy-container">
-        <div className="head-bdr"></div>
-        <div className="container-fluid">
-          <table width="100%" cellPadding="0" cellSpacing="0" border={0}>
-            <tbody>
-              <tr>
-                <td>
-                  <div className="content">
-                    <p className="txt-thm-clr-50-2 txt-center txt-upp mb-0">Based on your answers, your Legacy Name is</p>
-                    <h1 className="h5 txt-center fw-700">{revealed.legacyName}</h1>
-                    <p className="txt-thm-clr-50-2 txt-center mb-4">
-                      {archetype.label} ({archetype.romajiName}) &middot; Order of {archetype.order === "GIANT" ? "Giant" : "Hunter"}
-                    </p>
-                    
-                    <ArchetypeJourneyPlayer
-                      signals={revealed.signals}
-                      scoreHistory={revealed.scoreHistory}
-                      finalArchetypeId={archetype.id}
-                      scoreMap={revealed.scoreMap}
-                    />
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div className="container-fluid mxw-900">
-          <div className="content">
-            <div className="mxw-450 m-auto wht-cont pse-3 mt-4 pb-3">
-              <p className="txt-thm-clr-70-2 line-ht-20 mb-2">{archetype.description}</p>
-              <p className="txt-thm-clr-70-2 fst-italic line-ht-20 mb-2">&ldquo;{archetype.guidingPromise}&rdquo;</p>
-              <div className="grid-list">
-                <div className="row float-none">
-                  {archetype.traits.map((trait, i) => (
-                    <div className="col-4" key={trait}>
-                      <p className="f-12 txt-upp mb-0 txt-thm-clr-70-2">{trait}</p>
-                      <p className="f-12 txt-thm-clr-50-2">{archetype.traitDescriptions[i]}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-            <div className="txt-center mt-4 mb-4">
-              <button type="button" className="btn pse-3 bdr-rds2 me-2" onClick={handleConfirm}>This Is Me</button>
-              <button type="button" className="btn-outline pse-3 bdr-rds2" onClick={handleRetake}>Retake the Survey</button>
-            </div>
-            <p className="mxw-300 m-auto f-12 txt-thm-clr-50-2 txt-center mb-4">
-              Not feeling it? Retake the survey with a fresh set of questions.
-            </p>
-          </div>
-        </div>
-        <div className="foot-bdr"></div>
-      </div>
-    );
-  }
 
   return (
     <div className="legacy-container">
