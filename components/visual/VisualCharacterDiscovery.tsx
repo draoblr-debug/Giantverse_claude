@@ -37,6 +37,18 @@ export function VisualCharacterDiscovery() {
   useEffect(() => () => stopCamera(), [stopCamera]);
 
   async function startCamera() {
+    // Camera access requires a secure context. Mobile browsers only exempt
+    // literal "localhost" — a LAN IP over plain HTTP (e.g. testing a phone
+    // against a dev server) is treated as insecure and getUserMedia is
+    // unavailable there, even though it works fine on desktop localhost.
+    if (typeof window !== "undefined" && !window.isSecureContext) {
+      setError("Camera access needs a secure (https://) connection — this page is loaded over http://. Upload a photo instead, or open this page over HTTPS.");
+      return;
+    }
+    if (!navigator.mediaDevices?.getUserMedia) {
+      setError("Camera access isn't supported in this browser — you can upload a photo instead.");
+      return;
+    }
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: "user", width: { ideal: 720 } }, audio: false,
@@ -50,8 +62,19 @@ export function VisualCharacterDiscovery() {
           videoRef.current.play().catch(() => {});
         }
       });
-    } catch {
-      setError("Camera permission was declined — you can upload a photo instead.");
+    } catch (err) {
+      const name = err instanceof Error ? err.name : "";
+      const message =
+        name === "NotAllowedError" || name === "PermissionDeniedError"
+          ? "Camera permission was declined — allow camera access in your browser settings, or upload a photo instead."
+          : name === "NotFoundError" || name === "DevicesNotFoundError"
+          ? "No camera was found on this device — you can upload a photo instead."
+          : name === "NotReadableError" || name === "TrackStartError"
+          ? "Your camera is already in use by another app — close it and try again, or upload a photo instead."
+          : name === "OverconstrainedError"
+          ? "Your camera doesn't support the requested settings — you can upload a photo instead."
+          : "Couldn't access the camera — you can upload a photo instead.";
+      setError(message);
     }
   }
 
