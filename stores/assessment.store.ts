@@ -4,6 +4,7 @@ import type { Signal } from "@/types/archetype.types";
 export interface AssessmentResult {
   source: "survey" | "chat";
   signals: Signal[];
+  currentVector?: number[];
 }
 
 interface AssessmentStore {

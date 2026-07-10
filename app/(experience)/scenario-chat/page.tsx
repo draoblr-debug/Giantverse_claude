@@ -83,12 +83,12 @@ export default function ScenarioChatPage() {
     if (isComplete && usedSignals.length > 0) {
       const signals: Signal[] = usedSignals.map((dimension, idx) => ({
         dimension: dimension as any,
-        value: 1, // Positive signal
+        value: "1", // Positive signal
         confidence: 0.8,
         turnIndex: idx
       }));
 
-      setResult({ source: "chat", signals });
+      setResult({ source: "chat", signals, currentVector: useScenarioStore.getState().currentVector });
       router.push("/reveal");
     }
   }, [isComplete, usedSignals, setResult, router]);

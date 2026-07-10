@@ -50,11 +50,20 @@ export default function SharedRevealPage() {
 
     async function processResult() {
       try {
-        const archetypeRes = await fetch("/api/archetype", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ signals: result!.signals }),
-        });
+        let archetypeRes;
+        if (result!.source === "chat" && result!.currentVector) {
+          archetypeRes = await fetch("/api/scenario-chat/archetype", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ currentVector: result!.currentVector }),
+          });
+        } else {
+          archetypeRes = await fetch("/api/archetype", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ signals: result!.signals }),
+          });
+        }
 
         if (!archetypeRes.ok) throw new Error("Could not determine your archetype.");
         const { topArchetype, scores } = await archetypeRes.json();
@@ -99,7 +108,6 @@ export default function SharedRevealPage() {
     if (!revealed) return;
     const { legacyName, archetype, scoreMap, scoreHistory } = revealed;
     acceptLegacyName(legacyName, archetype.id, archetype.order, archetype.label, archetype.guidingPromise, archetype.traits, scoreMap, scoreHistory);
-    clearResult(); // clean up assessment
     router.push("/ending");
   }
 
