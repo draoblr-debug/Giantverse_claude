@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { useSessionStore } from "@/stores/session.store";
+import { useVisualStore } from "@/stores/visual.store";
 import { ARCHETYPE_DEFINITIONS } from "@/engines/archetype/archetype-definitions";
 import { REALMS } from "@/engines/realms";
 import { getInspirationHighlights, getBridgeEntities, getTopTwoArchetypes } from "@/engines/inspiration";
@@ -18,6 +19,8 @@ export function DrawingInvitation() {
 
   const { birthName, legacyName, archetypeLabel, archetype, order, guidingPromise, traits, firstName, scores, scoreHistory, resetExperience } =
     useSessionStore();
+  const visualMatches = useVisualStore((s) => s.matches);
+  const visualTop = visualMatches?.[0] ?? null;
 
   // Resonant Constellation: this archetype's inspiration set, plus a
   // "bridge" — an entity shared with the second-highest scoring archetype,
@@ -107,6 +110,26 @@ export function DrawingInvitation() {
 
         {ready && (
           <>
+            {/* Visual Inspiration (optional): result of the Visual Character
+                Discovery module, when the participant used it. Inspiration
+                only — the identity above was generated exclusively from
+                name + date of birth, never from the face. */}
+            {visualTop && (
+              <div className="wht-cont mxw-450 m-auto txt-center mb-3">
+                <p className="f-10 mb-0 txt-thm-clr-6 txt-upp">Your Visual Inspiration</p>
+                <p className="txt-thm-clr-5 line-ht-20 mb-0">
+                  {visualTop.character.name}
+                  <span className="txt-thm-clr-6"> · {visualTop.similarity}% visual similarity</span>
+                </p>
+                <p className="f-10 mb-0 txt-thm-clr-6 line-ht-15">
+                  {visualTop.character.series} — {visualTop.character.shape_language}
+                </p>
+                <p className="f-10 mt-2 mb-0 txt-thm-clr-6 italic line-ht-15">
+                  Now create a completely original character inspired by these design principles.
+                </p>
+              </div>
+            )}
+
             {/* Resonant Constellation: Realm + Inspiration Graph */}
             {(realm || inspiration.personalities.length > 0 || inspiration.book || inspiration.film) && (
               <div className="wht-cont mxw-450 m-auto txt-center">

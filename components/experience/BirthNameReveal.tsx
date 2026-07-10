@@ -78,6 +78,19 @@ export function BirthNameReveal() {
                       )}
                     </AnimatePresence>
                   </div>
+
+                  <AnimatePresence>
+                    {showCta && (
+                      <motion.p
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.15 }}
+                        className="f-12 txt-center txt-thm-clr-6 line-ht-20 mxw-320 m-auto mb-3"
+                      >
+                        Hi, {birthName}, answer a few questions quickly to find out your Purpose in Giantverse, which is also your Surname.
+                      </motion.p>
+                    )}
+                  </AnimatePresence>
                   
                   <div className="g-logo4"></div>
                 </div>
