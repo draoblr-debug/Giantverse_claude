@@ -193,7 +193,12 @@ export function DrawingInvitation() {
               <button
                 type="button"
                 className="btn-outline pse-4 bdr-rds2"
-                onClick={() => { resetExperience(); router.push("/birth"); }}
+                onClick={() => { 
+                  resetExperience(); 
+                  import("@/stores/assessment.store").then(m => m.useAssessmentStore.getState().clearResult());
+                  import("@/stores/scenario.store").then(m => m.useScenarioStore.getState().reset());
+                  router.push("/birth"); 
+                }}
               >
                 Begin Again
               </button>
