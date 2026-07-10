@@ -55,7 +55,11 @@ export default function SharedRevealPage() {
           archetypeRes = await fetch("/api/scenario-chat/archetype", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ currentVector: result!.currentVector }),
+            body: JSON.stringify({ 
+              currentVector: result!.currentVector,
+              vectorHistory: result!.vectorHistory,
+              chatThemes: result!.chatThemes
+            }),
           });
         } else {
           archetypeRes = await fetch("/api/archetype", {
@@ -66,7 +70,7 @@ export default function SharedRevealPage() {
         }
 
         if (!archetypeRes.ok) throw new Error("Could not determine your archetype.");
-        const { topArchetype, scores } = await archetypeRes.json();
+        const { topArchetype, scores, scoreHistory: apiScoreHistory } = await archetypeRes.json();
         const scoreMap: Record<string, number> = Object.fromEntries(
           (scores as { id: string; normalized: number }[]).map((s) => [s.id, s.normalized]),
         );
@@ -86,7 +90,7 @@ export default function SharedRevealPage() {
             archetype, 
             signals: result!.signals, 
             scoreMap, 
-            scoreHistory: buildScoreHistory(result!.signals),
+            scoreHistory: result!.source === "chat" && apiScoreHistory ? apiScoreHistory : buildScoreHistory(result!.signals),
             source: result!.source
           });
         }

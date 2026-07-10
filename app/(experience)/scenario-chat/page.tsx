@@ -88,7 +88,14 @@ export default function ScenarioChatPage() {
         turnIndex: idx
       }));
 
-      setResult({ source: "chat", signals, currentVector: useScenarioStore.getState().currentVector });
+      const state = useScenarioStore.getState();
+      setResult({ 
+        source: "chat", 
+        signals, 
+        currentVector: state.currentVector,
+        vectorHistory: state.vectorHistory,
+        chatThemes: state.history
+      });
       router.push("/reveal");
     }
   }, [isComplete, usedSignals, setResult, router]);

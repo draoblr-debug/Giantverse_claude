@@ -5,6 +5,8 @@ export interface AssessmentResult {
   source: "survey" | "chat";
   signals: Signal[];
   currentVector?: number[];
+  vectorHistory?: number[][];
+  chatThemes?: string[];
 }
 
 interface AssessmentStore {

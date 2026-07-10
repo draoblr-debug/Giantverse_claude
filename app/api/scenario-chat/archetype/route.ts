@@ -5,7 +5,7 @@ import { ARCHETYPE_DEFINITIONS } from '@/engines/archetype/archetype-definitions
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { currentVector } = body;
+    const { currentVector, vectorHistory, chatThemes } = body;
     
     if (!currentVector || !Array.isArray(currentVector)) {
       return NextResponse.json({ error: 'Invalid currentVector' }, { status: 400 });
@@ -43,6 +43,23 @@ export async function POST(req: Request) {
       };
     });
 
+    let scoreHistory: any[] = [];
+    if (vectorHistory && Array.isArray(vectorHistory)) {
+      scoreHistory = vectorHistory.map((vector, i) => {
+        const histClass = classify(vector, archetypes, temperature);
+        const histScores: Record<string, number> = {};
+        for (const hc of histClass) {
+          const centroid = archetypes.find(a => a.id === hc.archetypeId);
+          const cName = centroid?.name.replace(/^The\s+/, '') || '';
+          const mapped = Object.values(ARCHETYPE_DEFINITIONS).find(a => a.label === cName);
+          const surveyId = mapped?.id || hc.archetypeId;
+          histScores[surveyId] = Math.max(0, hc.probability);
+        }
+        const category = chatThemes && chatThemes[i] ? chatThemes[i] : `Turn ${i + 1}`;
+        return { category, scores: histScores };
+      });
+    }
+
     return NextResponse.json({
       topArchetype: {
         id: surveyArchetype.id,
@@ -51,7 +68,8 @@ export async function POST(req: Request) {
         order: surveyArchetype.order,
         normalized: classification[0].probability,
       },
-      scores
+      scores,
+      scoreHistory
     });
 
   } catch (error) {
