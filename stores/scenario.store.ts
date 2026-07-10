@@ -45,7 +45,7 @@ interface ScenarioState {
   reset: () => void;
   
   startSession: (userMetadata: SessionMetadata) => Promise<void>;
-  submitAnswer: (option: QuestionOption | undefined, customText: string, theme: string, structure: string, scenario: string, confidence: number) => Promise<void>;
+  submitAnswer: (option: QuestionOption | undefined, customText: string, theme: string, structure: string, scenario: string, confidence: number, chatHistoryStr: string) => Promise<void>;
 }
 
 export const useScenarioStore = create<ScenarioState>((set) => ({
@@ -155,7 +155,7 @@ export const useScenarioStore = create<ScenarioState>((set) => ({
     });
   },
 
-  submitAnswer: async (option, customText, currentTheme, currentStructure, currentScenario, confidence) => {
+  submitAnswer: async (option, customText, currentTheme, currentStructure, currentScenario, confidence, chatHistoryStr) => {
     const state = useScenarioStore.getState();
     
     // Optimistic update
@@ -190,7 +190,7 @@ export const useScenarioStore = create<ScenarioState>((set) => ({
           usedStructures: state.usedStructures,
           usedSignals: state.usedSignals,
           recentScenarios: state.recentScenarios,
-          chatHistory: '',
+          chatHistory: chatHistoryStr,
           userMetadata: state.sessionMetadata
         }
       })

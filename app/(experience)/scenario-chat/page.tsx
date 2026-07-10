@@ -82,7 +82,7 @@ export default function ScenarioChatPage() {
   useEffect(() => {
     if (isComplete && usedSignals.length > 0) {
       const signals: Signal[] = usedSignals.map((dimension, idx) => ({
-        dimension,
+        dimension: dimension as any,
         value: 1, // Positive signal
         confidence: 0.8,
         turnIndex: idx
@@ -98,16 +98,17 @@ export default function ScenarioChatPage() {
     
     const userText = composerText.trim();
     
-    setMessages(prev => [...prev, {
+    const newMessages: ChatMessage[] = [...messages, {
       id: `user-${Date.now()}`,
       role: 'user',
       text: userText
-    }]);
+    }];
+    setMessages(newMessages);
 
     setComposerText('');
     setIsSuggestionsOpen(false);
 
-    await processSubmit(undefined, userText, 1.0);
+    await processSubmit(undefined, userText, 1.0, newMessages);
   };
 
   const handleSuggestionSubmit = async () => {
@@ -115,29 +116,36 @@ export default function ScenarioChatPage() {
     
     const selectedOption = currentQuestion.options[selectedOptionIdx];
     
-    setMessages(prev => [...prev, {
+    const newMessages: ChatMessage[] = [...messages, {
       id: `user-${Date.now()}`,
       role: 'user',
       text: selectedOption.text
-    }]);
+    }];
+    setMessages(newMessages);
 
     setIsSuggestionsOpen(false);
     setSelectedOptionIdx(null);
     setSliderValue(0);
 
-    await processSubmit(selectedOption, '', sliderValue);
+    await processSubmit(selectedOption, '', sliderValue, newMessages);
   };
 
-  const processSubmit = async (selectedOption: QuestionOption | undefined, customText: string, confidence: number) => {
+  const processSubmit = async (selectedOption: QuestionOption | undefined, customText: string, confidence: number, newMessages: ChatMessage[]) => {
     if (!currentQuestion) return;
     
+    // Convert messages array to a transcript for the LLM
+    const chatHistoryStr = newMessages
+      .map(m => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.text}`)
+      .join('\n');
+
     await submitAnswer(
       selectedOption,
       customText,
       currentQuestion.theme,
       currentQuestion.structure,
       currentQuestion.scenario,
-      confidence
+      confidence,
+      chatHistoryStr
     );
   };
 
