@@ -179,7 +179,18 @@ export function DrawingInvitation() {
             <p className="txt-thm-clr-6 line-ht-24 mxw-320 m-auto mt-3 mb-4 txt-center">
               Now there&apos;s only one thing I don&apos;t know — what do I look like? In my world, I can&apos;t see my own face. But you can. Would you draw me?
             </p>
-            
+
+            <div className="txt-center mb-4">
+              <button
+                type="button"
+                className="btn bdr-rds2"
+                style={{ background: "transparent", color: "#C9A24B", border: "1px solid #C9A24B" }}
+                onClick={() => router.push("/dossier")}
+              >
+                📖 View My Giantverse Dossier
+              </button>
+            </div>
+
             <div className="txt-center mb-6">
               <button
                 type="button"

@@ -26,3 +26,13 @@ export const birthRitualSchema = z
 // Output: parsed values after zod coerces them to numbers.
 export type BirthRitualFormInput = z.input<typeof birthRitualSchema>;
 export type BirthRitualFormValues = z.output<typeof birthRitualSchema>;
+
+export const dossierGenerateSchema = z.object({
+  realName: z.string().trim().max(50).optional().default(""),
+  birthName: z.string().trim().min(1).max(50),
+  legacyName: z.string().trim().min(1).max(80),
+  archetypeId: z.string().trim().min(1).max(40),
+  order: z.enum(["GIANT", "HUNTER"]),
+  guidingPromise: z.string().trim().min(1).max(300),
+  scores: z.record(z.string(), z.number()).nullable().optional(),
+});

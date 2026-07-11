@@ -3,12 +3,20 @@
 
 Usage:
     DYLD_FALLBACK_LIBRARY_PATH=/opt/homebrew/lib python3 generate_dossier.py [--out PATH]
+    DYLD_FALLBACK_LIBRARY_PATH=/opt/homebrew/lib python3 generate_dossier.py --persona-json PATH --out PATH
+
+With no --persona-json, renders the Dossier 1.0 sample persona (Toyuho
+Kagemori). With --persona-json, renders a live participant's book from a
+JSON *payload* file (identity + archetype + wheel data, produced by the
+Next.js app's persona-payload.ts) — this file expands that payload into
+the full persona via persona_builder.build_persona() before rendering.
 
 Renders the full personalized book (Dossier 1.0 content preserved, plus the
 2.0 premium education layer) to PDF via WeasyPrint.
 """
 import argparse
 import html as html_mod
+import json
 from pathlib import Path
 
 from content_book import (CHAPTER_QUOTES, PRO_SECRETS, MASTER_STUDIES, DESIGN_LIKE,
@@ -127,6 +135,7 @@ def quote_page(key: str, section: str):
         <div class="cover-rule"></div>
         <p class="q-why"><span class="gold">WHY THIS OPENS THE CHAPTER</span><br/>{esc(fmt(q['why']))}</p>
       </div>""", spark=False, center=True, glyph=False)
+    PAGES[-1]["quote"] = True
 
 
 def secret_page(i: int):
@@ -874,14 +883,30 @@ def assemble() -> str:
 
 
 def main():
+    global P
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default=str(Path.home() / "Downloads" / "Giantverse_Dossier_2.0_Sample_Toyuho-Kagemori.pdf"))
+    ap.add_argument("--persona-json", default=None,
+                     help="Path to a JSON file shaped like persona_toyuho.PERSONA. "
+                          "Overrides the built-in sample persona for this run.")
+    ap.add_argument("--html-out", default=None,
+                     help="Optional separate path for the intermediate HTML (defaults to --out with .html suffix).")
     args = ap.parse_args()
+
+    if args.persona_json:
+        from persona_builder import build_persona
+        payload = json.loads(Path(args.persona_json).read_text())
+        P = build_persona(payload)
+
     html = assemble()
-    Path(args.out).with_suffix(".html").write_text(html)
+    html_out = args.html_out or str(Path(args.out).with_suffix(".html"))
+    Path(html_out).write_text(html)
     from weasyprint import HTML
     HTML(string=html).write_pdf(args.out)
+    quote_pages = [i + 1 for i, pg in enumerate(PAGES) if pg.get("quote")]
+    manifest = {"pages": len(PAGES), "quote_pages": quote_pages}
     print(f"pages: {len(PAGES)}  →  {args.out}")
+    print(f"MANIFEST:{json.dumps(manifest)}")
 
 
 if __name__ == "__main__":
