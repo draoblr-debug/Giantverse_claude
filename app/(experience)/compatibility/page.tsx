@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { CompatibilityChecker } from "@/components/compatibility/CompatibilityChecker";
 
 export const metadata = {
@@ -6,5 +7,9 @@ export const metadata = {
 };
 
 export default function CompatibilityPage() {
-  return <CompatibilityChecker />;
+  return (
+    <Suspense fallback={null}>
+      <CompatibilityChecker />
+    </Suspense>
+  );
 }

@@ -14,13 +14,27 @@
 // avoidable "not recognised" errors. The dropdown makes an invalid
 // archetype selection structurally impossible.
 
-import { useMemo, useState, type CSSProperties, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type CSSProperties, type FormEvent } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ARCHETYPE_DEFINITIONS } from "@/engines/archetype/archetype-definitions";
 import {
   computeCompatibility,
+  findArchetypeByName,
   type CompatibilityResult,
 } from "@/engines/compatibility/compatibility.engine";
+import { useInviteStore } from "@/stores/invite.store";
+import { useSessionStore } from "@/stores/session.store";
 import { CompatibilityShareCard } from "./CompatibilityShareCard";
+
+// Splits a full Legacy Name ("Teyuka Kanryō") into its Birth Name and
+// archetype, so an invite link's inviter can be shown/locked as Side A.
+function parseLegacyName(fullName: string): { birthName: string; archetypeId: string } | null {
+  const archetype = findArchetypeByName(fullName);
+  if (!archetype) return null;
+  const tokens = fullName.trim().split(/\s+/);
+  const birthName = tokens.slice(0, -1).join(" ") || tokens[0];
+  return { birthName, archetypeId: archetype.id };
+}
 
 const ROLE_COLOR: Record<CompatibilityResult["role"], string> = {
   Ally: "#C9A24B",
@@ -41,20 +55,59 @@ const ROLE_ICON: Record<CompatibilityResult["role"], string> = {
 const ARCHETYPE_OPTIONS = Object.values(ARCHETYPE_DEFINITIONS).sort((a, b) => a.label.localeCompare(b.label));
 
 export function CompatibilityChecker() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const pending = useInviteStore((s) => s.pending);
+  const setPending = useInviteStore((s) => s.setPending);
+  const clearPending = useInviteStore((s) => s.clearPending);
+  const ownLegacyName = useSessionStore((s) => s.legacyName);
+
   const [birthNameA, setBirthNameA] = useState("");
   const [archetypeIdA, setArchetypeIdA] = useState("");
   const [birthNameB, setBirthNameB] = useState("");
   const [archetypeIdB, setArchetypeIdB] = useState("");
   const [result, setResult] = useState<CompatibilityResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [manualEntry, setManualEntry] = useState(false);
+
+  // Arrived via a friend's invite link (?invite=<Legacy Name>) — capture it
+  // into the invite store so it survives the friend's own /birth -> /reveal
+  // journey. This only syncs an external system (the URL) into the invite
+  // store, never local component state, so it's a legitimate effect.
+  useEffect(() => {
+    const invite = searchParams.get("invite");
+    if (!invite || pending) return;
+    const decoded = decodeURIComponent(invite);
+    const archetype = findArchetypeByName(decoded);
+    if (archetype) setPending({ inviterName: decoded, inviterArchetypeLabel: archetype.label });
+  }, [searchParams, pending, setPending]);
 
   const archetypeA = useMemo(() => ARCHETYPE_DEFINITIONS[archetypeIdA] ?? null, [archetypeIdA]);
   const archetypeB = useMemo(() => ARCHETYPE_DEFINITIONS[archetypeIdB] ?? null, [archetypeIdB]);
+  const lockSideA = !!pending && !ownLegacyName;
+
+  // Side A is derived straight from the invite while locked, rather than
+  // copied into birthNameA/archetypeIdA state via an effect.
+  const invitedParsed = useMemo(() => (pending ? parseLegacyName(pending.inviterName) : null), [pending]);
+  const effectiveBirthNameA = lockSideA && invitedParsed ? invitedParsed.birthName : birthNameA;
+  const effectiveArchetypeA = lockSideA && invitedParsed ? ARCHETYPE_DEFINITIONS[invitedParsed.archetypeId] ?? null : archetypeA;
+
+  // Auto-resolve: the invited friend already has their own Legacy Name
+  // (they arrived here from /ending after completing their own ritual) —
+  // derive the result straight from the invite + session, skipping the form
+  // entirely, instead of pushing it into state from an effect.
+  const autoResult = useMemo(() => {
+    if (!pending || !ownLegacyName) return null;
+    const outcome = computeCompatibility(pending.inviterName, ownLegacyName);
+    return "error" in outcome ? null : outcome;
+  }, [pending, ownLegacyName]);
+  const displayResult = result ?? autoResult;
+  const showInviteBanner = !!pending && !displayResult && !manualEntry;
 
   function handleCheck(e: FormEvent) {
     e.preventDefault();
-    if (!archetypeA || !archetypeB) return; // dropdowns are required; shouldn't happen
-    const fullNameA = `${birthNameA.trim()} ${archetypeA.romajiName}`.trim();
+    if (!effectiveArchetypeA || !archetypeB) return; // dropdowns are required; shouldn't happen
+    const fullNameA = `${effectiveBirthNameA.trim()} ${effectiveArchetypeA.romajiName}`.trim();
     const fullNameB = `${birthNameB.trim()} ${archetypeB.romajiName}`.trim();
     const outcome = computeCompatibility(fullNameA, fullNameB);
     if ("error" in outcome) {
@@ -69,6 +122,10 @@ export function CompatibilityChecker() {
   function handleReset() {
     setResult(null);
     setError(null);
+    setManualEntry(false);
+    clearPending();
+    setBirthNameA("");
+    setArchetypeIdA("");
   }
 
   return (
@@ -85,34 +142,65 @@ export function CompatibilityChecker() {
             casts between them — Ally, Mentor, Romance, Rival, or Villain. Always the same result for the same pair.
           </p>
 
-          {!result && (
+          {showInviteBanner && (
+            <div className="wht-cont p-4 mb-4 txt-center" style={{ border: "1px solid #C9A24B" }}>
+              <p className="f-10 txt-thm-clr-6 txt-upp letter-spacing2 mb-1">You&apos;ve Been Invited</p>
+              <p className="f-14 line-ht-20" style={{ color: "#EFE9DA" }}>
+                <strong>{pending?.inviterName}</strong> ({pending?.inviterArchetypeLabel}) wants to know your Giant
+                Hunt compatibility.
+              </p>
+              <p className="f-12 txt-thm-clr-70-2 line-ht-20 mb-3">
+                Reveal your own Legacy Name first — we&apos;ll compare you both the moment you&apos;re done.
+              </p>
+              <button type="button" className="btn bdr-rds2 me-2" onClick={() => router.push("/birth")}>
+                Begin the Ritual
+              </button>
+              <button type="button" className="btn-outline bdr-rds2 mt-2" onClick={() => setManualEntry(true)}>
+                Or Enter My Name Manually
+              </button>
+            </div>
+          )}
+
+          {!displayResult && (!pending || manualEntry || ownLegacyName) && (
             <form onSubmit={handleCheck}>
-              <label className="f-10 txt-upp letter-spacing2" style={{ color: "#8A8478" }}>Your Name</label>
+              <label className="f-10 txt-upp letter-spacing2" style={{ color: "#8A8478" }}>
+                {lockSideA ? "Your Friend's Name" : "Your Name"}
+              </label>
               <input
                 type="text"
-                value={birthNameA}
+                value={effectiveBirthNameA}
                 onChange={(e) => setBirthNameA(e.target.value)}
                 placeholder="e.g. Teyuka"
                 className="f-14"
                 style={inputStyle}
                 required
+                readOnly={lockSideA}
+                disabled={lockSideA}
               />
 
-              <label className="f-10 txt-upp letter-spacing2 mt-3" style={{ color: "#8A8478", display: "block" }}>Your Archetype</label>
+              <label className="f-10 txt-upp letter-spacing2 mt-3" style={{ color: "#8A8478", display: "block" }}>
+                {lockSideA ? "Your Friend's Archetype" : "Your Archetype"}
+              </label>
               <select
-                value={archetypeIdA}
+                value={lockSideA ? (effectiveArchetypeA?.id ?? "") : archetypeIdA}
                 onChange={(e) => setArchetypeIdA(e.target.value)}
                 className="f-14"
                 style={inputStyle}
                 required
+                disabled={lockSideA}
               >
                 <option value="" disabled>Select your archetype…</option>
                 {ARCHETYPE_OPTIONS.map((a) => (
                   <option key={a.id} value={a.id}>{a.label} ({a.romajiName})</option>
                 ))}
               </select>
+              {lockSideA && (
+                <p className="f-10 mt-1" style={{ color: "#6E695F" }}>Locked to your inviter — enter your own details below.</p>
+              )}
 
-              <label className="f-10 txt-upp letter-spacing2 mt-4" style={{ color: "#8A8478", display: "block" }}>Your Friend&apos;s Name</label>
+              <label className="f-10 txt-upp letter-spacing2 mt-4" style={{ color: "#8A8478", display: "block" }}>
+                {lockSideA ? "Your Name" : "Your Friend's Name"}
+              </label>
               <input
                 type="text"
                 value={birthNameB}
@@ -123,7 +211,9 @@ export function CompatibilityChecker() {
                 required
               />
 
-              <label className="f-10 txt-upp letter-spacing2 mt-3" style={{ color: "#8A8478", display: "block" }}>Your Friend&apos;s Archetype</label>
+              <label className="f-10 txt-upp letter-spacing2 mt-3" style={{ color: "#8A8478", display: "block" }}>
+                {lockSideA ? "Your Archetype" : "Your Friend's Archetype"}
+              </label>
               <select
                 value={archetypeIdB}
                 onChange={(e) => setArchetypeIdB(e.target.value)}
@@ -149,36 +239,36 @@ export function CompatibilityChecker() {
             </form>
           )}
 
-          {result && (
+          {displayResult && (
             <div className="txt-center">
               <div
                 className="wht-cont p-4 mb-4"
-                style={{ border: `1px solid ${ROLE_COLOR[result.role]}` }}
+                style={{ border: `1px solid ${ROLE_COLOR[displayResult.role]}` }}
               >
                 <p className="f-12 txt-thm-clr-70-2 mb-1">
-                  {result.archetypeA.label} ({result.archetypeA.romajiName}) <span style={{ color: "#6E695F" }}>×</span>{" "}
-                  {result.archetypeB.label} ({result.archetypeB.romajiName})
+                  {displayResult.archetypeA.label} ({displayResult.archetypeA.romajiName}) <span style={{ color: "#6E695F" }}>×</span>{" "}
+                  {displayResult.archetypeB.label} ({displayResult.archetypeB.romajiName})
                 </p>
 
-                <p style={{ fontSize: 40, margin: "12px 0 4px" }}>{ROLE_ICON[result.role]}</p>
-                <h2 className="serif" style={{ color: ROLE_COLOR[result.role], fontFamily: "Georgia, serif", fontSize: 34, margin: 0 }}>
-                  {result.role}
+                <p style={{ fontSize: 40, margin: "12px 0 4px" }}>{ROLE_ICON[displayResult.role]}</p>
+                <h2 className="serif" style={{ color: ROLE_COLOR[displayResult.role], fontFamily: "Georgia, serif", fontSize: 34, margin: 0 }}>
+                  {displayResult.role}
                 </h2>
                 <p className="f-14 fw-700 mt-1" style={{ color: "#EFE9DA" }}>
-                  {result.percentage}% — {result.descriptor} {result.role}
+                  {displayResult.percentage}% — {displayResult.descriptor} {displayResult.role}
                 </p>
 
-                {result.mentor && result.mentee && (
-                  <p className="f-12 mt-2" style={{ color: ROLE_COLOR[result.role] }}>
-                    {result.mentor.name} is the Mentor · {result.mentee.name} is the Mentee
+                {displayResult.mentor && displayResult.mentee && (
+                  <p className="f-12 mt-2" style={{ color: ROLE_COLOR[displayResult.role] }}>
+                    {displayResult.mentor.name} is the Mentor · {displayResult.mentee.name} is the Mentee
                   </p>
                 )}
 
-                <p className="f-13 txt-thm-clr-70-2 line-ht-20 mt-3 mxw-385 m-auto">{result.tagline}</p>
+                <p className="f-13 txt-thm-clr-70-2 line-ht-20 mt-3 mxw-385 m-auto">{displayResult.tagline}</p>
               </div>
 
               <div className="mb-4">
-                <CompatibilityShareCard result={result} />
+                <CompatibilityShareCard result={displayResult} />
               </div>
 
               <button type="button" className="btn-outline bdr-rds2" onClick={handleReset}>

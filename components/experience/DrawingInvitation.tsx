@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { useSessionStore } from "@/stores/session.store";
 import { useVisualStore } from "@/stores/visual.store";
+import { useInviteStore } from "@/stores/invite.store";
 import { ARCHETYPE_DEFINITIONS } from "@/engines/archetype/archetype-definitions";
 import { REALMS } from "@/engines/realms";
 import { getInspirationHighlights, getBridgeEntities, getTopTwoArchetypes } from "@/engines/inspiration";
@@ -16,11 +17,35 @@ export function DrawingInvitation() {
   const displayCanvasRef = useRef<HTMLCanvasElement>(null);
   const [ready, setReady] = useState(false);
   const [downloading, setDownloading] = useState(false);
+  const [linkCopied, setLinkCopied] = useState(false);
 
   const { birthName, legacyName, archetypeLabel, archetype, order, guidingPromise, traits, firstName, scores, scoreHistory, resetExperience } =
     useSessionStore();
   const visualMatches = useVisualStore((s) => s.matches);
   const visualTop = visualMatches?.[0] ?? null;
+  const pendingInvite = useInviteStore((s) => s.pending);
+  const clearPendingInvite = useInviteStore((s) => s.clearPending);
+
+  async function handleInviteFriend() {
+    if (!legacyName || typeof window === "undefined") return;
+    const url = `${window.location.origin}/compatibility?invite=${encodeURIComponent(legacyName)}`;
+    const shareText = `I just became ${legacyName} in the Giantverse. Reveal your own Legacy Name and see how we match up:`;
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: "Giant Hunt Compatibility", text: shareText, url });
+        return;
+      } catch {
+        // user cancelled the share sheet — fall through to clipboard copy
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      setLinkCopied(true);
+      setTimeout(() => setLinkCopied(false), 2500);
+    } catch {
+      // clipboard unavailable — nothing more we can do without a fallback UI
+    }
+  }
 
   // Resonant Constellation: this archetype's inspiration set, plus a
   // "bridge" — an entity shared with the second-highest scoring archetype,
@@ -191,6 +216,31 @@ export function DrawingInvitation() {
               </button>
             </div>
 
+            {pendingInvite && (
+              <div className="txt-center mb-4">
+                <button
+                  type="button"
+                  className="btn bdr-rds2"
+                  onClick={() => router.push("/compatibility")}
+                >
+                  🤝 Check Compatibility with {pendingInvite.inviterName}
+                </button>
+              </div>
+            )}
+
+            <div className="txt-center mb-4">
+              <button
+                type="button"
+                className="btn-outline bdr-rds2"
+                onClick={handleInviteFriend}
+              >
+                {linkCopied ? "✓ Link Copied!" : "🔗 Invite a Friend to Compare"}
+              </button>
+              <p className="f-10 mt-2" style={{ color: "#6E695F" }}>
+                They&apos;ll reveal their own Legacy Name, then land pre-matched against yours.
+              </p>
+            </div>
+
             <div className="txt-center mb-6">
               <button
                 type="button"
@@ -204,11 +254,12 @@ export function DrawingInvitation() {
               <button
                 type="button"
                 className="btn-outline pse-4 bdr-rds2"
-                onClick={() => { 
-                  resetExperience(); 
+                onClick={() => {
+                  resetExperience();
+                  clearPendingInvite();
                   import("@/stores/assessment.store").then(m => m.useAssessmentStore.getState().clearResult());
                   import("@/stores/scenario.store").then(m => m.useScenarioStore.getState().reset());
-                  router.push("/birth"); 
+                  router.push("/birth");
                 }}
               >
                 Begin Again
