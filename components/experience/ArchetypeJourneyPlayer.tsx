@@ -15,11 +15,14 @@ type Props = {
   scoreMap: Record<string, number>;
   size?: number;
   hideSurveyProgression?: boolean;
+  // The archetypes shown as "invisible" on the reveal page — passed through
+  // so the map highlights exactly the same set, never a different one.
+  highlightArchetypeIds?: string[];
 };
 
 const STEP_MS = 650;
 
-export function ArchetypeJourneyPlayer({ signals, scoreHistory, finalArchetypeId, scoreMap, size = 480, hideSurveyProgression = false }: Props) {
+export function ArchetypeJourneyPlayer({ signals, scoreHistory, finalArchetypeId, scoreMap, size = 480, hideSurveyProgression = false, highlightArchetypeIds = [] }: Props) {
   const total = scoreHistory.length;
   const [step, setStep] = useState(total); // 0 = Start, total = Final
   const [playing, setPlaying] = useState(false);
@@ -45,11 +48,14 @@ export function ArchetypeJourneyPlayer({ signals, scoreHistory, finalArchetypeId
       background: "#0B111C",
       labelMode: "all",
       detail: "full",
+      // Only meaningful once the journey has actually concluded — mid-playback,
+      // "invisible" runner-ups haven't been decided yet either.
+      highlightArchetypeIds: step === total ? highlightArchetypeIds : [],
     });
     canvas.width = glyph.width;
     canvas.height = glyph.height;
     canvas.getContext("2d")?.drawImage(glyph, 0, 0);
-  }, [step, scoreHistory, finalArchetypeId, size, total]);
+  }, [step, scoreHistory, finalArchetypeId, size, total, highlightArchetypeIds]);
 
   useEffect(() => {
     return () => {

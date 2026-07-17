@@ -214,6 +214,7 @@ export default function SharedRevealPage() {
                     finalArchetypeId={archetype.id}
                     scoreMap={revealed.scoreMap}
                     hideSurveyProgression={revealed.source === "chat"}
+                    highlightArchetypeIds={invisibleArchetypes.map((a) => a.id)}
                   />
                 </div>
               </td>

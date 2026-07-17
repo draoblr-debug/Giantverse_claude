@@ -7,8 +7,6 @@ import { useSessionStore } from "@/stores/session.store";
 import { useVisualStore } from "@/stores/visual.store";
 import { useInviteStore } from "@/stores/invite.store";
 import { ARCHETYPE_DEFINITIONS } from "@/engines/archetype/archetype-definitions";
-import { REALMS } from "@/engines/realms";
-import { getInspirationHighlights, getBridgeEntities, getTopTwoArchetypes } from "@/engines/inspiration";
 import { drawCard } from "@/lib/card-generator";
 
 // The Dossier is a static preview build (see components/dossier/DossierPreview.tsx)
@@ -24,7 +22,7 @@ export function DrawingInvitation() {
   const [downloading, setDownloading] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
 
-  const { birthName, legacyName, archetypeLabel, archetype, order, guidingPromise, traits, firstName, scores, scoreHistory, resetExperience } =
+  const { birthName, legacyName, archetypeLabel, archetype, order, guidingPromise, traits, firstName, scoreHistory, resetExperience } =
     useSessionStore();
   const visualMatches = useVisualStore((s) => s.matches);
   const visualTop = visualMatches?.[0] ?? null;
@@ -51,17 +49,6 @@ export function DrawingInvitation() {
       // clipboard unavailable — nothing more we can do without a fallback UI
     }
   }
-
-  // Resonant Constellation: this archetype's inspiration set, plus a
-  // "bridge" — an entity shared with the second-highest scoring archetype,
-  // when the participant resonated with two archetypes almost equally.
-  const profileForConstellation = archetype ? ARCHETYPE_DEFINITIONS[archetype] : null;
-  const realm = profileForConstellation?.realmBias ? REALMS[profileForConstellation.realmBias] : null;
-  const inspiration = archetype ? getInspirationHighlights(archetype) : { personalities: [], book: null, film: null };
-  const [, secondArchetypeId] = scores ? getTopTwoArchetypes(scores) : [null, null];
-  const secondProfile =
-    secondArchetypeId && secondArchetypeId !== archetype ? ARCHETYPE_DEFINITIONS[secondArchetypeId] : null;
-  const bridgeEntities = archetype && secondProfile ? getBridgeEntities(archetype, secondProfile.id) : [];
 
   useEffect(() => {
     if (!legacyName) router.replace("/birth");
@@ -160,52 +147,6 @@ export function DrawingInvitation() {
               </div>
             )}
 
-            {/* Resonant Constellation: Realm + Inspiration Graph */}
-            {(realm || inspiration.personalities.length > 0 || inspiration.book || inspiration.film) && (
-              <div className="wht-cont mxw-450 m-auto txt-center">
-                {realm && (
-                  <>
-                    <p className="f-10 mb-0 txt-thm-clr-6 txt-upp">Realm Resonance</p>
-                    <p className="txt-thm-clr-5 line-ht-20 mb-2">
-                      {realm.name} <span className="txt-thm-clr-6 line-ht-20">({realm.japanese})</span> — {realm.tagline}
-                    </p>
-                  </>
-                )}
-
-                <p className="f-10 txt-thm-clr-5 txt-upp fw-700">Resonant Constellation</p>
-                <p className="f-10 mb-0 txt-thm-clr-6 mb-2">Not who you are — but echoes worth sitting with.</p>
-                
-                <div className="row float-none">
-                  {inspiration.personalities.length > 0 && (
-                    <div className="col-4">
-                      <p className="f-10 mb-0 txt-thm-clr-6 txt-upp">Kindred Spirits</p>
-                      <p className="f-12 mb-0 txt-thm-clr-5 line-ht-15">{inspiration.personalities.join(" · ")}</p>
-                    </div>
-                  )}
-                  {inspiration.book && (
-                    <div className="col-2">
-                      <p className="f-10 mb-0 txt-thm-clr-6 line-ht-15 txt-upp">A Book to Explore</p>
-                      <p className="f-12 mb-0 txt-thm-clr-5 line-ht-15">{inspiration.book}</p>
-                    </div>
-                  )}
-                  {inspiration.film && (
-                    <div className="col-2">
-                      <p className="f-10 mb-0 txt-thm-clr-6 txt-upp">A Film to Watch</p>
-                      <p className="f-12 mb-0 txt-thm-clr-5 line-ht-15">{inspiration.film}</p>
-                    </div>
-                  )}
-                </div>
-
-                {bridgeEntities.length > 0 && secondProfile && (
-                  <p className="border-t pt-3 mt-3 f-10 italic line-ht-15 txt-thm-clr-6" style={{ borderColor: "#3a2f12" }}>
-                    Your answers also echoed the{" "}
-                    <strong className="txt-thm-clr-5">{secondProfile.label}</strong> — you share{" "}
-                    {bridgeEntities[0].entity} with that path, among others.
-                  </p>
-                )}
-              </div>
-            )}
-
             <p className="txt-thm-clr-6 line-ht-24 mxw-320 m-auto mt-3 mb-4 txt-center">
               Now there&apos;s only one thing I don&apos;t know — what do I look like? In my world, I can&apos;t see my own face. But you can. Would you draw me?
             </p>
@@ -241,7 +182,7 @@ export function DrawingInvitation() {
                 className="btn-outline bdr-rds2"
                 onClick={handleInviteFriend}
               >
-                {linkCopied ? "✓ Link Copied!" : "🔗 Invite a Friend to Compare"}
+                {linkCopied ? "✓ Link Copied!" : "🔗 Share With a Friend to Reveal Your Giantverse Relationship"}
               </button>
               <p className="f-10 mt-2" style={{ color: "#6E695F" }}>
                 They&apos;ll reveal their own Legacy Name, then land pre-matched against yours.

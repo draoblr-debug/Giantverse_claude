@@ -84,8 +84,8 @@ async function renderShareCard(match: CharacterMatch): Promise<HTMLCanvasElement
     ctx.drawImage(logo, 90, H - 260, lw, lh);
   }
   if (template) {
-    // QR block location on the 941×1672 template (pixel-scanned)
-    ctx.drawImage(template, 752, 392, 158, 158, W - 280, H - 300, 190, 190);
+    // QR block location on the 900×1585 template (pixel-scanned)
+    ctx.drawImage(template, 687, 356, 190, 190, W - 280, H - 300, 190, 190);
     ctx.fillStyle = "#8A8478";
     ctx.font = "22px Helvetica, Arial";
     ctx.fillText("Discover yours", W - 185, H - 84);
