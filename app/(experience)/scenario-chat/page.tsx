@@ -33,8 +33,6 @@ export default function ScenarioChatPage() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [composerText, setComposerText] = useState('');
   const [isSuggestionsOpen, setIsSuggestionsOpen] = useState(false);
-  const [selectedOptionIdx, setSelectedOptionIdx] = useState<number | null>(null);
-  const [sliderValue, setSliderValue] = useState<number>(0);
 
   const initRef = useRef(false);
 
@@ -118,10 +116,10 @@ export default function ScenarioChatPage() {
     await processSubmit(undefined, userText, 1.0, newMessages);
   };
 
-  const handleSuggestionSubmit = async () => {
-    if (selectedOptionIdx === null || isGenerating || !currentQuestion) return;
+  const handleDirectSuggestionSubmit = async (idx: number, val: number) => {
+    if (isGenerating || !currentQuestion) return;
     
-    const selectedOption = currentQuestion.options[selectedOptionIdx];
+    const selectedOption = currentQuestion.options[idx];
     
     const newMessages: ChatMessage[] = [...messages, {
       id: `user-${Date.now()}`,
@@ -131,10 +129,8 @@ export default function ScenarioChatPage() {
     setMessages(newMessages);
 
     setIsSuggestionsOpen(false);
-    setSelectedOptionIdx(null);
-    setSliderValue(0);
 
-    await processSubmit(selectedOption, '', sliderValue, newMessages);
+    await processSubmit(selectedOption, '', val, newMessages);
   };
 
   const processSubmit = async (selectedOption: QuestionOption | undefined, customText: string, confidence: number, newMessages: ChatMessage[]) => {
@@ -185,11 +181,7 @@ export default function ScenarioChatPage() {
           isOpen={isSuggestionsOpen}
           onClose={() => setIsSuggestionsOpen(false)}
           options={currentQuestion?.options || []}
-          selectedOptionIndex={selectedOptionIdx}
-          onSelectOption={(idx) => setSelectedOptionIdx(idx)}
-          sliderValue={sliderValue}
-          onSliderChange={setSliderValue}
-          onSubmit={handleSuggestionSubmit}
+          onDirectSubmit={handleDirectSuggestionSubmit}
           disabled={isGenerating}
         />
         

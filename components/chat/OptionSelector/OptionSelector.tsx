@@ -4,25 +4,32 @@ import styles from './OptionSelector.module.css';
 
 interface Props {
   options: QuestionOption[];
-  selectedOptionIndex: number | null;
-  onSelect: (index: number) => void;
+  onDirectSubmit: (index: number, value: number) => void;
   disabled?: boolean;
 }
 
-export function OptionSelector({ options, selectedOptionIndex, onSelect, disabled }: Props) {
+export function OptionSelector({ options, onDirectSubmit, disabled }: Props) {
   if (!options || options.length === 0) return null;
+  const percentages = [0, 25, 50, 75, 100];
 
   return (
     <div className={styles.container}>
       {options.map((opt, idx) => (
-        <button
-          key={idx}
-          className={`${styles.optionBtn} ${selectedOptionIndex === idx ? styles.selected : ''}`}
-          onClick={() => onSelect(idx)}
-          disabled={disabled}
-        >
-          {opt.text}
-        </button>
+        <div key={idx} className={styles.optionCard}>
+          <div className={styles.optionText}>{opt.text}</div>
+          <div className={styles.percentagesRow}>
+            {percentages.map(pct => (
+              <button 
+                key={pct}
+                className={styles.percentCircle}
+                onClick={() => onDirectSubmit(idx, pct / 100)}
+                disabled={disabled}
+              >
+                {pct}%
+              </button>
+            ))}
+          </div>
+        </div>
       ))}
     </div>
   );

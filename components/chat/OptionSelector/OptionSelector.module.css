@@ -7,31 +7,50 @@
   margin: 0 auto 2rem auto;
 }
 
-.optionBtn {
+.optionCard {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   padding: 16px 20px;
   color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.optionText {
   font-size: 1rem;
   font-family: inherit;
   text-align: left;
+}
+
+.percentagesRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.percentCircle {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 8px 0;
+  color: #EFE9DA;
+  font-size: 0.85rem;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
+  text-align: center;
 }
 
-.optionBtn:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.2);
+.percentCircle:hover:not(:disabled) {
+  background: var(--thm-clr-1);
+  color: #0B111C;
+  border-color: var(--thm-clr-1);
 }
 
-.optionBtn.selected {
-  background: rgba(100, 150, 255, 0.2);
-  border-color: rgba(100, 150, 255, 0.6);
-  box-shadow: 0 0 15px rgba(100, 150, 255, 0.1);
-}
-
-.optionBtn:disabled {
+.percentCircle:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
