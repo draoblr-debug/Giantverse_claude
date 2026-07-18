@@ -31,7 +31,9 @@ export function DrawingInvitation() {
 
   async function handleInviteFriend() {
     if (!legacyName || typeof window === "undefined") return;
-    const url = `${window.location.origin}/compatibility?invite=${encodeURIComponent(legacyName)}`;
+    const params = new URLSearchParams({ invite: legacyName });
+    if (firstName) params.set("name", firstName);
+    const url = `${window.location.origin}/compatibility?${params.toString()}`;
     const shareText = `I just became ${legacyName} in the Giantverse. Reveal your own Legacy Name and see how we match up:`;
     if (navigator.share) {
       try {

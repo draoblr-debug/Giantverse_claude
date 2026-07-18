@@ -10,6 +10,7 @@ import { create } from "zustand";
 export interface PendingInvite {
   inviterName: string; // full Legacy Name, e.g. "Teyuka Kanryō"
   inviterArchetypeLabel: string; // e.g. "Bureaucrat" — for display only
+  inviterRealName?: string; // real-world first name, e.g. "Rajeev" — for the personalized landing copy
 }
 
 interface InviteStore {

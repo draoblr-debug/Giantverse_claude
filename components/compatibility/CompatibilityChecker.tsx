@@ -70,16 +70,23 @@ export function CompatibilityChecker() {
   const [error, setError] = useState<string | null>(null);
   const [manualEntry, setManualEntry] = useState(false);
 
-  // Arrived via a friend's invite link (?invite=<Legacy Name>) — capture it
-  // into the invite store so it survives the friend's own /birth -> /reveal
-  // journey. This only syncs an external system (the URL) into the invite
-  // store, never local component state, so it's a legitimate effect.
+  // Arrived via a friend's invite link (?invite=<Legacy Name>&name=<Real Name>)
+  // — capture it into the invite store so it survives the friend's own
+  // /birth -> /reveal journey. This only syncs an external system (the URL)
+  // into the invite store, never local component state, so it's a
+  // legitimate effect.
   useEffect(() => {
     const invite = searchParams.get("invite");
     if (!invite || pending) return;
     const decoded = decodeURIComponent(invite);
     const archetype = findArchetypeByName(decoded);
-    if (archetype) setPending({ inviterName: decoded, inviterArchetypeLabel: archetype.label });
+    if (!archetype) return;
+    const realName = searchParams.get("name");
+    setPending({
+      inviterName: decoded,
+      inviterArchetypeLabel: archetype.label,
+      inviterRealName: realName ? decodeURIComponent(realName) : undefined,
+    });
   }, [searchParams, pending, setPending]);
 
   const archetypeA = useMemo(() => ARCHETYPE_DEFINITIONS[archetypeIdA] ?? null, [archetypeIdA]);
@@ -103,6 +110,9 @@ export function CompatibilityChecker() {
   }, [pending, ownLegacyName]);
   const displayResult = result ?? autoResult;
   const showInviteBanner = !!pending && !displayResult && !manualEntry;
+  // Older invite links (shared before real names were carried in the URL)
+  // only have the Legacy Name — fall back to that so they still render.
+  const inviterDisplayName = pending?.inviterRealName || pending?.inviterName;
 
   function handleCheck(e: FormEvent) {
     e.preventDefault();
@@ -133,32 +143,34 @@ export function CompatibilityChecker() {
       <div className="head-bdr"></div>
       <div className="container-fluid" style={{ paddingBottom: 48 }}>
         <div className="content" style={{ maxWidth: 560, margin: "0 auto", paddingTop: 40 }}>
-          <p className="f-12 txt-center txt-thm-clr-50-2 txt-upp letter-spacing2 mb-1">Giant Hunt Compatibility</p>
-          <h1 className="txt-center h2 fw-600 mb-2" style={{ color: "#EFE9DA", fontFamily: "Georgia, serif" }}>
-            Compatibility Checker
-          </h1>
-          <p className="mxw-450 m-auto txt-center f-13 txt-thm-clr-70-2 line-ht-20 mb-5">
-            Enter two names and pick each Giantverse archetype to see which of the five Giant Hunt roles the wheel
-            casts between them — Ally, Mentor, Romance, Rival, or Villain. Always the same result for the same pair.
-          </p>
-
-          {showInviteBanner && (
-            <div className="wht-cont p-4 mb-4 txt-center" style={{ border: "1px solid #C9A24B" }}>
+          {showInviteBanner ? (
+            <div className="txt-center mb-5">
               <p className="f-10 txt-thm-clr-6 txt-upp letter-spacing2 mb-1">You&apos;ve Been Invited</p>
-              <p className="f-14 line-ht-20" style={{ color: "#EFE9DA" }}>
-                <strong>{pending?.inviterName}</strong> ({pending?.inviterArchetypeLabel}) wants to know your Giant
-                Hunt compatibility.
-              </p>
-              <p className="f-12 txt-thm-clr-70-2 line-ht-20 mb-3">
-                Reveal your own Legacy Name first — we&apos;ll compare you both the moment you&apos;re done.
+              <h1 className="h2 fw-600 mb-3" style={{ color: "#EFE9DA", fontFamily: "Georgia, serif" }}>
+                {inviterDisplayName}{" "}wants to know how you&apos;re related to them in the Giantverse
+              </h1>
+              <p className="mxw-450 m-auto f-13 txt-thm-clr-70-2 line-ht-20 mb-4">
+                If you already have a Giantverse identity, enter your full name here. Otherwise, create one by
+                taking this survey — it&apos;s fun!
               </p>
               <button type="button" className="btn bdr-rds2 me-2" onClick={() => router.push("/birth")}>
-                Begin the Ritual
+                Take the Survey
               </button>
               <button type="button" className="btn-outline bdr-rds2 mt-2" onClick={() => setManualEntry(true)}>
-                Or Enter My Name Manually
+                I Already Have a Giantverse Identity
               </button>
             </div>
+          ) : (
+            <>
+              <p className="f-12 txt-center txt-thm-clr-50-2 txt-upp letter-spacing2 mb-1">Giant Hunt Compatibility</p>
+              <h1 className="txt-center h2 fw-600 mb-2" style={{ color: "#EFE9DA", fontFamily: "Georgia, serif" }}>
+                Compatibility Checker
+              </h1>
+              <p className="mxw-450 m-auto txt-center f-13 txt-thm-clr-70-2 line-ht-20 mb-5">
+                Enter two names and pick each Giantverse archetype to see which of the five Giant Hunt roles the wheel
+                casts between them — Ally, Mentor, Romance, Rival, or Villain. Always the same result for the same pair.
+              </p>
+            </>
           )}
 
           {!displayResult && (!pending || manualEntry || ownLegacyName) && (
