@@ -156,16 +156,9 @@ export function CompatibilityChecker() {
               </button>
             </div>
           ) : (
-            <>
-              <p className="f-12 txt-center txt-thm-clr-50-2 txt-upp letter-spacing2 mb-1">Giant Hunt Compatibility</p>
-              <h1 className="txt-center h2 fw-600 mb-2" style={{ color: "#EFE9DA", fontFamily: "Georgia, serif" }}>
-                Compatibility Checker
-              </h1>
-              <p className="mxw-450 m-auto txt-center f-13 txt-thm-clr-70-2 line-ht-20 mb-5">
-                Enter two names and pick each Giantverse archetype to see which of the five Giant Hunt roles the wheel
-                casts between them — Ally, Mentor, Romance, Rival, or Villain. Always the same result for the same pair.
-              </p>
-            </>
+            <div className="mb-4">
+              <p className="f-12 txt-center txt-thm-clr-50-2 txt-upp letter-spacing2">Giant Hunt Compatibility</p>
+            </div>
           )}
 
           {!displayResult && (!pending || manualEntry || ownLegacyName) && (
