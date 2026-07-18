@@ -80,6 +80,22 @@ export function SurveyShell() {
     setRetake((r) => r + 1); // reshuffles the question sample
   }
 
+  async function handleBypass() {
+    setSubmitting(true);
+    try {
+      const mockAnswers: SurveyAnswers = {};
+      questions.forEach((q) => {
+        mockAnswers[q.id] = q.type === "yesno" ? 1 : 3; // Answer Yes or Neutral
+      });
+      const signals = answersToSignals(mockAnswers, questions);
+      setResult({ source: "survey", signals });
+      router.push("/reveal");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Bypass failed.");
+      setSubmitting(false);
+    }
+  }
+
   if (submitting) {
     return (
       <div className="legacy-container">
@@ -125,7 +141,16 @@ export function SurveyShell() {
                       <img src="/Images/g-img3.png" alt="Giantverse" title="Giantverse" />
                     </div>
                   </div>
-                  <div className="survey-cont">
+                  <div className="survey-cont relative">
+                    <div style={{ textAlign: 'right', marginBottom: '10px' }}>
+                      <button 
+                        onClick={handleBypass}
+                        className="px-3 py-1 text-xs uppercase tracking-widest text-white bg-white/10 hover:bg-white/20 border border-white/30 rounded cursor-pointer transition-colors"
+                        title="Auto-fill and bypass survey"
+                      >
+                        [Fast-Forward Survey]
+                      </button>
+                    </div>
                     <div className="progress-bar">
                       <motion.div
                         style={{ width: `${progress * 100}%` }}
