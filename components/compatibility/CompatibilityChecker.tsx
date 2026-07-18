@@ -261,6 +261,9 @@ export function CompatibilityChecker() {
 
               <div className="txt-center mt-5">
                 <button type="submit" className="btn bdr-rds2">Check Compatibility</button>
+                <button type="button" className="btn-outline bdr-rds2 ms-2" onClick={() => router.push("/")}>
+                  Back to Home
+                </button>
               </div>
               <p className="f-10 txt-center mt-3" style={{ color: "#6E695F" }}>
                 Not sure of an archetype? It's the Surname half of a Giantverse Legacy Name — e.g. "Kanryō" in
@@ -272,11 +275,19 @@ export function CompatibilityChecker() {
           {displayResult && (
             <div className="txt-center">
               <div className="mb-4">
-                <CompatibilityShareCard result={displayResult} invitedByRealName={pending?.inviterRealName} />
+                <CompatibilityShareCard 
+                  result={displayResult} 
+                  invitedByRealName={pending?.inviterRealName} 
+                  realNameA={realNameA}
+                  realNameB={realNameB}
+                />
               </div>
 
-              <button type="button" className="btn-outline bdr-rds2" onClick={handleReset}>
+              <button type="button" className="btn bdr-rds2" onClick={handleReset}>
                 Check Another Pair
+              </button>
+              <button type="button" className="btn-outline bdr-rds2 ms-2 mt-2 mt-md-0" onClick={() => router.push("/")}>
+                Back to Home
               </button>
             </div>
           )}

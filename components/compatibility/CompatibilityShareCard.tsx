@@ -58,7 +58,7 @@ function extractBirthName(fullName: string, romaji: string): string {
 // invite link's &name= param) of whoever shared it. Attributed only on
 // Side B's column, since that's the only side that can ever be "someone
 // who was invited" in the current flows.
-async function renderCompatibilityCard(result: CompatibilityResult, invitedByRealName?: string): Promise<HTMLCanvasElement> {
+async function renderCompatibilityCard(result: CompatibilityResult, invitedByRealName?: string, realNameA?: string, realNameB?: string): Promise<HTMLCanvasElement> {
   const canvas = document.createElement("canvas");
   const template = await loadImage("/Compatibility card_template.png");
   const W = template ? template.naturalWidth : 1080;
@@ -98,8 +98,8 @@ async function renderCompatibilityCard(result: CompatibilityResult, invitedByRea
   // fills the large gap above the bust; the Real Name value sits just
   // below the baked-in label.
   const columns = [
-    { x: px(0.225), name: result.nameA, romaji: result.archetypeA.romajiName, color: GOLD, dim: GOLD_DIM, attribution: undefined as string | undefined },
-    { x: px(0.7806), name: result.nameB, romaji: result.archetypeB.romajiName, color: SILVER, dim: SILVER_DIM, attribution: invitedByRealName },
+    { x: px(0.225), name: result.nameA, romaji: result.archetypeA.romajiName, realName: realNameA || extractBirthName(result.nameA, result.archetypeA.romajiName), color: GOLD, dim: GOLD_DIM, attribution: undefined as string | undefined },
+    { x: px(0.7806), name: result.nameB, romaji: result.archetypeB.romajiName, realName: realNameB || extractBirthName(result.nameB, result.archetypeB.romajiName), color: SILVER, dim: SILVER_DIM, attribution: invitedByRealName },
   ];
 
   const nameTopY = py(0.1516);        // top divider under the "GIANTVERSE" wordmark
@@ -109,28 +109,33 @@ async function renderCompatibilityCard(result: CompatibilityResult, invitedByRea
   const colMaxW = px(0.32);
 
   for (const col of columns) {
-    // "GIANTVERSE NAME" — small field label (matches the template's own
-    // field-label styling) so the big name isn't just unlabeled decoration
-    // under the wordmark divider.
-    const gvLabelZoneH = (bustTopY - nameTopY) * 0.15;
-    ctx.font = `600 ${Math.round(W * 0.0115)}px Helvetica, Arial`;
-    ctx.fillStyle = "#8A8478";
-    ctx.fillText("GIANTVERSE NAME", col.x, nameTopY + gvLabelZoneH * 0.72);
-
-    // Legacy Name — large, vertically centered in the remaining gap above the bust.
-    const legacyZoneTop = nameTopY + gvLabelZoneH;
-    const legacyFont = fitFont(col.name.toUpperCase(), Math.round(W * 0.052), colMaxW, "bold");
-    const capHeight = legacyFont * 0.72;
-    const baselineY = legacyZoneTop + (bustTopY - legacyZoneTop + capHeight) / 2;
+    // Legacy Name — large, vertically centered in the gap above the bust, split into two lines.
+    const legacyZoneTop = nameTopY;
+    const gvBirthName = extractBirthName(col.name, col.romaji).toUpperCase();
+    const gvSurname = col.romaji.toUpperCase();
+    
+    // Fit font for both lines
+    let legacyFont = Math.round(W * 0.07);
     ctx.font = `bold ${legacyFont}px Georgia, serif`;
+    while (legacyFont > 8 && (ctx.measureText(gvBirthName).width > colMaxW || ctx.measureText(gvSurname).width > colMaxW)) {
+      legacyFont -= 0.5;
+      ctx.font = `bold ${legacyFont}px Georgia, serif`;
+    }
+    
+    const capHeight = legacyFont * 0.72;
+    const lineSpacing = legacyFont * 1.1;
+    const totalTextHeight = lineSpacing + capHeight;
+    const startY = legacyZoneTop + (bustTopY - legacyZoneTop - totalTextHeight) / 2 + capHeight;
+
     ctx.fillStyle = col.color;
-    ctx.fillText(col.name.toUpperCase(), col.x, baselineY);
+    ctx.fillText(gvBirthName, col.x, startY);
+    ctx.fillText(gvSurname, col.x, startY + lineSpacing);
 
     // Real Name — the actual first name, below the baked-in "REAL NAME"
     // label. When this column belongs to whoever was invited, a second,
     // smaller line credits who invited them — both compressed to fit
     // ahead of the "RELATIONSHIP" section.
-    const realName = extractBirthName(col.name, col.romaji);
+    const realName = col.realName;
     if (col.attribution) {
       const nameFont = fitFont(realName.toUpperCase(), Math.round(W * 0.019), colMaxW, "");
       const nameY = realNameLabelBottomY + (realNameZoneBottomY - realNameLabelBottomY) * 0.42;
@@ -173,44 +178,79 @@ async function renderCompatibilityCard(result: CompatibilityResult, invitedByRea
   const contentMaxW = px(0.8);
 
   ctx.font = `700 ${Math.round(W * 0.052)}px Georgia, serif`;
+  const roleText = result.role.toUpperCase();
+  const roleTextWidth = ctx.measureText(roleText).width;
+  const linePadding = W * 0.03; // space between text and lines
+  const lineWidth = (contentMaxW - roleTextWidth) / 2 - linePadding;
+  
   ctx.fillStyle = roleColor;
-  ctx.fillText(result.role.toUpperCase(), px(0.5), cy);
-  cy += W * 0.019;
+  ctx.fillText(roleText, px(0.5), cy);
+  
+  // Draw left and right lines dynamically
+  ctx.strokeStyle = roleColor;
+  ctx.lineWidth = Math.round(W * 0.003);
+  const lineY = cy - W * 0.015;
+  
+  ctx.beginPath();
+  ctx.moveTo(px(0.5) - roleTextWidth / 2 - linePadding, lineY);
+  ctx.lineTo(px(0.5) - contentMaxW / 2, lineY);
+  ctx.stroke();
+  
+  ctx.beginPath();
+  ctx.moveTo(px(0.5) + roleTextWidth / 2 + linePadding, lineY);
+  ctx.lineTo(px(0.5) + contentMaxW / 2, lineY);
+  ctx.stroke();
 
-  ctx.font = `600 ${Math.round(W * 0.018)}px Helvetica, Arial`;
+  cy += W * 0.022;
+
+  ctx.font = `600 ${Math.round(W * 0.025)}px Helvetica, Arial`;
   ctx.fillStyle = "#EFE9DA";
   ctx.fillText(`${result.descriptor} ${result.role}`, px(0.5), cy);
-  cy += W * 0.015;
+  cy += W * 0.020;
 
   if (result.mentor && result.mentee) {
-    ctx.font = `600 ${Math.round(W * 0.013)}px Helvetica, Arial`;
+    ctx.font = `600 ${Math.round(W * 0.016)}px Helvetica, Arial`;
     ctx.fillStyle = roleColor;
     ctx.fillText(`${result.mentor.name} is the Mentor · ${result.mentee.name} is the Mentee`, px(0.5), cy);
-    cy += W * 0.014;
+    cy += W * 0.018;
   }
 
-  cy += W * 0.008;
-  ctx.font = `${Math.round(W * 0.013)}px Georgia, serif`;
+  cy += W * 0.012;
+  ctx.font = `italic ${Math.round(W * 0.020)}px Georgia, serif`;
   ctx.fillStyle = "#8A8478";
+  
   const words = result.tagline.split(" ");
   let line = "";
-  const lineH = W * 0.018;
-  for (const word of words) {
+  const lineH = W * 0.026;
+  const paraMaxW = px(0.70); // Narrower width to force a 2-line wrap
+  
+  let linesDrawn = 0;
+  for (let i = 0; i < words.length; i++) {
+    const word = words[i];
     const test = line ? `${line} ${word}` : word;
-    if (ctx.measureText(test).width > contentMaxW && line) {
-      ctx.fillText(line, px(0.5), cy);
+    
+    // If it exceeds width OR it's a short tagline and we're exactly halfway through the words
+    const shouldBreakEarly = linesDrawn === 0 && words.length < 10 && i === Math.floor(words.length / 2);
+    
+    if (ctx.measureText(test).width > paraMaxW || shouldBreakEarly) {
+      if (linesDrawn < 2) {
+        ctx.fillText(line, px(0.5), cy);
+        cy += lineH;
+        linesDrawn++;
+      }
       line = word;
-      cy += lineH;
     } else {
       line = test;
     }
   }
-  if (line) ctx.fillText(line, px(0.5), cy);
+  if (line && linesDrawn < 2) {
+    ctx.fillText(line, px(0.5), cy);
+  }
 
   return canvas;
 }
 
-export function CompatibilityShareCard({ result, invitedByRealName }: { result: CompatibilityResult; invitedByRealName?: string }) {
+export function CompatibilityShareCard({ result, invitedByRealName, realNameA, realNameB }: { result: CompatibilityResult; invitedByRealName?: string; realNameA?: string; realNameB?: string }) {
   const [preview, setPreview] = useState<string | null>(null);
   const [linkCopied, setLinkCopied] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -221,7 +261,7 @@ export function CompatibilityShareCard({ result, invitedByRealName }: { result: 
     let cancelled = false;
     setPreview(null);
     canvasRef.current = null;
-    renderCompatibilityCard(result, invitedByRealName).then((canvas) => {
+    renderCompatibilityCard(result, invitedByRealName, realNameA, realNameB).then((canvas) => {
       if (cancelled) return;
       canvasRef.current = canvas;
       setPreview(canvas.toDataURL("image/png"));
@@ -229,7 +269,7 @@ export function CompatibilityShareCard({ result, invitedByRealName }: { result: 
     return () => {
       cancelled = true;
     };
-  }, [result, invitedByRealName]);
+  }, [result, invitedByRealName, realNameA, realNameB]);
 
   // Invites whoever "Side B" is to take the survey and get their own
   // Legacy Name — carries the same ?invite=&name= payload the /ending
