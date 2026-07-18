@@ -148,13 +148,19 @@ export function CompatibilityChecker() {
         <div className="content" style={{ maxWidth: 560, margin: "0 auto", paddingTop: 40 }}>
           {showInviteBanner ? (
             <div className="txt-center mb-5">
-              <p className="f-10 txt-thm-clr-6 txt-upp letter-spacing2 mb-1">You&apos;ve Been Invited</p>
-              <h1 className="h2 fw-600 mb-3" style={{ color: "#EFE9DA", fontFamily: "Georgia, serif" }}>
-                {inviterDisplayName}{" "}wants to know your Giantverse connection
-              </h1>
+              <p className="f-10 txt-thm-clr-6 txt-upp letter-spacing2 mb-1">You've Been Invited</p>
+              {pending?.inviterRealName ? (
+                <h1 className="h2 fw-600 mb-3" style={{ color: "#EFE9DA", fontFamily: "Georgia, serif" }}>
+                  Hey! 👋 I'm {pending.inviterRealName}.
+                </h1>
+              ) : (
+                <h1 className="h2 fw-600 mb-3" style={{ color: "#EFE9DA", fontFamily: "Georgia, serif" }}>
+                  Hey! 👋
+                </h1>
+              )}
               <p className="mxw-450 m-auto f-13 txt-thm-clr-70-2 line-ht-20 mb-4">
-                Already have a Giantverse identity? Enter it below to check instantly. New here? Take the short
-                survey to create one — it&apos;s fun!
+                My Giantverse identity is <strong>{pending?.inviterName}</strong>. Now I'm wondering... how are you connected to me in the Giantverse?<br /><br />
+                Tap below to find out. It's quick, fun, and you might discover something unexpected!
               </p>
               <button type="button" className="btn bdr-rds2 me-2" onClick={() => router.push("/birth")}>
                 Take the Survey
