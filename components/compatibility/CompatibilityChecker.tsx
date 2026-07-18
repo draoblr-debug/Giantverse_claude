@@ -259,9 +259,9 @@ export function CompatibilityChecker() {
 
               {error && <p className="f-12 mt-3" style={{ color: "#B4543F" }}>{error}</p>}
 
-              <div className="txt-center mt-5">
+              <div style={{ display: "flex", justifyContent: "center", gap: "16px", flexWrap: "wrap", marginTop: "32px" }}>
                 <button type="submit" className="btn bdr-rds2">Check Compatibility</button>
-                <button type="button" className="btn-outline bdr-rds2 ms-2" onClick={() => router.push("/")}>
+                <button type="button" className="btn-outline bdr-rds2" onClick={() => router.push("/")}>
                   Back to Home
                 </button>
               </div>
@@ -283,12 +283,14 @@ export function CompatibilityChecker() {
                 />
               </div>
 
-              <button type="button" className="btn bdr-rds2" onClick={handleReset}>
-                Check Another Pair
-              </button>
-              <button type="button" className="btn-outline bdr-rds2 ms-2 mt-2 mt-md-0" onClick={() => router.push("/")}>
-                Back to Home
-              </button>
+              <div style={{ display: "flex", justifyContent: "center", gap: "16px", flexWrap: "wrap" }}>
+                <button type="button" className="btn bdr-rds2" onClick={handleReset}>
+                  Check Another Pair
+                </button>
+                <button type="button" className="btn-outline bdr-rds2" onClick={() => router.push("/")}>
+                  Back to Home
+                </button>
+              </div>
             </div>
           )}
         </div>

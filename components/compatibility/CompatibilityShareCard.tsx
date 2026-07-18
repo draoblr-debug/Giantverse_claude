@@ -164,7 +164,7 @@ async function renderCompatibilityCard(result: CompatibilityResult, invitedByRea
   // which close in to about 20% of the card's width at this height.
   const pctGapTop = py(0.3941);
   const pctGapBottom = py(0.4886);
-  const pctFont = fitFont(`${result.percentage}%`, Math.round(W * 0.085), px(0.19), "700");
+  const pctFont = fitFont(`${result.percentage}%`, Math.round(W * 0.070), px(0.19), "700");
   const pctCap = pctFont * 0.72;
   const pctBaseline = pctGapTop + (pctGapBottom - pctGapTop + pctCap) / 2;
   ctx.fillStyle = roleColor;
@@ -174,7 +174,7 @@ async function renderCompatibilityCard(result: CompatibilityResult, invitedByRea
   // band below the "RELATIONSHIP" divider (~65.9%), now much tighter than
   // before since it has to clear the decorative Giantverse emblem that
   // fills the bottom ~23% of this template (starts around 76.5%).
-  let cy = py(0.672);
+  let cy = py(0.682); // Shifted down to add space below the baked-in 'RELATIONSHIP' label
   const contentMaxW = px(0.8);
 
   ctx.font = `700 ${Math.round(W * 0.052)}px Georgia, serif`;
@@ -201,7 +201,7 @@ async function renderCompatibilityCard(result: CompatibilityResult, invitedByRea
   ctx.lineTo(px(0.5) + contentMaxW / 2, lineY);
   ctx.stroke();
 
-  cy += W * 0.022;
+  cy += W * 0.035; // Increased spacing between relationship text and small header
 
   ctx.font = `600 ${Math.round(W * 0.025)}px Helvetica, Arial`;
   ctx.fillStyle = "#EFE9DA";
