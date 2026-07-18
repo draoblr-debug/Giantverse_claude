@@ -26,6 +26,17 @@ import { useInviteStore } from "@/stores/invite.store";
 import { useSessionStore } from "@/stores/session.store";
 import { CompatibilityShareCard } from "./CompatibilityShareCard";
 
+// Some share targets (notably how certain messaging apps merge the Web
+// Share API's text and url fields before the link is opened) can corrupt
+// the "name" param into a long run-on string. A real first name is short
+// and plain — anything longer or sentence-shaped falls back to the Legacy
+// Name instead of rendering garbage as the page's headline.
+function sanitizeRealName(raw: string): string | undefined {
+  const trimmed = raw.trim();
+  if (!trimmed || trimmed.length > 30 || /[.:\n]/.test(trimmed)) return undefined;
+  return trimmed;
+}
+
 // Splits a full Legacy Name ("Teyuka Kanryō") into its Birth Name and
 // archetype, so an invite link's inviter can be shown/locked as Side A.
 function parseLegacyName(fullName: string): { birthName: string; archetypeId: string } | null {
@@ -35,22 +46,6 @@ function parseLegacyName(fullName: string): { birthName: string; archetypeId: st
   const birthName = tokens.slice(0, -1).join(" ") || tokens[0];
   return { birthName, archetypeId: archetype.id };
 }
-
-const ROLE_COLOR: Record<CompatibilityResult["role"], string> = {
-  Ally: "#C9A24B",
-  Mentor: "#7B8FA3",
-  Romance: "#D97BA0",
-  Rival: "#D98E3B",
-  Villain: "#B4543F",
-};
-
-const ROLE_ICON: Record<CompatibilityResult["role"], string> = {
-  Ally: "🤝",
-  Mentor: "🧭",
-  Romance: "💫",
-  Rival: "⚔️",
-  Villain: "◆",
-};
 
 const ARCHETYPE_OPTIONS = Object.values(ARCHETYPE_DEFINITIONS).sort((a, b) => a.label.localeCompare(b.label));
 
@@ -85,7 +80,7 @@ export function CompatibilityChecker() {
     setPending({
       inviterName: decoded,
       inviterArchetypeLabel: archetype.label,
-      inviterRealName: realName ? decodeURIComponent(realName) : undefined,
+      inviterRealName: realName ? sanitizeRealName(decodeURIComponent(realName)) : undefined,
     });
   }, [searchParams, pending, setPending]);
 
@@ -147,11 +142,11 @@ export function CompatibilityChecker() {
             <div className="txt-center mb-5">
               <p className="f-10 txt-thm-clr-6 txt-upp letter-spacing2 mb-1">You&apos;ve Been Invited</p>
               <h1 className="h2 fw-600 mb-3" style={{ color: "#EFE9DA", fontFamily: "Georgia, serif" }}>
-                {inviterDisplayName}{" "}wants to know how you&apos;re related to them in the Giantverse
+                {inviterDisplayName}{" "}wants to know your Giantverse connection
               </h1>
               <p className="mxw-450 m-auto f-13 txt-thm-clr-70-2 line-ht-20 mb-4">
-                If you already have a Giantverse identity, enter your full name here. Otherwise, create one by
-                taking this survey — it&apos;s fun!
+                Already have a Giantverse identity? Enter it below to check instantly. New here? Take the short
+                survey to create one — it&apos;s fun!
               </p>
               <button type="button" className="btn bdr-rds2 me-2" onClick={() => router.push("/birth")}>
                 Take the Survey
@@ -253,34 +248,8 @@ export function CompatibilityChecker() {
 
           {displayResult && (
             <div className="txt-center">
-              <div
-                className="wht-cont p-4 mb-4"
-                style={{ border: `1px solid ${ROLE_COLOR[displayResult.role]}` }}
-              >
-                <p className="f-12 txt-thm-clr-70-2 mb-1">
-                  {displayResult.archetypeA.label} ({displayResult.archetypeA.romajiName}) <span style={{ color: "#6E695F" }}>×</span>{" "}
-                  {displayResult.archetypeB.label} ({displayResult.archetypeB.romajiName})
-                </p>
-
-                <p style={{ fontSize: 40, margin: "12px 0 4px" }}>{ROLE_ICON[displayResult.role]}</p>
-                <h2 className="serif" style={{ color: ROLE_COLOR[displayResult.role], fontFamily: "Georgia, serif", fontSize: 34, margin: 0 }}>
-                  {displayResult.role}
-                </h2>
-                <p className="f-14 fw-700 mt-1" style={{ color: "#EFE9DA" }}>
-                  {displayResult.percentage}% — {displayResult.descriptor} {displayResult.role}
-                </p>
-
-                {displayResult.mentor && displayResult.mentee && (
-                  <p className="f-12 mt-2" style={{ color: ROLE_COLOR[displayResult.role] }}>
-                    {displayResult.mentor.name} is the Mentor · {displayResult.mentee.name} is the Mentee
-                  </p>
-                )}
-
-                <p className="f-13 txt-thm-clr-70-2 line-ht-20 mt-3 mxw-385 m-auto">{displayResult.tagline}</p>
-              </div>
-
               <div className="mb-4">
-                <CompatibilityShareCard result={displayResult} />
+                <CompatibilityShareCard result={displayResult} invitedByRealName={pending?.inviterRealName} />
               </div>
 
               <button type="button" className="btn-outline bdr-rds2" onClick={handleReset}>

@@ -34,7 +34,7 @@ export function DrawingInvitation() {
     const params = new URLSearchParams({ invite: legacyName });
     if (firstName) params.set("name", firstName);
     const url = `${window.location.origin}/compatibility?${params.toString()}`;
-    const shareText = `I just became ${legacyName} in the Giantverse. Reveal your own Legacy Name and see how we match up:`;
+    const shareText = `Check your Giantverse connection with ${firstName || legacyName}:`;
     if (navigator.share) {
       try {
         await navigator.share({ title: "Giant Hunt Compatibility", text: shareText, url });
