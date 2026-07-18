@@ -61,6 +61,8 @@ export function CompatibilityChecker() {
   const [archetypeIdA, setArchetypeIdA] = useState("");
   const [birthNameB, setBirthNameB] = useState("");
   const [archetypeIdB, setArchetypeIdB] = useState("");
+  const [realNameA, setRealNameA] = useState("");
+  const [realNameB, setRealNameB] = useState("");
   const [result, setResult] = useState<CompatibilityResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [manualEntry, setManualEntry] = useState(false);
@@ -131,6 +133,8 @@ export function CompatibilityChecker() {
     clearPending();
     setBirthNameA("");
     setArchetypeIdA("");
+    setRealNameA("");
+    setRealNameB("");
   }
 
   return (
@@ -179,6 +183,20 @@ export function CompatibilityChecker() {
               />
 
               <label className="f-10 txt-upp letter-spacing2 mt-3" style={{ color: "#8A8478", display: "block" }}>
+                {lockSideA ? "Your Friend's Real Name" : "Your Real Name"}
+              </label>
+              <input
+                type="text"
+                value={lockSideA ? (pending?.inviterRealName || realNameA) : realNameA}
+                onChange={(e) => setRealNameA(e.target.value)}
+                placeholder="e.g. John"
+                className="f-14"
+                style={inputStyle}
+                readOnly={lockSideA && !!pending?.inviterRealName}
+                disabled={lockSideA && !!pending?.inviterRealName}
+              />
+
+              <label className="f-10 txt-upp letter-spacing2 mt-3" style={{ color: "#8A8478", display: "block" }}>
                 {lockSideA ? "Your Friend's Archetype" : "Your Archetype"}
               </label>
               <select
@@ -209,6 +227,18 @@ export function CompatibilityChecker() {
                 className="f-14"
                 style={inputStyle}
                 required
+              />
+
+              <label className="f-10 txt-upp letter-spacing2 mt-3" style={{ color: "#8A8478", display: "block" }}>
+                {lockSideA ? "Your Real Name" : "Your Friend's Real Name"}
+              </label>
+              <input
+                type="text"
+                value={realNameB}
+                onChange={(e) => setRealNameB(e.target.value)}
+                placeholder="e.g. Jane"
+                className="f-14"
+                style={inputStyle}
               />
 
               <label className="f-10 txt-upp letter-spacing2 mt-3" style={{ color: "#8A8478", display: "block" }}>
