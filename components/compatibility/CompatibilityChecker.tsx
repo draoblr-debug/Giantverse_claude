@@ -56,6 +56,7 @@ export function CompatibilityChecker() {
   const setPending = useInviteStore((s) => s.setPending);
   const clearPending = useInviteStore((s) => s.clearPending);
   const ownLegacyName = useSessionStore((s) => s.legacyName);
+  const ownFirstName = useSessionStore((s) => s.firstName);
 
   const [birthNameA, setBirthNameA] = useState("");
   const [archetypeIdA, setArchetypeIdA] = useState("");
@@ -110,6 +111,9 @@ export function CompatibilityChecker() {
   // Older invite links (shared before real names were carried in the URL)
   // only have the Legacy Name — fall back to that so they still render.
   const inviterDisplayName = pending?.inviterRealName || pending?.inviterName;
+
+  const effectiveCardRealNameA = displayResult === autoResult ? pending?.inviterRealName : (lockSideA ? (pending?.inviterRealName || realNameA) : realNameA);
+  const effectiveCardRealNameB = displayResult === autoResult ? ownFirstName : realNameB;
 
   function handleCheck(e: FormEvent) {
     e.preventDefault();
@@ -277,9 +281,8 @@ export function CompatibilityChecker() {
               <div className="mb-4">
                 <CompatibilityShareCard 
                   result={displayResult} 
-                  invitedByRealName={pending?.inviterRealName} 
-                  realNameA={realNameA}
-                  realNameB={realNameB}
+                  realNameA={effectiveCardRealNameA}
+                  realNameB={effectiveCardRealNameB}
                 />
               </div>
 

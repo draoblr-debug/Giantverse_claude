@@ -53,12 +53,7 @@ function extractBirthName(fullName: string, romaji: string): string {
   return fullName;
 }
 
-// invitedByRealName — when set, Side B is the friend who arrived via a
-// shared invite link, and this is the real name (remembered from the
-// invite link's &name= param) of whoever shared it. Attributed only on
-// Side B's column, since that's the only side that can ever be "someone
-// who was invited" in the current flows.
-async function renderCompatibilityCard(result: CompatibilityResult, invitedByRealName?: string, realNameA?: string, realNameB?: string): Promise<HTMLCanvasElement> {
+async function renderCompatibilityCard(result: CompatibilityResult, realNameA?: string, realNameB?: string): Promise<HTMLCanvasElement> {
   const canvas = document.createElement("canvas");
   const template = await loadImage("/Compatibility card_template.png");
   const W = template ? template.naturalWidth : 1080;
@@ -98,8 +93,8 @@ async function renderCompatibilityCard(result: CompatibilityResult, invitedByRea
   // fills the large gap above the bust; the Real Name value sits just
   // below the baked-in label.
   const columns = [
-    { x: px(0.225), name: result.nameA, romaji: result.archetypeA.romajiName, realName: realNameA || extractBirthName(result.nameA, result.archetypeA.romajiName), color: GOLD, dim: GOLD_DIM, attribution: undefined as string | undefined },
-    { x: px(0.7806), name: result.nameB, romaji: result.archetypeB.romajiName, realName: realNameB || extractBirthName(result.nameB, result.archetypeB.romajiName), color: SILVER, dim: SILVER_DIM, attribution: invitedByRealName },
+    { x: px(0.225), name: result.nameA, romaji: result.archetypeA.romajiName, realName: realNameA || extractBirthName(result.nameA, result.archetypeA.romajiName), color: GOLD, dim: GOLD_DIM },
+    { x: px(0.7806), name: result.nameB, romaji: result.archetypeB.romajiName, realName: realNameB || extractBirthName(result.nameB, result.archetypeB.romajiName), color: SILVER, dim: SILVER_DIM },
   ];
 
   const nameTopY = py(0.1516);        // top divider under the "GIANTVERSE" wordmark
@@ -131,31 +126,13 @@ async function renderCompatibilityCard(result: CompatibilityResult, invitedByRea
     ctx.fillText(gvBirthName, col.x, startY);
     ctx.fillText(gvSurname, col.x, startY + lineSpacing);
 
-    // Real Name — the actual first name, below the baked-in "REAL NAME"
-    // label. When this column belongs to whoever was invited, a second,
-    // smaller line credits who invited them — both compressed to fit
-    // ahead of the "RELATIONSHIP" section.
+    // Real Name — the actual first name, below the baked-in "REAL NAME" label.
     const realName = col.realName;
-    if (col.attribution) {
-      const nameFont = fitFont(realName.toUpperCase(), Math.round(W * 0.019), colMaxW, "");
-      const nameY = realNameLabelBottomY + (realNameZoneBottomY - realNameLabelBottomY) * 0.42;
-      ctx.font = `${nameFont}px Helvetica, Arial`;
-      ctx.fillStyle = col.dim;
-      ctx.fillText(realName.toUpperCase(), col.x, nameY);
-
-      const attrText = `Invited by ${col.attribution}`;
-      const attrFont = fitFont(attrText, Math.round(W * 0.0135), colMaxW, "italic");
-      const attrY = realNameLabelBottomY + (realNameZoneBottomY - realNameLabelBottomY) * 0.85;
-      ctx.font = `italic ${attrFont}px Georgia, serif`;
-      ctx.fillStyle = col.color;
-      ctx.fillText(attrText, col.x, attrY);
-    } else {
-      const nameFont = fitFont(realName.toUpperCase(), Math.round(W * 0.022), colMaxW, "");
-      const nameY = realNameLabelBottomY + (realNameZoneBottomY - realNameLabelBottomY) * 0.55;
-      ctx.font = `${nameFont}px Helvetica, Arial`;
-      ctx.fillStyle = col.dim;
-      ctx.fillText(realName.toUpperCase(), col.x, nameY);
-    }
+    const nameFont = fitFont(realName.toUpperCase(), Math.round(W * 0.022), colMaxW, "");
+    const nameY = realNameLabelBottomY + (realNameZoneBottomY - realNameLabelBottomY) * 0.55;
+    ctx.font = `${nameFont}px Helvetica, Arial`;
+    ctx.fillStyle = col.dim;
+    ctx.fillText(realName.toUpperCase(), col.x, nameY);
   }
 
   // ── COMPATIBILITY % — the gap between the "COMPATIBILITY" label and
@@ -190,15 +167,29 @@ async function renderCompatibilityCard(result: CompatibilityResult, invitedByRea
   ctx.strokeStyle = roleColor;
   ctx.lineWidth = Math.round(W * 0.003);
   const lineY = cy - W * 0.015;
+  const arrowW = W * 0.01;
+  const arrowH = W * 0.008;
   
+  // Left line (arrowhead pointing right)
+  const leftStart = px(0.5) - contentMaxW / 2;
+  const leftEnd = px(0.5) - roleTextWidth / 2 - linePadding;
   ctx.beginPath();
-  ctx.moveTo(px(0.5) - roleTextWidth / 2 - linePadding, lineY);
-  ctx.lineTo(px(0.5) - contentMaxW / 2, lineY);
+  ctx.moveTo(leftStart, lineY);
+  ctx.lineTo(leftEnd, lineY);
+  ctx.lineTo(leftEnd - arrowW, lineY - arrowH);
+  ctx.moveTo(leftEnd, lineY);
+  ctx.lineTo(leftEnd - arrowW, lineY + arrowH);
   ctx.stroke();
   
+  // Right line (arrowhead pointing left)
+  const rightStart = px(0.5) + contentMaxW / 2;
+  const rightEnd = px(0.5) + roleTextWidth / 2 + linePadding;
   ctx.beginPath();
-  ctx.moveTo(px(0.5) + roleTextWidth / 2 + linePadding, lineY);
-  ctx.lineTo(px(0.5) + contentMaxW / 2, lineY);
+  ctx.moveTo(rightStart, lineY);
+  ctx.lineTo(rightEnd, lineY);
+  ctx.lineTo(rightEnd + arrowW, lineY - arrowH);
+  ctx.moveTo(rightEnd, lineY);
+  ctx.lineTo(rightEnd + arrowW, lineY + arrowH);
   ctx.stroke();
 
   cy += W * 0.035; // Increased spacing between relationship text and small header
@@ -250,7 +241,7 @@ async function renderCompatibilityCard(result: CompatibilityResult, invitedByRea
   return canvas;
 }
 
-export function CompatibilityShareCard({ result, invitedByRealName, realNameA, realNameB }: { result: CompatibilityResult; invitedByRealName?: string; realNameA?: string; realNameB?: string }) {
+export function CompatibilityShareCard({ result, realNameA, realNameB }: { result: CompatibilityResult; realNameA?: string; realNameB?: string }) {
   const [preview, setPreview] = useState<string | null>(null);
   const [linkCopied, setLinkCopied] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -261,7 +252,7 @@ export function CompatibilityShareCard({ result, invitedByRealName, realNameA, r
     let cancelled = false;
     setPreview(null);
     canvasRef.current = null;
-    renderCompatibilityCard(result, invitedByRealName, realNameA, realNameB).then((canvas) => {
+    renderCompatibilityCard(result, realNameA, realNameB).then((canvas) => {
       if (cancelled) return;
       canvasRef.current = canvas;
       setPreview(canvas.toDataURL("image/png"));
@@ -269,7 +260,7 @@ export function CompatibilityShareCard({ result, invitedByRealName, realNameA, r
     return () => {
       cancelled = true;
     };
-  }, [result, invitedByRealName, realNameA, realNameB]);
+  }, [result, realNameA, realNameB]);
 
   // Invites whoever "Side B" is to take the survey and get their own
   // Legacy Name — carries the same ?invite=&name= payload the /ending
