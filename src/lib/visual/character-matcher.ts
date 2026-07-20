@@ -6,9 +6,35 @@
 // between measured axes and a hand-authored design profile. It is not
 // recognition and carries no identity claim.
 
-import type { CharacterEntry, CharacterMatch, VisualAxes } from "@/types/visual.types";
+import type { CharacterEntry, CharacterMatch, GenderFilter, VisualAxes, VisualPresentation } from "@/types/visual.types";
 import { VISUAL_AXES } from "@/types/visual.types";
 import { CharacterDatabase } from "@/data/character-database";
+
+// Gender-filter mechanism ported from the Lens Hunt Android app
+// (AppRepository.findMatches): MALE/FEMALE keep that gender plus nonbinary
+// characters, ANY keeps everyone, and AUTO defers to the detected visual
+// presentation only when it's confident enough — otherwise it's a no-op.
+function applyGenderFilter(
+  pool: CharacterEntry[],
+  filter: GenderFilter,
+  presentation?: VisualPresentation,
+  presentationConfidence = 0,
+): CharacterEntry[] {
+  const byPresentation = (p: "male" | "female") =>
+    pool.filter((c) => c.gender === p || c.gender === "nonbinary");
+
+  switch (filter) {
+    case "MALE": return byPresentation("male");
+    case "FEMALE": return byPresentation("female");
+    case "ANY": return pool;
+    case "AUTO":
+    default:
+      if (presentationConfidence >= 0.6 && (presentation === "male" || presentation === "female")) {
+        return byPresentation(presentation);
+      }
+      return pool;
+  }
+}
 
 // Perceptual weighting: axes people actually notice when they say two
 // faces "look alike" count more than photometric ones.
@@ -39,10 +65,17 @@ function similarityTo(user: VisualAxes, profile: VisualAxes): { score: number; a
  */
 export function matchCharacters(
   user: VisualAxes,
-  opts: { count?: number; collection?: CharacterEntry["collection"] } = {},
+  opts: {
+    count?: number;
+    collection?: CharacterEntry["collection"];
+    genderFilter?: GenderFilter;
+    visualPresentation?: VisualPresentation;
+    presentationConfidence?: number;
+  } = {},
 ): CharacterMatch[] {
-  const { count = 5, collection } = opts;
-  const pool = collection ? CharacterDatabase.byCollection(collection) : CharacterDatabase.all();
+  const { count = 5, collection, genderFilter = "AUTO", visualPresentation, presentationConfidence } = opts;
+  const basePool = collection ? CharacterDatabase.byCollection(collection) : CharacterDatabase.all();
+  const pool = applyGenderFilter(basePool, genderFilter, visualPresentation, presentationConfidence);
 
   const scored = pool
     .map((character) => {

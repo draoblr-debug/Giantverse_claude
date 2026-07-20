@@ -199,5 +199,19 @@ export async function computeVisualEmbedding(imageSrc: string): Promise<VisualEm
     warmth: clamp01(((rSum - bSum) / (SIZE * SIZE) + 20) / 90),
   };
 
-  return { axes: axesOut, faceConfidence: box.confidence * clamp01(edgeTotal / (SIZE * SIZE * 8)) };
+  // Coarse presentation read for the optional gender filter's AUTO mode —
+  // same formula as the Lens Hunt Android app's detectVisualPresentation
+  // (jaw + brow + shape angularity), so AUTO behaves the same way here.
+  const presentationScore = (axesOut.jawSharpness + axesOut.browWeight + axesOut.angularity) / 3;
+  const visualPresentation: VisualEmbedding["visualPresentation"] =
+    presentationScore > 0.55 ? "male" : presentationScore < 0.45 ? "female" : "unknown";
+  const presentationConfidence =
+    visualPresentation === "unknown" ? 0.5 : clamp01(visualPresentation === "male" ? presentationScore : 1 - presentationScore);
+
+  return {
+    axes: axesOut,
+    faceConfidence: box.confidence * clamp01(edgeTotal / (SIZE * SIZE * 8)),
+    visualPresentation,
+    presentationConfidence,
+  };
 }

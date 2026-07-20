@@ -26,7 +26,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "levi-ackerman", name: "Levi Ackerman", series: "Attack on Titan",
     designer: "Hajime Isayama", studio: "Wit Studio / MAPPA", franchise: "Attack on Titan",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Sharp jaw", "Narrow eyes", "Minimal expression", "Short dark undercut"],
     design_language: ["Precision", "Discipline", "Efficiency"],
     shape_language: "Triangles and rectangles",
@@ -44,7 +44,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "gojo-satoru", name: "Gojo Satoru", series: "Jujutsu Kaisen",
     designer: "Gege Akutami", studio: "MAPPA", franchise: "Jujutsu Kaisen",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Blindfold/eyewear", "Tall silhouette", "White spiked hair", "Confident smirk"],
     design_language: ["Overwhelming ease", "Mystery", "Play"],
     shape_language: "Vertical rectangles with triangular hair",
@@ -62,7 +62,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "sasuke-uchiha", name: "Sasuke Uchiha", series: "Naruto",
     designer: "Masashi Kishimoto", studio: "Pierrot", franchise: "Naruto",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Angular face", "Narrow dark eyes", "Raven hair with back spikes", "Cool detachment"],
     design_language: ["Rivalry", "Elegance", "Distance"],
     shape_language: "Triangles",
@@ -80,7 +80,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "mikasa-ackerman", name: "Mikasa Ackerman", series: "Attack on Titan",
     designer: "Hajime Isayama", studio: "Wit Studio / MAPPA", franchise: "Attack on Titan",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Level gaze", "Short black bob", "Red scarf", "Athletic frame"],
     design_language: ["Loyalty", "Lethality", "Restraint"],
     shape_language: "Rectangles with one soft accent",
@@ -98,7 +98,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "sung-jinwoo", name: "Sung Jinwoo", series: "Solo Leveling",
     designer: "DUBU (REDICE)", studio: "A-1 Pictures", franchise: "Solo Leveling",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Sharp long face", "Piercing narrow eyes", "Black layered hair", "Shadowed palette"],
     design_language: ["Ascension", "Menace", "Solitude"],
     shape_language: "Long triangles",
@@ -116,7 +116,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "tanjiro-kamado", name: "Tanjiro Kamado", series: "Demon Slayer",
     designer: "Koyoharu Gotouge", studio: "ufotable", franchise: "Demon Slayer",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Soft rounded eyes", "Forehead scar", "Checked haori", "Hanafuda earrings"],
     design_language: ["Kindness", "Inheritance", "Resolve"],
     shape_language: "Circles on squares",
@@ -134,7 +134,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "naruto-uzumaki", name: "Naruto Uzumaki", series: "Naruto",
     designer: "Masashi Kishimoto", studio: "Pierrot", franchise: "Naruto",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Round face", "Wide bright eyes", "Spiky blond hair", "Whisker marks", "Grin"],
     design_language: ["Refusal to be ignored", "Optimism", "Energy"],
     shape_language: "Triangles on circles",
@@ -152,7 +152,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "violet-evergarden", name: "Violet Evergarden", series: "Violet Evergarden",
     designer: "Akiko Takase", studio: "Kyoto Animation", franchise: "Violet Evergarden",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Doll-like symmetry", "Wide still eyes", "Long braided blond hair", "White gloves"],
     design_language: ["Rebirth", "Restraint", "Grace"],
     shape_language: "Soft verticals, ribbon curves",
@@ -170,7 +170,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "edward-elric", name: "Edward Elric", series: "Fullmetal Alchemist",
     designer: "Hiromu Arakawa", studio: "Bones", franchise: "Fullmetal Alchemist",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Golden braid", "Fierce round eyes", "Red coat", "Automail arm"],
     design_language: ["Defiance", "Cost", "Brotherhood"],
     shape_language: "Compact triangles",
@@ -188,7 +188,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "goku", name: "Son Goku", series: "Dragon Ball",
     designer: "Akira Toriyama", studio: "Toei Animation", franchise: "Dragon Ball",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Instantly readable spiked hair", "Round friendly eyes", "Orange gi", "Broad grin"],
     design_language: ["Joyful strength", "Simplicity", "Motion"],
     shape_language: "Bold triangles on circles",
@@ -206,7 +206,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "monkey-d-luffy", name: "Monkey D. Luffy", series: "One Piece",
     designer: "Eiichiro Oda", studio: "Toei Animation", franchise: "One Piece",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Straw hat", "Huge round eyes", "Scar under eye", "Rubbery grin"],
     design_language: ["Freedom", "Promise", "Appetite for life"],
     shape_language: "Circles",
@@ -224,7 +224,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "l-lawliet", name: "L Lawliet", series: "Death Note",
     designer: "Takeshi Obata", studio: "Madhouse", franchise: "Death Note",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Deep-set shadowed eyes", "Unkempt black hair", "Hunched posture", "Pale palette"],
     design_language: ["Intellect", "Eccentricity", "Insomnia"],
     shape_language: "Collapsed verticals",
@@ -242,7 +242,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "sailor-moon", name: "Usagi Tsukino (Sailor Moon)", series: "Sailor Moon",
     designer: "Naoko Takeuchi", studio: "Toei Animation", franchise: "Sailor Moon",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Twin odango buns", "Enormous expressive eyes", "Flowing twin tails", "Bright palette"],
     design_language: ["Hope", "Femininity as power", "Transformation"],
     shape_language: "Circles and crescents",
@@ -260,7 +260,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "spike-spiegel", name: "Spike Spiegel", series: "Cowboy Bebop",
     designer: "Toshihiro Kawamoto", studio: "Sunrise", franchise: "Cowboy Bebop",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Lanky frame", "Heavy-lidded eyes", "Fluffy dark mop", "Loose suit"],
     design_language: ["Cool detachment", "Jazz", "Past regrets"],
     shape_language: "Loose verticals",
@@ -278,7 +278,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "nezuko-kamado", name: "Nezuko Kamado", series: "Demon Slayer",
     designer: "Koyoharu Gotouge", studio: "ufotable", franchise: "Demon Slayer",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Bamboo muzzle", "Huge gradient eyes", "Long flowing hair", "Pink kimono"],
     design_language: ["Innocence preserved", "Duality", "Protection"],
     shape_language: "Soft circles",
@@ -296,7 +296,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "kaneki-ken", name: "Ken Kaneki", series: "Tokyo Ghoul",
     designer: "Sui Ishida", studio: "Pierrot", franchise: "Tokyo Ghoul",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["White hair transformation", "One hidden eye", "Slender frame", "Mask"],
     design_language: ["Duality", "Loss of self", "Rebirth through pain"],
     shape_language: "Fragile verticals",
@@ -314,7 +314,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "zero-two", name: "Zero Two", series: "DARLING in the FRANXX",
     designer: "Masayoshi Tanaka", studio: "Trigger / A-1", franchise: "DARLING in the FRANXX",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Long pink hair", "Small horns", "Teal eyes", "Confident smile"],
     design_language: ["Otherness", "Allure", "Hunger for life"],
     shape_language: "Long S-curves",
@@ -333,7 +333,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "cloud-strife", name: "Cloud Strife", series: "Final Fantasy VII",
     designer: "Tetsuya Nomura", studio: "Square Enix", franchise: "Final Fantasy",
-    collection: "games",
+    collection: "games", gender: "male",
     visual_traits: ["Gravity-defying blond spikes", "Glowing blue eyes", "Oversized sword", "Guarded look"],
     design_language: ["Burden", "Iconic silhouette", "Guardedness"],
     shape_language: "Aggressive triangles",
@@ -351,7 +351,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "aloy", name: "Aloy", series: "Horizon", designer: "Guerrilla character team",
     studio: "Guerrilla Games", franchise: "Horizon",
-    collection: "games",
+    collection: "games", gender: "female",
     visual_traits: ["Voluminous red braids", "Freckles", "Determined brow", "Tribal-tech layers"],
     design_language: ["Curiosity", "Resilience", "Nature-meets-machine"],
     shape_language: "Organic triangles",
@@ -369,7 +369,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "link", name: "Link", series: "The Legend of Zelda",
     designer: "Nintendo EPD", studio: "Nintendo", franchise: "Zelda",
-    collection: "games",
+    collection: "games", gender: "male",
     visual_traits: ["Pointed ears", "Neat blond hair", "Clear watchful eyes", "Green/blue hero wear"],
     design_language: ["Courage", "Silence", "Readiness"],
     shape_language: "Clean triangles",
@@ -387,7 +387,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "2b", name: "2B", series: "NieR: Automata",
     designer: "Akihiko Yoshida", studio: "PlatinumGames / Square Enix", franchise: "NieR",
-    collection: "games",
+    collection: "games", gender: "female",
     visual_traits: ["Blindfold visor", "White bob", "Black gothic dress", "Composed mouth"],
     design_language: ["Elegy", "Duty", "Concealed feeling"],
     shape_language: "Gothic verticals",
@@ -406,7 +406,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "batman", name: "Batman", series: "DC Comics",
     designer: "Bob Kane · Bill Finger", studio: "DC", franchise: "Batman",
-    collection: "comics",
+    collection: "comics", gender: "male",
     visual_traits: ["Cowl ears", "Hidden eyes", "Square jaw", "Cape silhouette"],
     design_language: ["Fear as tool", "Discipline", "Theatre"],
     shape_language: "Hard triangles on a square jaw",
@@ -424,7 +424,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "spider-man", name: "Spider-Man", series: "Marvel Comics",
     designer: "Steve Ditko", studio: "Marvel", franchise: "Spider-Man",
-    collection: "comics",
+    collection: "comics", gender: "male",
     visual_traits: ["Full mask", "Expressive eye shapes", "Lean build", "Web texture"],
     design_language: ["Agility", "Youth", "Relatability"],
     shape_language: "Dynamic curves",
@@ -442,7 +442,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "miles-morales", name: "Miles Morales", series: "Spider-Verse",
     designer: "Sony Pictures Animation team", studio: "Sony Pictures Animation", franchise: "Spider-Man",
-    collection: "animation",
+    collection: "animation", gender: "male",
     visual_traits: ["Short curly hair", "Expressive brows", "Sneakers with suit", "Spray-paint accents"],
     design_language: ["Becoming", "Street style", "Rhythm"],
     shape_language: "Rounded rectangles",
@@ -460,7 +460,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "elsa", name: "Elsa", series: "Frozen",
     designer: "Disney Animation team", studio: "Walt Disney Animation", franchise: "Frozen",
-    collection: "animation",
+    collection: "animation", gender: "female",
     visual_traits: ["Platinum side braid", "Almond eyes", "Poised chin", "Ice-blue palette"],
     design_language: ["Contained power", "Poise", "Release"],
     shape_language: "Elegant verticals and crystals",
@@ -478,7 +478,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "eren-yeager", name: "Eren Yeager", series: "Attack on Titan",
     designer: "Hajime Isayama", studio: "Wit Studio / MAPPA", franchise: "Attack on Titan",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Undercut hairline", "Teal narrow eyes", "Lean soldier frame", "Scarf-less intensity"],
     design_language: ["Rage", "Freedom", "Sacrifice"],
     shape_language: "Sharp verticals, tightened over time",
@@ -496,7 +496,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "vegeta", name: "Vegeta", series: "Dragon Ball",
     designer: "Akira Toriyama", studio: "Toei Animation", franchise: "Dragon Ball",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Flame-spiked black hair", "Widow's peak", "Sharp scowl", "Saiyan armor"],
     design_language: ["Pride", "Rivalry", "Royalty"],
     shape_language: "Aggressive flame triangles",
@@ -514,7 +514,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "ichigo-kurosaki", name: "Ichigo Kurosaki", series: "Bleach",
     designer: "Tite Kubo", studio: "Pierrot", franchise: "Bleach",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Bright orange hair", "Scowling brows", "Black bankai coat", "Tall lean frame"],
     design_language: ["Defiance", "Protection", "Duality"],
     shape_language: "Long verticals, torn edges",
@@ -532,7 +532,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "rukia-kuchiki", name: "Rukia Kuchiki", series: "Bleach",
     designer: "Tite Kubo", studio: "Pierrot", franchise: "Bleach",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Bob-length black hair", "Violet eyes", "Small stature", "Composed stillness"],
     design_language: ["Nobility", "Restraint", "Hidden warmth"],
     shape_language: "Compact ovals and straight verticals",
@@ -550,7 +550,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "killua-zoldyck", name: "Killua Zoldyck", series: "Hunter x Hunter",
     designer: "Yoshihiro Togashi", studio: "Madhouse", franchise: "Hunter x Hunter",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Silver spiky hair", "Cat-like grin", "Slight frame", "Claw-like hands"],
     design_language: ["Latent danger", "Playfulness", "Trauma"],
     shape_language: "Spiky triangles on a slim frame",
@@ -568,7 +568,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "gon-freecss", name: "Gon Freecss", series: "Hunter x Hunter",
     designer: "Yoshihiro Togashi", studio: "Madhouse", franchise: "Hunter x Hunter",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Spiky green-black hair", "Wide round eyes", "Star-shaped pupils in excitement", "Simple green outfit"],
     design_language: ["Curiosity", "Innocence", "Wild instinct"],
     shape_language: "Rounded triangles",
@@ -586,7 +586,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "izuku-midoriya", name: "Izuku Midoriya", series: "My Hero Academia",
     designer: "Kohei Horikoshi", studio: "Bones", franchise: "My Hero Academia",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Curly green hair", "Freckles", "Round eyes", "Utility hero suit"],
     design_language: ["Underdog resolve", "Inheritance", "Anxiety-to-courage"],
     shape_language: "Soft curves with sudden hard lines under stress",
@@ -604,7 +604,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "katsuki-bakugo", name: "Katsuki Bakugo", series: "My Hero Academia",
     designer: "Kohei Horikoshi", studio: "Bones", franchise: "My Hero Academia",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Spiky ash-blond hair", "Permanent glare", "Wide stance", "Explosive gauntlets"],
     design_language: ["Aggression", "Pride", "Insecurity masked"],
     shape_language: "Explosive jagged triangles",
@@ -622,7 +622,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "shoto-todoroki", name: "Shoto Todoroki", series: "My Hero Academia",
     designer: "Kohei Horikoshi", studio: "Bones", franchise: "My Hero Academia",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Half red, half white hair", "Burn scar over one eye", "Heterochromia", "Cold composure"],
     design_language: ["Duality", "Inherited trauma", "Balance"],
     shape_language: "Split vertical symmetry",
@@ -640,7 +640,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "denji", name: "Denji", series: "Chainsaw Man",
     designer: "Tatsuki Fujimoto", studio: "MAPPA", franchise: "Chainsaw Man",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Choppy blond-orange hair", "Chainsaw pull-cord on chest", "Wide manic grin", "Ragged clothes"],
     design_language: ["Poverty-to-power", "Impulse", "Body horror"],
     shape_language: "Jagged, mismatched lines",
@@ -658,7 +658,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "power", name: "Power", series: "Chainsaw Man",
     designer: "Tatsuki Fujimoto", studio: "MAPPA", franchise: "Chainsaw Man",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Long pale-pink horns", "Sharp fanged grin", "Blood-red eyes", "Chaotic energy"],
     design_language: ["Vanity", "Chaos", "Loyalty hidden under bravado"],
     shape_language: "Sharp curves and horn spirals",
@@ -676,7 +676,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "makima", name: "Makima", series: "Chainsaw Man",
     designer: "Tatsuki Fujimoto", studio: "MAPPA", franchise: "Chainsaw Man",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Auburn braided hair", "Ringed golden eyes", "Unblinking calm", "Office-formal suit"],
     design_language: ["Control", "Deception", "Menace disguised as warmth"],
     shape_language: "Flat, unbroken verticals",
@@ -694,7 +694,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "anya-forger", name: "Anya Forger", series: "Spy x Family",
     designer: "Tatsuya Endo", studio: "Wit Studio / CloverWorks", franchise: "Spy x Family",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Pink bob hair", "Huge round eyes", "Wide expressive brows", "Small frame"],
     design_language: ["Innocence", "Comic timing", "Secret knowledge"],
     shape_language: "Circles on circles",
@@ -712,7 +712,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "loid-forger", name: "Loid Forger", series: "Spy x Family",
     designer: "Tatsuya Endo", studio: "Wit Studio / CloverWorks", franchise: "Spy x Family",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Slicked side-part hair", "Rectangular glasses", "Composed smile", "Tailored suit"],
     design_language: ["Practiced normalcy", "Precision", "Hidden danger"],
     shape_language: "Clean rectangles",
@@ -730,7 +730,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "yor-forger", name: "Yor Forger", series: "Spy x Family",
     designer: "Tatsuya Endo", studio: "Wit Studio / CloverWorks", franchise: "Spy x Family",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Long black hair", "Red eyes", "Elegant posture", "Hidden strength"],
     design_language: ["Elegance", "Lethality", "Domestic disguise"],
     shape_language: "Long soft verticals with hidden angles",
@@ -748,7 +748,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "rimuru-tempest", name: "Rimuru Tempest", series: "That Time I Got Reincarnated as a Slime",
     designer: "Fuse / Mitz Vah", studio: "8bit", franchise: "Tensura",
-    collection: "anime",
+    collection: "anime", gender: "nonbinary",
     visual_traits: ["Sky-blue slicked hair", "Ambiguous androgynous features", "Calm expression", "Simple robes"],
     design_language: ["Adaptability", "Benevolent power", "Otherness"],
     shape_language: "Smooth, fluid curves",
@@ -766,7 +766,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "ainz-ooal-gown", name: "Ainz Ooal Gown", series: "Overlord",
     designer: "Kugane Maruyama / so-bin", studio: "Madhouse", franchise: "Overlord",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Skeletal face", "Glowing red eye sockets", "Ornate black robes", "Towering presence"],
     design_language: ["Dread authority", "Loneliness", "Overwhelming power"],
     shape_language: "Sharp verticals and gothic ornament",
@@ -784,7 +784,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "senku-ishigami", name: "Senku Ishigami", series: "Dr. Stone",
     designer: "Riichiro Inagaki / Boichi", studio: "TMS Entertainment", franchise: "Dr. Stone",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Spiky pale hair", "Sharp analytical eyes", "Lab coat over ragged clothes", "Confident smirk"],
     design_language: ["Rationality", "Ambition", "Resourcefulness"],
     shape_language: "Sharp angular spikes",
@@ -802,7 +802,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "roy-mustang", name: "Roy Mustang", series: "Fullmetal Alchemist",
     designer: "Hiromu Arakawa", studio: "Bones", franchise: "Fullmetal Alchemist",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Slicked black hair", "Sharp confident eyes", "Military uniform", "Ignition gloves"],
     design_language: ["Ambition", "Control", "Charisma"],
     shape_language: "Straight authoritative verticals",
@@ -820,7 +820,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "riza-hawkeye", name: "Riza Hawkeye", series: "Fullmetal Alchemist",
     designer: "Hiromu Arakawa", studio: "Bones", franchise: "Fullmetal Alchemist",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Blonde tied-back hair", "Sharp amber eyes", "Military uniform", "Rifle"],
     design_language: ["Loyalty", "Discipline", "Quiet strength"],
     shape_language: "Clean straight verticals",
@@ -838,7 +838,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "kakashi-hatake", name: "Kakashi Hatake", series: "Naruto",
     designer: "Masashi Kishimoto", studio: "Pierrot", franchise: "Naruto",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Silver gravity-defying hair", "Face mask", "Sharingan eye", "Relaxed posture"],
     design_language: ["Mystery", "Mastery", "Weariness"],
     shape_language: "Spiky silhouette over a slouched frame",
@@ -856,7 +856,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "itachi-uchiha", name: "Itachi Uchiha", series: "Naruto",
     designer: "Masashi Kishimoto", studio: "Pierrot", franchise: "Naruto",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Long dark hair, low ponytail", "Under-eye lines", "Sharingan eyes", "Calm sorrow"],
     design_language: ["Sacrifice", "Burden", "Quiet tragedy"],
     shape_language: "Long straight verticals",
@@ -874,7 +874,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "hinata-hyuga", name: "Hinata Hyuga", series: "Naruto",
     designer: "Masashi Kishimoto", studio: "Pierrot", franchise: "Naruto",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Dark blue-black hair", "Pale lavender eyes", "Shy posture", "Soft features"],
     design_language: ["Gentleness", "Quiet resolve", "Devotion"],
     shape_language: "Soft rounded verticals",
@@ -892,7 +892,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "roronoa-zoro", name: "Roronoa Zoro", series: "One Piece",
     designer: "Eiichiro Oda", studio: "Toei Animation", franchise: "One Piece",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Green hair", "Three earrings", "Scarred eye", "Three swords"],
     design_language: ["Discipline", "Loyalty", "Single-minded ambition"],
     shape_language: "Blocky rectangles",
@@ -910,7 +910,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "nami", name: "Nami", series: "One Piece",
     designer: "Eiichiro Oda", studio: "Toei Animation", franchise: "One Piece",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Orange hair", "Tattoo", "Confident posture", "Practical adventurer outfit"],
     design_language: ["Cunning", "Ambition", "Freedom"],
     shape_language: "Curved, dynamic lines",
@@ -928,7 +928,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "nico-robin", name: "Nico Robin", series: "One Piece",
     designer: "Eiichiro Oda", studio: "Toei Animation", franchise: "One Piece",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Long black hair", "Crossed-arm stance", "Sharp intelligent eyes", "Elegant scars"],
     design_language: ["Mystery", "Survival", "Composure"],
     shape_language: "Long elegant verticals",
@@ -946,7 +946,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "shanks", name: "Shanks", series: "One Piece",
     designer: "Eiichiro Oda", studio: "Toei Animation", franchise: "One Piece",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Red shaggy hair", "Scarred left eye", "Missing arm", "Relaxed captain's coat"],
     design_language: ["Legend", "Ease", "Restraint"],
     shape_language: "Loose flowing lines",
@@ -964,7 +964,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "motoko-kusanagi", name: "Motoko Kusanagi", series: "Ghost in the Shell",
     designer: "Masamune Shirow", studio: "Production I.G", franchise: "Ghost in the Shell",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Short lavender hair", "Cybernetic body", "Piercing stare", "Minimal tactical suit"],
     design_language: ["Post-human identity", "Control", "Isolation"],
     shape_language: "Clean geometric verticals",
@@ -982,7 +982,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "faye-valentine", name: "Faye Valentine", series: "Cowboy Bebop",
     designer: "Toshihiro Kawamoto", studio: "Sunrise", franchise: "Cowboy Bebop",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Short purple hair", "Yellow short-suit", "Confident smirk", "Lean frame"],
     design_language: ["Cynicism", "Freedom", "Performed confidence"],
     shape_language: "Sharp diagonals",
@@ -1000,7 +1000,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "rei-ayanami", name: "Rei Ayanami", series: "Neon Genesis Evangelion",
     designer: "Yoshiyuki Sadamoto", studio: "Gainax", franchise: "Evangelion",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Pale blue hair", "Red eyes", "Blank expression", "Plugsuit"],
     design_language: ["Emptiness", "Otherness", "Fragile stillness"],
     shape_language: "Flat, minimal verticals",
@@ -1018,7 +1018,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "asuka-langley-soryu", name: "Asuka Langley Soryu", series: "Neon Genesis Evangelion",
     designer: "Yoshiyuki Sadamoto", studio: "Gainax", franchise: "Evangelion",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Long red hair", "Blue eyes", "Confident scowl", "Red plugsuit"],
     design_language: ["Pride", "Insecurity", "Aggression"],
     shape_language: "Sharp verticals with dramatic hair volume",
@@ -1036,7 +1036,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "shinji-ikari", name: "Shinji Ikari", series: "Neon Genesis Evangelion",
     designer: "Yoshiyuki Sadamoto", studio: "Gainax", franchise: "Evangelion",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Brown short hair", "Downcast eyes", "Slight frame", "Plugsuit"],
     design_language: ["Avoidance", "Anxiety", "Reluctant duty"],
     shape_language: "Rounded, inward-curving lines",
@@ -1054,7 +1054,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "guts", name: "Guts", series: "Berserk",
     designer: "Kentaro Miura", studio: "OLM / Millepensee", franchise: "Berserk",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Long shaggy black hair", "Scar across face", "Massive sword", "Prosthetic arm"],
     design_language: ["Endurance", "Rage", "Trauma made physical"],
     shape_language: "Heavy jagged verticals",
@@ -1072,7 +1072,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "griffith", name: "Griffith", series: "Berserk",
     designer: "Kentaro Miura", studio: "OLM / Millepensee", franchise: "Berserk",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Pale silver hair", "Delicate features", "White armor", "Piercing calm eyes"],
     design_language: ["Ambition", "Beauty as weapon", "Ruthlessness"],
     shape_language: "Elegant sharp verticals",
@@ -1090,7 +1090,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "jotaro-kujo", name: "Jotaro Kujo", series: "JoJo's Bizarre Adventure",
     designer: "Hirohiko Araki", studio: "David Production", franchise: "JoJo's Bizarre Adventure",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Black spiked hair under cap", "Sunglasses", "Tall stoic frame", "School uniform coat"],
     design_language: ["Stoicism", "Cool defiance", "Silent strength"],
     shape_language: "Rigid straight verticals",
@@ -1108,7 +1108,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "dio-brando", name: "Dio Brando", series: "JoJo's Bizarre Adventure",
     designer: "Hirohiko Araki", studio: "David Production", franchise: "JoJo's Bizarre Adventure",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Golden wavy hair", "Sharp cheekbones", "Theatrical pose", "Ornate coat"],
     design_language: ["Megalomania", "Theatricality", "Immortal vanity"],
     shape_language: "Dramatic curling verticals",
@@ -1126,7 +1126,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "inuyasha", name: "Inuyasha", series: "Inuyasha",
     designer: "Rumiko Takahashi", studio: "Sunrise", franchise: "Inuyasha",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Long silver hair", "Dog ears", "Red fire-rat robe", "Sharp fangs"],
     design_language: ["Duality (human/demon)", "Impulsiveness", "Loyalty"],
     shape_language: "Wild flowing lines",
@@ -1144,7 +1144,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "kagome-higurashi", name: "Kagome Higurashi", series: "Inuyasha",
     designer: "Rumiko Takahashi", studio: "Sunrise", franchise: "Inuyasha",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Black hair", "School uniform", "Bow and arrow", "Warm expression"],
     design_language: ["Modernity meeting myth", "Warmth", "Determination"],
     shape_language: "Soft rounded verticals",
@@ -1162,7 +1162,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "rin-tohsaka", name: "Rin Tohsaka", series: "Fate/stay night",
     designer: "Takashi Takeuchi", studio: "ufotable", franchise: "Fate",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Twin-tailed black hair", "Sharp confident eyes", "Red-accented outfit", "Poised stance"],
     design_language: ["Pride", "Competence", "Guarded warmth"],
     shape_language: "Sharp symmetrical verticals",
@@ -1180,7 +1180,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "saber", name: "Saber", series: "Fate/stay night",
     designer: "Takashi Takeuchi", studio: "ufotable", franchise: "Fate",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Golden bob hair", "Green eyes", "Blue-silver armor", "Regal composure"],
     design_language: ["Nobility", "Duty", "Suppressed longing"],
     shape_language: "Clean armored verticals",
@@ -1198,7 +1198,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "natsu-dragneel", name: "Natsu Dragneel", series: "Fairy Tail",
     designer: "Hiro Mashima", studio: "A-1 Pictures / Bridge", franchise: "Fairy Tail",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Pink spiky hair", "Scaly scarf", "Wide grin", "Fire aura"],
     design_language: ["Recklessness", "Warmth", "Loyalty"],
     shape_language: "Spiky, warm-toned triangles",
@@ -1216,7 +1216,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "erza-scarlet", name: "Erza Scarlet", series: "Fairy Tail",
     designer: "Hiro Mashima", studio: "A-1 Pictures / Bridge", franchise: "Fairy Tail",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Scarlet armor", "Red hair", "Eye-patch history (scar)", "Commanding posture"],
     design_language: ["Discipline", "Armor as identity", "Protective strength"],
     shape_language: "Structured armored verticals",
@@ -1234,7 +1234,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "saitama", name: "Saitama", series: "One Punch Man",
     designer: "ONE / Yusuke Murata", studio: "Madhouse / J.C.Staff", franchise: "One Punch Man",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Completely bald head", "Blank round eyes", "Plain yellow jumpsuit", "Unremarkable build"],
     design_language: ["Deconstructed heroism", "Boredom", "Anticlimax"],
     shape_language: "Simple ovals and rectangles",
@@ -1252,7 +1252,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "genos", name: "Genos", series: "One Punch Man",
     designer: "ONE / Yusuke Murata", studio: "Madhouse / J.C.Staff", franchise: "One Punch Man",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Spiky blond hair", "Cybernetic body", "Glowing eyes", "Battle-ready stance"],
     design_language: ["Vengeance", "Precision engineering", "Devotion"],
     shape_language: "Mechanical straight lines",
@@ -1270,7 +1270,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "tatsumaki", name: "Tatsumaki", series: "One Punch Man",
     designer: "ONE / Yusuke Murata", studio: "Madhouse / J.C.Staff", franchise: "One Punch Man",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Long green hair", "Small child-like stature", "Sharp intense eyes", "Floating cape"],
     design_language: ["Overwhelming power in a small frame", "Irritability", "Pride"],
     shape_language: "Long flowing curves on a tiny frame",
@@ -1288,7 +1288,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "touka-kirishima", name: "Touka Kirishima", series: "Tokyo Ghoul",
     designer: "Sui Ishida", studio: "Pierrot", franchise: "Tokyo Ghoul",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Short black-purple hair", "Sharp red-black kakugan eyes", "Casual tough exterior", "Guarded softness"],
     design_language: ["Survival", "Guardedness", "Hidden gentleness"],
     shape_language: "Sharp compact verticals",
@@ -1306,7 +1306,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "lelouch-lamperouge", name: "Lelouch Lamperouge", series: "Code Geass",
     designer: "CLAMP / Takahiro Kimura", studio: "Sunrise", franchise: "Code Geass",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Black tousled hair", "Violet eyes", "Cape and mask persona", "Theatrical confidence"],
     design_language: ["Duality", "Manipulation", "Theatricality"],
     shape_language: "Dramatic sweeping verticals",
@@ -1324,7 +1324,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "c-c", name: "C.C.", series: "Code Geass",
     designer: "CLAMP / Takahiro Kimura", studio: "Sunrise", franchise: "Code Geass",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Long green hair", "Amber eyes", "White gothic-lolita outfit", "Detached calm"],
     design_language: ["Immortal detachment", "Mystery", "Playful cruelty"],
     shape_language: "Flowing verticals with ornate trim",
@@ -1342,7 +1342,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "subaru-natsuki", name: "Subaru Natsuki", series: "Re:Zero",
     designer: "Tappei Nagatsuki / Shinichirou Otsuka", studio: "White Fox", franchise: "Re:Zero",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Messy black hair", "Tracksuit", "Nervous energy", "Wide expressive eyes"],
     design_language: ["Ordinary thrown into extraordinary", "Persistence", "Anxiety"],
     shape_language: "Soft casual verticals",
@@ -1360,7 +1360,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "emilia", name: "Emilia", series: "Re:Zero",
     designer: "Tappei Nagatsuki / Shinichirou Otsuka", studio: "White Fox", franchise: "Re:Zero",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Long silver hair", "Violet eyes", "Pointed elf ears", "Gentle expression"],
     design_language: ["Otherness", "Gentleness", "Burden of resemblance"],
     shape_language: "Soft flowing verticals",
@@ -1378,7 +1378,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "all-might", name: "All Might", series: "My Hero Academia",
     designer: "Kohei Horikoshi", studio: "Bones", franchise: "My Hero Academia",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Tall muscular silhouette", "Blond flame-swept hair", "Wide toothy grin", "Star-quiff bangs"],
     design_language: ["Symbolic hope", "Performed invincibility", "Hidden decay"],
     shape_language: "Massive exaggerated triangles",
@@ -1396,7 +1396,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "ochaco-uraraka", name: "Ochaco Uraraka", series: "My Hero Academia",
     designer: "Kohei Horikoshi", studio: "Bones", franchise: "My Hero Academia",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Brown bob hair", "Round rosy cheeks", "Pink accented suit", "Earnest expression"],
     design_language: ["Groundedness", "Earnestness", "Quiet ambition"],
     shape_language: "Soft rounded verticals",
@@ -1414,7 +1414,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "tomura-shigaraki", name: "Tomura Shigaraki", series: "My Hero Academia",
     designer: "Kohei Horikoshi", studio: "Bones", franchise: "My Hero Academia",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Pale blue-grey hair", "Hand mask over face", "Scratching habit scars", "Disjointed posture"],
     design_language: ["Fractured identity", "Rage", "Contamination"],
     shape_language: "Broken, disjointed angles",
@@ -1432,7 +1432,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "yuji-itadori", name: "Yuji Itadori", series: "Jujutsu Kaisen",
     designer: "Gege Akutami", studio: "MAPPA", franchise: "Jujutsu Kaisen",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Pink-tinged short hair", "Athletic build", "Easy grin", "Sports-club casualness"],
     design_language: ["Ordinary strength", "Compassion", "Borrowed power"],
     shape_language: "Compact athletic rectangles",
@@ -1450,7 +1450,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "megumi-fushiguro", name: "Megumi Fushiguro", series: "Jujutsu Kaisen",
     designer: "Gege Akutami", studio: "MAPPA", franchise: "Jujutsu Kaisen",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Dark tousled hair", "Blue-grey eyes", "Guarded stillness", "School uniform"],
     design_language: ["Guardedness", "Duty", "Suppressed feeling"],
     shape_language: "Straight compact verticals",
@@ -1468,7 +1468,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "nobara-kugisaki", name: "Nobara Kugisaki", series: "Jujutsu Kaisen",
     designer: "Gege Akutami", studio: "MAPPA", franchise: "Jujutsu Kaisen",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Orange bob hair", "Confident smirk", "Hammer and nails motif", "Bold makeup"],
     design_language: ["Defiant confidence", "Rural pride", "Sharp wit"],
     shape_language: "Bold angular curves",
@@ -1486,7 +1486,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "sukuna", name: "Sukuna", series: "Jujutsu Kaisen",
     designer: "Gege Akutami", studio: "MAPPA", franchise: "Jujutsu Kaisen",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Spiky black-red hair", "Extra eyes and mouths under curses", "Ornate markings", "Predatory calm"],
     design_language: ["Ancient malice", "Overwhelming power", "Contempt"],
     shape_language: "Sharp jagged verticals",
@@ -1504,7 +1504,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "nanami-kento", name: "Nanami Kento", series: "Jujutsu Kaisen",
     designer: "Gege Akutami", studio: "MAPPA", franchise: "Jujutsu Kaisen",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Slicked-back blond hair", "Rectangular glasses", "Business suit", "Weary composure"],
     design_language: ["Professionalism", "Exhaustion", "Reluctant duty"],
     shape_language: "Clean rectangles",
@@ -1522,7 +1522,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "zenitsu-agatsuma", name: "Zenitsu Agatsuma", series: "Demon Slayer",
     designer: "Koyoharu Gotouge", studio: "ufotable", franchise: "Demon Slayer",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Bright yellow spiky hair", "Wide fearful eyes", "Checkered haori", "Trembling posture"],
     design_language: ["Cowardice masking latent strength", "Anxiety", "Sudden transformation"],
     shape_language: "Erratic zigzag lines",
@@ -1540,7 +1540,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "inosuke-hashibira", name: "Inosuke Hashibira", series: "Demon Slayer",
     designer: "Koyoharu Gotouge", studio: "ufotable", franchise: "Demon Slayer",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Boar-head mask", "Wild spiky hair underneath", "Muscular bare torso", "Aggressive stance"],
     design_language: ["Feral confidence", "Isolation", "Untamed strength"],
     shape_language: "Jagged animal-inspired angles",
@@ -1558,7 +1558,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "giyu-tomioka", name: "Giyu Tomioka", series: "Demon Slayer",
     designer: "Koyoharu Gotouge", studio: "ufotable", franchise: "Demon Slayer",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Dark teal hair", "Half-lidded stoic eyes", "Water-pattern haori", "Minimal expression"],
     design_language: ["Stoicism", "Grief carried quietly", "Discipline"],
     shape_language: "Flowing straight verticals",
@@ -1576,7 +1576,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "muzan-kibutsuji", name: "Muzan Kibutsuji", series: "Demon Slayer",
     designer: "Koyoharu Gotouge", studio: "ufotable", franchise: "Demon Slayer",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Slicked black hair", "Sharp cold eyes", "Immaculate formal suit", "Shifting monstrous forms"],
     design_language: ["Vanity", "Predation", "Control"],
     shape_language: "Rigid, immaculate verticals",
@@ -1594,7 +1594,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "hinata-shoyo", name: "Hinata Shoyo", series: "Haikyuu!!",
     designer: "Haruichi Furudate", studio: "Production I.G", franchise: "Haikyuu!!",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Orange spiky hair", "Bright wide eyes", "Compact athletic build", "Perpetual energy"],
     design_language: ["Underdog drive", "Joy", "Explosive effort"],
     shape_language: "Bouncy compact triangles",
@@ -1612,7 +1612,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "kageyama-tobio", name: "Kageyama Tobio", series: "Haikyuu!!",
     designer: "Haruichi Furudate", studio: "Production I.G", franchise: "Haikyuu!!",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Dark navy hair", "Sharp intense eyes", "Tall lean build", "Guarded intensity"],
     design_language: ["Perfectionism", "Isolation", "Redirected passion"],
     shape_language: "Straight tense verticals",
@@ -1630,7 +1630,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "isagi-yoichi", name: "Isagi Yoichi", series: "Blue Lock",
     designer: "Muneyuki Kaneshiro / Yusuke Nomura", studio: "8bit", franchise: "Blue Lock",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Dark blue-black hair", "Calculating eyes", "Athletic build", "Sudden predatory focus"],
     design_language: ["Egoism cultivated", "Calculation", "Hunger"],
     shape_language: "Sharp converging lines",
@@ -1648,7 +1648,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "shigeo-kageyama", name: "Shigeo Kageyama", series: "Mob Psycho 100",
     designer: "ONE", studio: "Bones", franchise: "Mob Psycho 100",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Round plain face", "Bowl-cut black hair", "Blank expression", "Ordinary school uniform"],
     design_language: ["Suppressed power", "Ordinariness", "Emotional restraint"],
     shape_language: "Simple rounded rectangles",
@@ -1666,7 +1666,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "reigen-arataka", name: "Reigen Arataka", series: "Mob Psycho 100",
     designer: "ONE", studio: "Bones", franchise: "Mob Psycho 100",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Slicked side-part hair", "Confident smirk", "Cheap suit", "Exaggerated bravado"],
     design_language: ["Fraudulent confidence", "Charisma", "Hidden decency"],
     shape_language: "Loose confident verticals",
@@ -1684,7 +1684,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "thorfinn", name: "Thorfinn", series: "Vinland Saga",
     designer: "Makoto Yukimura", studio: "Wit Studio / MAPPA", franchise: "Vinland Saga",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Messy blond hair", "Weathered scarred face", "Lean warrior build", "Weary eyes"],
     design_language: ["Vengeance to peace", "Trauma", "Redemption"],
     shape_language: "Weathered straight verticals",
@@ -1702,7 +1702,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "atsushi-nakajima", name: "Atsushi Nakajima", series: "Bungou Stray Dogs",
     designer: "Kafka Asagiri / Sango Harukawa", studio: "Bones", franchise: "Bungou Stray Dogs",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["White-silver messy hair", "Wide anxious eyes", "Oversized coat", "Hesitant posture"],
     design_language: ["Self-doubt", "Hidden power", "Belonging"],
     shape_language: "Soft uneven verticals",
@@ -1720,7 +1720,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "dazai-osamu", name: "Dazai Osamu", series: "Bungou Stray Dogs",
     designer: "Kafka Asagiri / Sango Harukawa", studio: "Bones", franchise: "Bungou Stray Dogs",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Messy brown hair", "Bandaged arms", "Loose bandage-white coat", "Playful deadpan expression"],
     design_language: ["Performed nihilism", "Charm", "Concealed pain"],
     shape_language: "Loose casual verticals",
@@ -1738,7 +1738,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "hisoka-morow", name: "Hisoka Morow", series: "Hunter x Hunter",
     designer: "Yoshihiro Togashi", studio: "Madhouse", franchise: "Hunter x Hunter",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Magenta hair with teardrop marks", "Playing-card motifs", "Androgynous elegance", "Predatory smile"],
     design_language: ["Sadistic hunger", "Theatricality", "Unpredictability"],
     shape_language: "Curling ornamental lines",
@@ -1756,7 +1756,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "kurapika", name: "Kurapika", series: "Hunter x Hunter",
     designer: "Yoshihiro Togashi", studio: "Madhouse", franchise: "Hunter x Hunter",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Blond bowl-styled hair", "Scarlet eyes when enraged", "Tribal earrings", "Composed formality"],
     design_language: ["Vengeance restrained", "Grief", "Discipline"],
     shape_language: "Clean symmetrical verticals",
@@ -1774,7 +1774,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "armin-arlert", name: "Armin Arlert", series: "Attack on Titan",
     designer: "Hajime Isayama", studio: "Wit Studio / MAPPA", franchise: "Attack on Titan",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Blond bob hair", "Wide thoughtful eyes", "Slight frame", "Strategic calm"],
     design_language: ["Intelligence", "Vulnerability", "Growth into leadership"],
     shape_language: "Soft rounded verticals",
@@ -1792,7 +1792,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "historia-reiss", name: "Historia Reiss", series: "Attack on Titan",
     designer: "Hajime Isayama", studio: "Wit Studio / MAPPA", franchise: "Attack on Titan",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Short blond hair", "Pale blue eyes", "Small stature", "Shifting demeanor"],
     design_language: ["Concealed identity", "Duty", "Reclaimed selfhood"],
     shape_language: "Soft compact verticals",
@@ -1810,7 +1810,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "vash-the-stampede", name: "Vash the Stampede", series: "Trigun",
     designer: "Yasuhiro Nightow", studio: "Madhouse", franchise: "Trigun",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Spiky blond hair", "Round orange sunglasses", "Long red coat", "Exaggerated goofy expression"],
     design_language: ["Pacifism hiding trauma", "Comic deflection", "Legendary destruction"],
     shape_language: "Loose exaggerated verticals",
@@ -1828,7 +1828,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "mugen", name: "Mugen", series: "Samurai Champloo",
     designer: "Kazuto Nakazawa", studio: "Manglobe", franchise: "Samurai Champloo",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Wild dreadlocked hair", "Loose sleeveless outfit", "Feral grin", "Erratic stance"],
     design_language: ["Chaos", "Freedom", "Untrained brilliance"],
     shape_language: "Erratic broken angles",
@@ -1846,7 +1846,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "jin", name: "Jin", series: "Samurai Champloo",
     designer: "Kazuto Nakazawa", studio: "Manglobe", franchise: "Samurai Champloo",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Neat tied-back hair", "Round glasses", "Formal ronin dress", "Composed stillness"],
     design_language: ["Discipline", "Tradition", "Quiet intensity"],
     shape_language: "Straight formal verticals",
@@ -1864,7 +1864,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "okabe-rintaro", name: "Okabe Rintaro", series: "Steins;Gate",
     designer: "5pb. / Nitroplus", studio: "White Fox", franchise: "Steins;Gate",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Messy dark hair", "Lab coat", "Theatrical mad-scientist posture", "Intense eyes"],
     design_language: ["Delusion as armor", "Obsession", "Hidden grief"],
     shape_language: "Loose dramatic verticals",
@@ -1882,7 +1882,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "kurisu-makise", name: "Kurisu Makise", series: "Steins;Gate",
     designer: "5pb. / Nitroplus", studio: "White Fox", franchise: "Steins;Gate",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Long chestnut hair", "Sharp intelligent eyes", "Casual practical clothing", "Guarded composure"],
     design_language: ["Intelligence", "Guardedness", "Reluctant warmth"],
     shape_language: "Straight composed verticals",
@@ -1900,7 +1900,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "aki-hayakawa", name: "Aki Hayakawa", series: "Chainsaw Man",
     designer: "Tatsuki Fujimoto", studio: "MAPPA", franchise: "Chainsaw Man",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Dark shaggy hair", "Weary eyes", "Casual devil-hunter coat", "Quiet resolve"],
     design_language: ["Weary duty", "Grief", "Quiet resolve"],
     shape_language: "Straight weathered verticals",
@@ -1918,7 +1918,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "sanji", name: "Sanji", series: "One Piece",
     designer: "Eiichiro Oda", studio: "Toei Animation", franchise: "One Piece",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Swirl-eyebrow blond hair", "Suit-and-tie chef outfit", "Cigarette", "Theatrical charm"],
     design_language: ["Chivalry", "Showmanship", "Hidden discipline"],
     shape_language: "Sharp elegant diagonals",
@@ -1936,7 +1936,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "tony-tony-chopper", name: "Tony Tony Chopper", series: "One Piece",
     designer: "Eiichiro Oda", studio: "Toei Animation", franchise: "One Piece",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Small reindeer form", "Blue pom-pom hat", "Antlers", "Oversized round eyes"],
     design_language: ["Innocence", "Insecurity", "Found family"],
     shape_language: "Rounded soft ovals",
@@ -1954,7 +1954,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "piccolo", name: "Piccolo", series: "Dragon Ball",
     designer: "Akira Toriyama", studio: "Toei Animation", franchise: "Dragon Ball",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Green skin", "Pointed ears", "Purple-white cape and turban", "Stoic scowl"],
     design_language: ["Redemption", "Discipline", "Mentorship"],
     shape_language: "Angular straight verticals",
@@ -1972,7 +1972,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "frieza", name: "Frieza", series: "Dragon Ball",
     designer: "Akira Toriyama", studio: "Toei Animation", franchise: "Dragon Ball",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Purple-white alien form", "Elongated head", "Cold cruel smile", "Ornate armor plating"],
     design_language: ["Sadism", "Superiority", "Cold elegance"],
     shape_language: "Smooth alien curves with sharp points",
@@ -1990,7 +1990,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "sakura-haruno", name: "Sakura Haruno", series: "Naruto",
     designer: "Masashi Kishimoto", studio: "Pierrot", franchise: "Naruto",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Bright pink hair", "Green eyes", "Wide forehead", "Determined expression"],
     design_language: ["Growth", "Insecurity overcome", "Devotion"],
     shape_language: "Soft rounded verticals",
@@ -2008,7 +2008,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "gaara", name: "Gaara", series: "Naruto",
     designer: "Masashi Kishimoto", studio: "Pierrot", franchise: "Naruto",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Blood-red hair", "Dark-ringed eyes", "Love kanji scar", "Gourd of sand"],
     design_language: ["Isolation", "Redemption", "Restrained power"],
     shape_language: "Sharp compact verticals",
@@ -2026,7 +2026,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "might-guy", name: "Might Guy", series: "Naruto",
     designer: "Masashi Kishimoto", studio: "Pierrot", franchise: "Naruto",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Bowl-cut black hair", "Thick round brows", "Green jumpsuit", "Exaggerated confident pose"],
     design_language: ["Hard work over talent", "Loyalty", "Exuberance"],
     shape_language: "Bold rounded rectangles",
@@ -2044,7 +2044,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "alphonse-elric", name: "Alphonse Elric", series: "Fullmetal Alchemist",
     designer: "Hiromu Arakawa", studio: "Bones", franchise: "Fullmetal Alchemist",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Full-body armor", "Empty helmet interior", "Gentle posture", "Blank faceplate"],
     design_language: ["Lost body", "Innocence", "Quiet grief"],
     shape_language: "Heavy rounded rectangles",
@@ -2062,7 +2062,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "asta", name: "Asta", series: "Black Clover",
     designer: "Yuki Tabata", studio: "Pierrot", franchise: "Black Clover",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Spiky white hair", "Loud grinning expression", "Anti-magic sword", "Muscular scrappy build"],
     design_language: ["Underdog defiance", "Loudness", "Persistence"],
     shape_language: "Jagged energetic triangles",
@@ -2080,7 +2080,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "yuno", name: "Yuno", series: "Black Clover",
     designer: "Yuki Tabata", studio: "Pierrot", franchise: "Black Clover",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Pale blond hair", "Calm confident eyes", "Wind-magic grimoire", "Composed posture"],
     design_language: ["Talent", "Composure", "Quiet rivalry"],
     shape_language: "Clean straight verticals",
@@ -2098,7 +2098,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "tetsuo-shima", name: "Tetsuo Shima", series: "Akira",
     designer: "Katsuhiro Otomo", studio: "Tokyo Movie Shinsha", franchise: "Akira",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Messy dark hair", "Red biker jacket", "Volatile expression", "Increasing bodily distortion"],
     design_language: ["Powerlessness to power", "Instability", "Body horror"],
     shape_language: "Escalating jagged distortion",
@@ -2116,7 +2116,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "sakura-kinomoto", name: "Sakura Kinomoto", series: "Cardcaptor Sakura",
     designer: "CLAMP", studio: "Madhouse", franchise: "Cardcaptor Sakura",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Short auburn hair", "Big green eyes", "Pink outfit motifs", "Bright cheerful expression"],
     design_language: ["Innocence", "Courage", "Warmth"],
     shape_language: "Soft round curves",
@@ -2134,7 +2134,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "tohru-honda", name: "Tohru Honda", series: "Fruits Basket",
     designer: "Natsuki Takaya", studio: "TMS Entertainment", franchise: "Fruits Basket",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Brown hair with orange highlights", "Gentle wide eyes", "School uniform", "Soft warm posture"],
     design_language: ["Compassion", "Grief carried gently", "Healing presence"],
     shape_language: "Soft rounded verticals",
@@ -2152,7 +2152,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "yusuke-urameshi", name: "Yusuke Urameshi", series: "Yu Yu Hakusho",
     designer: "Yoshihiro Togashi", studio: "Studio Pierrot", franchise: "Yu Yu Hakusho",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Slicked-back black hair", "Delinquent smirk", "School uniform", "Relaxed aggressive stance"],
     design_language: ["Rebellion", "Loyalty", "Hidden decency"],
     shape_language: "Sharp casual angles",
@@ -2170,7 +2170,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "hiei", name: "Hiei", series: "Yu Yu Hakusho",
     designer: "Yoshihiro Togashi", studio: "Studio Pierrot", franchise: "Yu Yu Hakusho",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Spiky black-red hair", "Third eye under bandana", "Small stature", "Cold expression"],
     design_language: ["Isolation", "Pride", "Suppressed loyalty"],
     shape_language: "Sharp compact spikes",
@@ -2188,7 +2188,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "kenshin-himura", name: "Kenshin Himura", series: "Rurouni Kenshin",
     designer: "Nobuhiro Watsuki", studio: "Studio Deen", franchise: "Rurouni Kenshin",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Long red hair tied back", "Cross-shaped scar", "Gentle smile", "Wandering swordsman attire"],
     design_language: ["Redemption", "Pacifism over violence", "Buried past"],
     shape_language: "Soft flowing verticals with a hard scar",
@@ -2206,7 +2206,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "gintoki-sakata", name: "Gintoki Sakata", series: "Gintama",
     designer: "Hideaki Sorachi", studio: "Sunrise", franchise: "Gintama",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Wild silver perm", "Half-lidded lazy eyes", "Kimono-jacket combo", "Wooden bokuto sword"],
     design_language: ["Comic apathy hiding conviction", "Nostalgia", "Loyalty"],
     shape_language: "Loose messy verticals",
@@ -2224,7 +2224,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "kaguya-shinomiya", name: "Kaguya Shinomiya", series: "Kaguya-sama: Love is War",
     designer: "Aka Akasaka", studio: "A-1 Pictures", franchise: "Kaguya-sama",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Long black hair", "Sharp elegant features", "Refined uniform", "Controlled composure"],
     design_language: ["Pride", "Repressed feeling", "Elegance as armor"],
     shape_language: "Long straight elegant verticals",
@@ -2242,7 +2242,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "frieren", name: "Frieren", series: "Frieren: Beyond Journey's End",
     designer: "Kanehito Yamada / Tsukasa Abe", studio: "Madhouse", franchise: "Frieren",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Long pale hair", "Ancient calm eyes", "Simple mage robes", "Unhurried stillness"],
     design_language: ["Timelessness", "Detachment learned", "Quiet grief"],
     shape_language: "Long soft flowing verticals",
@@ -2260,7 +2260,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "ai-hoshino", name: "Ai Hoshino", series: "Oshi no Ko",
     designer: "Aka Akasaka / Mengo Yokoyari", studio: "Doga Kobo", franchise: "Oshi no Ko",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Pink twin-tail hair", "Star-shaped eye motif", "Idol stage outfit", "Radiant practiced smile"],
     design_language: ["Performed perfection", "Hidden loneliness", "Idol artifice"],
     shape_language: "Bright symmetrical curves",
@@ -2278,7 +2278,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "tamaki-suoh", name: "Tamaki Suoh", series: "Ouran High School Host Club",
     designer: "Bisco Hatori", studio: "Bones", franchise: "Ouran High School Host Club",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Blond wavy hair", "Violet eyes", "Theatrical flourish", "Host club uniform"],
     design_language: ["Theatricality", "Performed charm", "Hidden loneliness"],
     shape_language: "Sweeping ornate curves",
@@ -2296,7 +2296,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "haruhi-fujioka", name: "Haruhi Fujioka", series: "Ouran High School Host Club",
     designer: "Bisco Hatori", studio: "Bones", franchise: "Ouran High School Host Club",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Short practical brown hair", "Round unassuming eyes", "Boy's uniform", "Plain demeanor"],
     design_language: ["Androgyny", "Practicality", "Unbothered authenticity"],
     shape_language: "Simple soft rectangles",
@@ -2314,7 +2314,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "nana-osaki", name: "Nana Osaki", series: "Nana",
     designer: "Ai Yazawa", studio: "Madhouse", franchise: "Nana",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Short black spiky hair", "Punk styling", "Piercings", "Confident stage presence"],
     design_language: ["Rebellion", "Independence", "Guarded vulnerability"],
     shape_language: "Sharp punk angles",
@@ -2332,7 +2332,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "nana-komatsu", name: "Nana Komatsu", series: "Nana",
     designer: "Ai Yazawa", studio: "Madhouse", franchise: "Nana",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Wavy brown hair", "Soft round eyes", "Trendy casual fashion", "Open expressive face"],
     design_language: ["Dependence", "Warmth", "Naivety"],
     shape_language: "Soft rounded curves",
@@ -2350,7 +2350,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "ryuji-takasu", name: "Ryuji Takasu", series: "Toradora!",
     designer: "Yuyuko Takemiya / Yasu", studio: "J.C.Staff", franchise: "Toradora!",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Messy dark hair", "Sharp narrow eyes read as delinquent", "Domestic apron", "Gentle demeanor mismatched with looks"],
     design_language: ["Mistaken menace", "Domesticity", "Quiet devotion"],
     shape_language: "Sharp features, soft posture",
@@ -2368,7 +2368,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "taiga-aisaka", name: "Taiga Aisaka", series: "Toradora!",
     designer: "Yuyuko Takemiya / Yasu", studio: "J.C.Staff", franchise: "Toradora!",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Long auburn twin-tails", "Small fierce stature", "Sharp glaring eyes", "Palmtop-tiger energy"],
     design_language: ["Fierce vulnerability", "Small stature big presence", "Guardedness"],
     shape_language: "Sharp small triangles",
@@ -2386,7 +2386,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "kousei-arima", name: "Kousei Arima", series: "Your Lie in April",
     designer: "Naoshi Arakawa", studio: "A-1 Pictures", franchise: "Your Lie in April",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Dark neat hair", "Glasses", "Pale nervous complexion", "Formal piano-recital attire"],
     design_language: ["Grief frozen in place", "Monochrome world", "Reawakening color"],
     shape_language: "Rigid straight verticals",
@@ -2404,7 +2404,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "kaori-miyazono", name: "Kaori Miyazono", series: "Your Lie in April",
     designer: "Naoshi Arakawa", studio: "A-1 Pictures", franchise: "Your Lie in April",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Short blonde bob", "Bright expressive eyes", "Violin performance dress", "Dynamic energetic motion"],
     design_language: ["Vitality", "Freedom", "Hidden fragility"],
     shape_language: "Dynamic flowing curves",
@@ -2422,7 +2422,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "kyo-sohma", name: "Kyo Sohma", series: "Fruits Basket",
     designer: "Natsuki Takaya", studio: "TMS Entertainment", franchise: "Fruits Basket",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Orange spiky hair", "Sharp intense eyes", "Bracelet worn constantly", "Guarded aggressive stance"],
     design_language: ["Self-loathing", "Suppressed rage", "Longing to belong"],
     shape_language: "Sharp jagged verticals",
@@ -2440,7 +2440,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "yuki-sohma", name: "Yuki Sohma", series: "Fruits Basket",
     designer: "Natsuki Takaya", studio: "TMS Entertainment", franchise: "Fruits Basket",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Silver-grey hair", "Delicate elegant features", "Composed melancholy", "Soft school uniform"],
     design_language: ["Elegance as isolation", "Suppressed pain", "Quiet grace"],
     shape_language: "Soft elegant verticals",
@@ -2458,7 +2458,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "sawako-kuronuma", name: "Sawako Kuronuma", series: "Kimi ni Todoke",
     designer: "Karuho Shiina", studio: "Production I.G", franchise: "Kimi ni Todoke",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Long straight black hair", "Wide innocent eyes", "Shy hunched posture", "Plain school uniform"],
     design_language: ["Misread as sinister", "Innocence", "Slow-blooming confidence"],
     shape_language: "Long straight verticals",
@@ -2476,7 +2476,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "yuki-cross", name: "Yuki Cross", series: "Vampire Knight",
     designer: "Matsuri Hino", studio: "Studio Deen", franchise: "Vampire Knight",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Brown twin-tail hair", "Wide gentle eyes", "Guardian academy uniform", "Quiet determination"],
     design_language: ["Protective duty", "Innocence", "Hidden strength"],
     shape_language: "Soft rounded verticals",
@@ -2494,7 +2494,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "zero-kiryu", name: "Zero Kiryu", series: "Vampire Knight",
     designer: "Matsuri Hino", studio: "Studio Deen", franchise: "Vampire Knight",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Silver-white hair", "Cold guarded eyes", "Vampire hunter coat", "Rigid tense posture"],
     design_language: ["Self-hatred", "Guarded trauma", "Restrained violence"],
     shape_language: "Sharp rigid verticals",
@@ -2512,7 +2512,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "kyoko-mogami", name: "Kyoko Mogami", series: "Skip Beat!",
     designer: "Yoshiki Nakamura", studio: "Hal Film Maker", franchise: "Skip Beat!",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Straight dark hair", "Intense determined eyes", "Multiple stage personas", "Expressive dramatic range"],
     design_language: ["Revenge fuel", "Reinvention", "Hidden warmth"],
     shape_language: "Shifting theatrical verticals",
@@ -2530,7 +2530,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "jet-black", name: "Jet Black", series: "Cowboy Bebop",
     designer: "Toshihiro Kawamoto", studio: "Sunrise", franchise: "Cowboy Bebop",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Bald head", "Mechanical arm", "Weathered face", "Practical bounty-hunter attire"],
     design_language: ["Weary reliability", "Old-world honor", "Quiet paternalism"],
     shape_language: "Solid weathered rectangles",
@@ -2548,7 +2548,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "edward-wong", name: "Edward Wong (Radical Edward)", series: "Cowboy Bebop",
     designer: "Toshihiro Kawamoto", studio: "Sunrise", franchise: "Cowboy Bebop",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Wild orange hair", "Goggles pushed up", "Contortionist posture", "Minimal patchwork clothing"],
     design_language: ["Feral genius", "Freedom from convention", "Childlike chaos"],
     shape_language: "Loose erratic curves",
@@ -2566,7 +2566,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "nicholas-wolfwood", name: "Nicholas D. Wolfwood", series: "Trigun",
     designer: "Yasuhiro Nightow", studio: "Madhouse", franchise: "Trigun",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Slicked-back dark hair", "Priest collar", "Giant cross-shaped weapon case", "Weary cynical eyes"],
     design_language: ["Contradiction", "Weary faith", "Hidden violence"],
     shape_language: "Heavy straight verticals",
@@ -2584,7 +2584,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "misato-katsuragi", name: "Misato Katsuragi", series: "Neon Genesis Evangelion",
     designer: "Yoshiyuki Sadamoto", studio: "Gainax", franchise: "Evangelion",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Long dark purple hair", "Confident casual posture", "Military uniform by day, casual by night", "Guarded warmth"],
     design_language: ["Duality", "Guarded leadership", "Buried trauma"],
     shape_language: "Loose confident verticals",
@@ -2602,7 +2602,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "kaworu-nagisa", name: "Kaworu Nagisa", series: "Neon Genesis Evangelion",
     designer: "Yoshiyuki Sadamoto", studio: "Gainax", franchise: "Evangelion",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Pale silver-grey hair", "Red eyes", "Serene unbothered expression", "Plugsuit"],
     design_language: ["Otherness", "Serenity", "Foreboding calm"],
     shape_language: "Flat serene verticals",
@@ -2620,7 +2620,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "ranma-saotome", name: "Ranma Saotome", series: "Ranma ½",
     designer: "Rumiko Takahashi", studio: "Studio Deen", franchise: "Ranma ½",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Black hair in a pigtail", "Confident smirk", "Chinese-style martial arts outfit", "Dual-form design"],
     design_language: ["Identity fluidity", "Cockiness", "Comic chaos"],
     shape_language: "Sharp confident diagonals",
@@ -2638,7 +2638,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "doraemon", name: "Doraemon", series: "Doraemon",
     designer: "Fujiko F. Fujio", studio: "Shin-Ei Animation", franchise: "Doraemon",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Round blue robotic body", "White round belly", "Red collar bell", "No visible ears (plot detail)"],
     design_language: ["Comfort", "Whimsy", "Reliable friendship"],
     shape_language: "Perfect circles",
@@ -2656,7 +2656,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "nobita-nobi", name: "Nobita Nobi", series: "Doraemon",
     designer: "Fujiko F. Fujio", studio: "Shin-Ei Animation", franchise: "Doraemon",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Round glasses", "Simple bowl-ish hair", "Yellow shirt", "Perpetually anxious posture"],
     design_language: ["Ordinary struggle", "Hopefulness", "Comic hapless energy"],
     shape_language: "Soft simple rectangles",
@@ -2674,7 +2674,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "astro-boy", name: "Astro Boy", series: "Astro Boy",
     designer: "Osamu Tezuka", studio: "Mushi Production", franchise: "Astro Boy",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Spiky black hair points", "Round expressive eyes", "Red boots", "Rocket-powered limbs"],
     design_language: ["Innocence", "Hybrid humanity", "Retro-futurism"],
     shape_language: "Bold geometric points",
@@ -2692,7 +2692,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "tuxedo-mask", name: "Tuxedo Mask", series: "Sailor Moon",
     designer: "Naoko Takeuchi", studio: "Toei Animation", franchise: "Sailor Moon",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Black tuxedo and cape", "Top hat", "Domino mask", "Rose motif"],
     design_language: ["Chivalry", "Mystery", "Classic romance"],
     shape_language: "Formal sharp verticals",
@@ -2710,7 +2710,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "sailor-mars", name: "Sailor Mars", series: "Sailor Moon",
     designer: "Naoko Takeuchi", studio: "Toei Animation", franchise: "Sailor Moon",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Long black hair", "Red bow accents", "Shrine maiden undertones", "Fierce confident eyes"],
     design_language: ["Fire and passion", "Spiritual discipline", "Fierce loyalty"],
     shape_language: "Sharp confident verticals",
@@ -2728,7 +2728,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "albedo", name: "Albedo", series: "Overlord",
     designer: "Kugane Maruyama / so-bin", studio: "Madhouse", franchise: "Overlord",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Long platinum blonde hair", "Black-feathered wings", "Golden eyes", "Elegant gothic dress"],
     design_language: ["Devotion", "Beauty as weapon", "Obsessive loyalty"],
     shape_language: "Elegant flowing verticals",
@@ -2746,7 +2746,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "naofumi-iwatani", name: "Naofumi Iwatani", series: "The Rising of the Shield Hero",
     designer: "Aneko Yusagi", studio: "Kinema Citrus", franchise: "The Rising of the Shield Hero",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Messy brown hair", "Guarded distrustful eyes", "Heavy shield equipped", "Defensive stance"],
     design_language: ["Betrayal endured", "Guardedness", "Protective resolve"],
     shape_language: "Heavy defensive rectangles",
@@ -2764,7 +2764,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "rudeus-greyrat", name: "Rudeus Greyrat", series: "Mushoku Tensei",
     designer: "Rifujin na Magonote", studio: "Studio Bind", franchise: "Mushoku Tensei",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Blue-grey hair", "Round glasses", "Mage robes", "Awkward earnest posture"],
     design_language: ["Second chance", "Redemption arc", "Earnest effort"],
     shape_language: "Soft rounded verticals",
@@ -2782,7 +2782,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "kazuma-satou", name: "Kazuma Satou", series: "KonoSuba",
     designer: "Natsume Akatsuki", studio: "Studio Deen", franchise: "KonoSuba",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Messy brown hair", "Deadpan tired eyes", "Plain adventurer gear", "Unimpressed expression"],
     design_language: ["Deadpan pragmatism", "Comic misfortune", "Reluctant heroism"],
     shape_language: "Plain simple rectangles",
@@ -2800,7 +2800,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "megumin", name: "Megumin", series: "KonoSuba",
     designer: "Natsume Akatsuki", studio: "Studio Deen", franchise: "KonoSuba",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Dark spiky twin-tails", "Eyepatch", "Red-and-black mage outfit", "Dramatic wide-armed pose"],
     design_language: ["Obsessive specialization", "Theatrical pride", "Comic excess"],
     shape_language: "Dramatic sharp triangles",
@@ -2818,7 +2818,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "aqua", name: "Aqua", series: "KonoSuba",
     designer: "Natsume Akatsuki", studio: "Studio Deen", franchise: "KonoSuba",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Long light-blue hair", "Wide dramatic eyes", "Goddess robes", "Exaggeratedly expressive face"],
     design_language: ["Incompetent divinity", "Comic vanity", "Melodrama"],
     shape_language: "Flowing dramatic curves",
@@ -2836,7 +2836,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "milim-nava", name: "Milim Nava", series: "That Time I Got Reincarnated as a Slime",
     designer: "Fuse / Mitz Vah", studio: "8bit", franchise: "Tensura",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Pink twin-drill hair", "Childlike stature", "Dragon-motif accessories", "Playful destructive energy"],
     design_language: ["Overwhelming power in a child's body", "Playfulness", "Ancient origin"],
     shape_language: "Bouncy curled spirals",
@@ -2854,7 +2854,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "goblin-slayer", name: "Goblin Slayer", series: "Goblin Slayer",
     designer: "Kumo Kagyu / Noboru Kannatuki", studio: "White Fox", franchise: "Goblin Slayer",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Full-face steel helmet", "Mismatched practical armor", "No visible face", "Efficient grim posture"],
     design_language: ["Obsessive focus", "Trauma-driven purpose", "Facelessness"],
     shape_language: "Utilitarian angular plates",
@@ -2872,7 +2872,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "hanamichi-sakuragi", name: "Hanamichi Sakuragi", series: "Slam Dunk",
     designer: "Takehiko Inoue", studio: "Toei Animation", franchise: "Slam Dunk",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Bright red spiky hair", "Tall broad frame", "Cocky grin", "Basketball jersey"],
     design_language: ["Bravado", "Underdog talent", "Comic overconfidence"],
     shape_language: "Bold spiky triangles",
@@ -2890,7 +2890,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "rukawa-kaede", name: "Rukawa Kaede", series: "Slam Dunk",
     designer: "Takehiko Inoue", studio: "Toei Animation", franchise: "Slam Dunk",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Dark messy hair", "Half-lidded aloof eyes", "Lean athletic build", "Minimal expression"],
     design_language: ["Talent without effort shown", "Aloofness", "Singular focus"],
     shape_language: "Straight understated verticals",
@@ -2908,7 +2908,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "kuroko-tetsuya", name: "Kuroko Tetsuya", series: "Kuroko's Basketball",
     designer: "Tadatoshi Fujimaki", studio: "Production I.G", franchise: "Kuroko's Basketball",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Pale blue short hair", "Faint unassuming presence", "Slight build", "Blank calm expression"],
     design_language: ["Invisibility as skill", "Quiet support", "Understated power"],
     shape_language: "Minimal faint rectangles",
@@ -2926,7 +2926,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "kagami-taiga", name: "Kagami Taiga", series: "Kuroko's Basketball",
     designer: "Tadatoshi Fujimaki", studio: "Production I.G", franchise: "Kuroko's Basketball",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Bright red-tipped hair", "Sharp intense eyes", "Tall imposing frame", "Aggressive dunk-ready stance"],
     design_language: ["Raw power", "American-trained confidence", "Competitive fire"],
     shape_language: "Bold aggressive triangles",
@@ -2944,7 +2944,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "ryoma-echizen", name: "Ryoma Echizen", series: "The Prince of Tennis",
     designer: "Takeshi Konomi", studio: "Production I.G", franchise: "The Prince of Tennis",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Dark green-black hair under a cap", "Sharp confident smirk", "Sports cap pulled low", "Compact athletic build"],
     design_language: ["Prodigy arrogance", "Cool composure", "Singular focus"],
     shape_language: "Compact sharp rectangles",
@@ -2962,7 +2962,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "tsubasa-ozora", name: "Tsubasa Ozora", series: "Captain Tsubasa",
     designer: "Yoichi Takahashi", studio: "Tsuchida Productions", franchise: "Captain Tsubasa",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Spiky black hair", "Bright determined eyes", "Soccer uniform", "Dynamic mid-kick pose"],
     design_language: ["Pure passion", "Underdog ambition", "Boundless optimism"],
     shape_language: "Dynamic energetic triangles",
@@ -2980,7 +2980,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "shinichi-izumi", name: "Shinichi Izumi", series: "Parasyte",
     designer: "Hitoshi Iwaaki", studio: "Madhouse", franchise: "Parasyte",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Neat short brown hair", "Ordinary student features", "Increasingly hardened eyes", "Right hand marked by scarring"],
     design_language: ["Lost humanity", "Hybrid identity", "Gradual hardening"],
     shape_language: "Straight tightening verticals",
@@ -2998,7 +2998,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "akira-fudo", name: "Akira Fudo", series: "Devilman Crybaby",
     designer: "Go Nagai / Masaaki Yuasa", studio: "Science SARU", franchise: "Devilman",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Messy dark hair", "Sharp demon-form horns", "Muscular hybrid build", "Tearful expressive eyes"],
     design_language: ["Hybrid duality", "Empathy as strength", "Devastation"],
     shape_language: "Jagged hybrid angles",
@@ -3016,7 +3016,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "ryo-asuka", name: "Ryo Asuka", series: "Devilman Crybaby",
     designer: "Go Nagai / Masaaki Yuasa", studio: "Science SARU", franchise: "Devilman",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Silver-white hair", "Cold analytical eyes", "Slim androgynous build", "Composed detached demeanor"],
     design_language: ["Detachment", "Obsessive devotion", "Hidden inhumanity"],
     shape_language: "Clean cold verticals",
@@ -3034,7 +3034,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "rena-ryugu", name: "Rena Ryugu", series: "Higurashi: When They Cry",
     designer: "Ryukishi07", studio: "Studio Deen", franchise: "Higurashi",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Long orange-brown hair", "Wide innocent eyes", "Rural school uniform", "Unsettling smile shifts"],
     design_language: ["Innocence weaponized", "Hidden madness", "Rural warmth turned uncanny"],
     shape_language: "Soft curves with sudden sharp breaks",
@@ -3052,7 +3052,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "lucy", name: "Lucy", series: "Elfen Lied",
     designer: "Lynn Okamoto", studio: "Arms", franchise: "Elfen Lied",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Long pink hair", "Diclonius horns", "Cold vacant stare", "Invisible telekinetic vectors implied"],
     design_language: ["Trauma-born violence", "Duality (Lucy/Nyu)", "Isolation"],
     shape_language: "Sharp cold verticals",
@@ -3070,7 +3070,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "riko", name: "Riko", series: "Made in Abyss",
     designer: "Akihito Tsukushi", studio: "Kinema Citrus", franchise: "Made in Abyss",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Blue-black bob hair", "Bright determined eyes", "Explorer's cloak", "Small resilient frame"],
     design_language: ["Childlike resolve", "Curiosity over caution", "Found family"],
     shape_language: "Soft compact verticals",
@@ -3088,7 +3088,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "reg", name: "Reg", series: "Made in Abyss",
     designer: "Akihito Tsukushi", studio: "Kinema Citrus", franchise: "Made in Abyss",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Pale robotic limbs", "Soft human-like face", "Large cannon-arm", "Gentle cautious demeanor"],
     design_language: ["Hybrid vulnerability", "Protective devotion", "Mysterious origin"],
     shape_language: "Smooth hybrid curves",
@@ -3106,7 +3106,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "emma", name: "Emma", series: "The Promised Neverland",
     designer: "Kaiu Shirai / Posuka Demizu", studio: "CloverWorks", franchise: "The Promised Neverland",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Short orange-brown hair", "Wide determined eyes", "Orphanage uniform", "Resolute protective posture"],
     design_language: ["Protective resolve", "Hope under threat", "Found-family leadership"],
     shape_language: "Soft determined verticals",
@@ -3124,7 +3124,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "norman", name: "Norman", series: "The Promised Neverland",
     designer: "Kaiu Shirai / Posuka Demizu", studio: "CloverWorks", franchise: "The Promised Neverland",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["White-silver hair", "Calm calculating eyes", "Orphanage uniform", "Composed strategic posture"],
     design_language: ["Quiet genius", "Sacrifice", "Calculated hope"],
     shape_language: "Soft calculated verticals",
@@ -3142,7 +3142,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "madoka-kaname", name: "Madoka Kaname", series: "Puella Magi Madoka Magica",
     designer: "Magica Quartet / Ume Aoki", studio: "Shaft", franchise: "Madoka Magica",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Soft pink twin-tail hair", "Wide innocent eyes", "Plain school uniform", "Gentle uncertain posture"],
     design_language: ["Ordinary goodness", "Impending sacrifice", "Innocence under threat"],
     shape_language: "Soft rounded verticals",
@@ -3160,7 +3160,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "homura-akemi", name: "Homura Akemi", series: "Puella Magi Madoka Magica",
     designer: "Magica Quartet / Ume Aoki", studio: "Shaft", franchise: "Madoka Magica",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Long black hair", "Cold guarded violet eyes", "Dark battle uniform", "Rigid controlled posture"],
     design_language: ["Time-loop trauma", "Guarded devotion", "Isolation by design"],
     shape_language: "Rigid controlled verticals",
@@ -3178,7 +3178,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "joker-akira-kurusu", name: "Joker (Akira Kurusu)", series: "Persona 5",
     designer: "Shigenori Soejima", studio: "Studio A-Cat / P-Studio", franchise: "Persona 5",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Sharp black tousled hair", "Red gloves", "Long black coat", "Confident phantom-thief mask"],
     design_language: ["Rebellion", "Style as defiance", "Trickster confidence"],
     shape_language: "Sharp dramatic verticals",
@@ -3196,7 +3196,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "yu-narukami", name: "Yu Narukami", series: "Persona 4",
     designer: "Shigenori Soejima", studio: "AIC ASTA", franchise: "Persona 4",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Silver-grey hair", "Calm composed eyes", "School uniform", "Understated leadership"],
     design_language: ["Quiet leadership", "Composure", "Everyman mystery"],
     shape_language: "Clean composed verticals",
@@ -3214,7 +3214,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "katarina-claes", name: "Katarina Claes", series: "My Next Life as a Villainess: All Routes Lead to Doom!",
     designer: "Satoru Yamaguchi / Nami Hidaka", studio: "Silver Link", franchise: "My Next Life as a Villainess",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Long wavy blonde twin drills", "Green eyes", "Ornate noble dress", "Oblivious cheerful expression"],
     design_language: ["Villainess iconography subverted", "Obliviousness as charm", "Noble excess"],
     shape_language: "Elaborate curled spirals",
@@ -3232,7 +3232,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "hori-kyoko", name: "Hori Kyoko", series: "Horimiya",
     designer: "HERO / Daisuke Hagiwara", studio: "CloverWorks", franchise: "Horimiya",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Long dark hair", "Confident casual demeanor", "School-then-home dual style", "Sharp attentive eyes"],
     design_language: ["Dual identity", "Confidence", "Hidden domestic responsibility"],
     shape_language: "Clean straight verticals",
@@ -3250,7 +3250,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "miyamura-izumi", name: "Miyamura Izumi", series: "Horimiya",
     designer: "HERO / Daisuke Hagiwara", studio: "CloverWorks", franchise: "Horimiya",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Long hair covering piercings", "Glasses at school", "Tattoos and piercings hidden", "Quiet reserved demeanor"],
     design_language: ["Concealment", "Dual presentation", "Quiet self-possession"],
     shape_language: "Soft concealed verticals",
@@ -3268,7 +3268,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "hanako-kun", name: "Hanako-kun", series: "Toilet-bound Hanako-kun",
     designer: "AidaIro", studio: "Lerche", franchise: "Toilet-bound Hanako-kun",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Messy dark hair", "School uniform with red accents", "Ghostly pale complexion", "Playful mischievous grin"],
     design_language: ["Playful death", "School folklore", "Hidden melancholy"],
     shape_language: "Loose playful verticals",
@@ -3286,7 +3286,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "maple", name: "Maple", series: "Bofuri: I Don't Want to Get Hurt, so I'll Max Out My Defense.",
     designer: "Yuumikan / Koin", studio: "Silver Link", franchise: "Bofuri",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Pink twin-tail hair", "Heavy defensive armor", "Shield equipped", "Cheerful oblivious expression"],
     design_language: ["Defensive extremity", "Comic overpowering", "Cheerful obliviousness"],
     shape_language: "Heavy rounded armor plates",
@@ -3304,7 +3304,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "cid-kagenou", name: "Cid Kagenou", series: "The Eminence in Shadow",
     designer: "Daisuke Aizawa / Touzai", studio: "Nexus", franchise: "The Eminence in Shadow",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Dark tousled hair", "Theatrical shadow-cloak persona", "Confident smirking eyes", "Deliberately mysterious posing"],
     design_language: ["Chuunibyou theatricality", "Hidden overwhelming power", "Self-aware performance"],
     shape_language: "Dramatic cloaked verticals",
@@ -3322,7 +3322,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "kiyotaka-ayanokoji", name: "Kiyotaka Ayanokoji", series: "Classroom of the Elite",
     designer: "Shogo Kinugasa / Tomoseshunsaku", studio: "Lerche", franchise: "Classroom of the Elite",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Plain dark hair", "Deliberately unremarkable features", "School uniform", "Calculating hidden intensity"],
     design_language: ["Deliberate blankness", "Hidden mastery", "Social invisibility"],
     shape_language: "Plain neutral rectangles",
@@ -3340,7 +3340,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "koro-sensei", name: "Koro-sensei", series: "Assassination Classroom",
     designer: "Yusei Matsui", studio: "Lerche", franchise: "Assassination Classroom",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Round yellow tentacled body", "Wide unnervingly cheerful smile", "Blur-fast movement implied", "Teacher's coat"],
     design_language: ["Absurdist menace", "Genuine mentorship", "Comic-horror duality"],
     shape_language: "Bulbous rounded curves",
@@ -3358,7 +3358,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "nagisa-shiota", name: "Nagisa Shiota", series: "Assassination Classroom",
     designer: "Yusei Matsui", studio: "Lerche", franchise: "Assassination Classroom",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Light blue-tinted hair in a braid", "Androgynous soft features", "School uniform", "Quietly watchful eyes"],
     design_language: ["Underestimated lethality", "Androgyny", "Quiet observation"],
     shape_language: "Soft slender verticals",
@@ -3376,7 +3376,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "yuri-nakamura", name: "Yuri Nakamura", series: "Angel Beats!",
     designer: "Jun Maeda / Na-Ga", studio: "P.A. Works", franchise: "Angel Beats!",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Twin-tailed dark hair", "Fierce commanding eyes", "Battlefront uniform", "Defiant confident stance"],
     design_language: ["Rebellion against fate", "Leadership through anger", "Hidden grief"],
     shape_language: "Sharp commanding verticals",
@@ -3394,7 +3394,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "tomoya-okazaki", name: "Tomoya Okazaki", series: "Clannad",
     designer: "Key / Juumonji Itaru", studio: "Kyoto Animation", franchise: "Clannad",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Messy dark hair", "Delinquent-adjacent look", "School uniform worn loosely", "Guarded cynical eyes"],
     design_language: ["Cynicism masking grief", "Reluctant growth", "Guarded warmth"],
     shape_language: "Loose casual verticals",
@@ -3412,7 +3412,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "nagisa-furukawa", name: "Nagisa Furukawa", series: "Clannad",
     designer: "Key / Juumonji Itaru", studio: "Kyoto Animation", franchise: "Clannad",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Long soft brown hair", "Gentle timid eyes", "School uniform", "Fragile hesitant posture"],
     design_language: ["Fragility", "Quiet perseverance", "Gentle hope"],
     shape_language: "Soft delicate verticals",
@@ -3430,7 +3430,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "menma", name: "Menma", series: "Anohana: The Flower We Saw That Day",
     designer: "Mari Okada / Masayoshi Tanaka", studio: "A-1 Pictures", franchise: "Anohana",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Long white sundress", "Wide childlike eyes", "Ghostly translucent quality", "Simple ponytail"],
     design_language: ["Arrested childhood", "Unresolved grief", "Gentle haunting"],
     shape_language: "Soft flowing simple curves",
@@ -3448,7 +3448,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "yui-hirasawa", name: "Yui Hirasawa", series: "K-On!",
     designer: "Kakifly", studio: "Kyoto Animation", franchise: "K-On!",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Light brown hair with hairpin", "Wide cheerful eyes", "School uniform", "Guitar carried constantly"],
     design_language: ["Carefree joy", "Comic obliviousness", "Warm friendship"],
     shape_language: "Soft rounded curves",
@@ -3466,7 +3466,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "koyomi-araragi", name: "Koyomi Araragi", series: "Bakemonogatari",
     designer: "NisiOisiN / VOFAN", studio: "Shaft", franchise: "Monogatari",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Messy dark hair", "Vampire-pale complexion", "Casual loose clothing", "Deadpan observant eyes"],
     design_language: ["Hybrid vampirism", "Deadpan wit", "Guarded compassion"],
     shape_language: "Loose straight verticals",
@@ -3484,7 +3484,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "hitagi-senjougahara", name: "Hitagi Senjougahara", series: "Bakemonogatari",
     designer: "NisiOisiN / VOFAN", studio: "Shaft", franchise: "Monogatari",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Long straight dark purple hair", "Sharp cutting eyes", "Formal school uniform", "Rigid guarded posture"],
     design_language: ["Sharp defense mechanism", "Trauma armor", "Guarded affection"],
     shape_language: "Rigid straight verticals",
@@ -3502,7 +3502,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "izaya-orihara", name: "Izaya Orihara", series: "Durarara!!",
     designer: "Ryohgo Narita / Suzuhito Yasuda", studio: "Brain's Base", franchise: "Durarara!!",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Black fur-trimmed jacket", "Sharp mischievous eyes", "Slicked casual hair", "Theatrical unpredictable posing"],
     design_language: ["Manipulation as art", "Chaotic delight", "Godlike detachment"],
     shape_language: "Sharp theatrical diagonals",
@@ -3520,7 +3520,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "sora", name: "Sora", series: "No Game No Life",
     designer: "Yuu Kamiya", studio: "Madhouse", franchise: "No Game No Life",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Messy white hair", "Sharp confident smirk", "Casual hoodie", "Chess-piece motif accessories"],
     design_language: ["Gaming genius", "Social withdrawal", "Sibling codependence"],
     shape_language: "Loose confident verticals",
@@ -3538,7 +3538,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "shiro", name: "Shiro", series: "No Game No Life",
     designer: "Yuu Kamiya", studio: "Madhouse", franchise: "No Game No Life",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Long silver-white hair", "Wide unblinking eyes", "Oversized shirt as dress", "Childlike stature"],
     design_language: ["Genius stripped of social ease", "Dependence", "Otherworldly focus"],
     shape_language: "Soft elongated verticals",
@@ -3556,7 +3556,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "decim", name: "Decim", series: "Death Parade",
     designer: "Yuzuru Tachikawa", studio: "Madhouse", franchise: "Death Parade",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Slicked white-blond hair", "Perpetually calm mask-like face", "Formal bartender attire", "Unnervingly still posture"],
     design_language: ["Emotional detachment", "Judgment without malice", "Learned empathy"],
     shape_language: "Flat rigid verticals",
@@ -3574,7 +3574,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "satoru-fujinuma", name: "Satoru Fujinuma", series: "Erased",
     designer: "Kei Sanbe", studio: "A-1 Pictures", franchise: "Erased",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Messy dark hair", "Guarded anxious eyes", "Casual everyday clothing", "Determined protective posture"],
     design_language: ["Time-loop urgency", "Protective resolve", "Ordinary heroism"],
     shape_language: "Straight tense verticals",
@@ -3592,7 +3592,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "saichi-sugimoto", name: "Saichi Sugimoto", series: "Golden Kamuy",
     designer: "Satoru Noda", studio: "Geno Studio / MAPPA", franchise: "Golden Kamuy",
-    collection: "anime",
+    collection: "anime", gender: "male",
     visual_traits: ["Short dark hair with a scar", "Weathered intense eyes", "Military-surplus winter gear", "Grim survivalist posture"],
     design_language: ["Survival instinct", "War-forged resolve", "Dark humor masking trauma"],
     shape_language: "Rugged straight verticals",
@@ -3610,7 +3610,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
   {
     id: "hitori-gotoh", name: "Hitori Gotoh", series: "Bocchi the Rock!",
     designer: "Aki Hamaji", studio: "CloverWorks", franchise: "Bocchi the Rock!",
-    collection: "anime",
+    collection: "anime", gender: "female",
     visual_traits: ["Long pink hair often hiding the face", "Anxious hunched posture", "Guitar carried like a shield", "Wide panicked eyes"],
     design_language: ["Social anxiety", "Hidden musical passion", "Self-protective concealment"],
     shape_language: "Soft hunched curves",

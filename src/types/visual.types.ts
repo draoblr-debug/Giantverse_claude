@@ -44,19 +44,32 @@ export const AXIS_LABELS: Record<keyof VisualAxes, string> = {
   warmth: "Colour temperature",
 };
 
+// Coarse visual-presentation read used only to steer the optional gender
+// filter's AUTO mode — never shown as a claim about the person, and easily
+// overridden by the user via MALE/FEMALE/ANY.
+export type VisualPresentation = "male" | "female" | "unknown";
+
 export type VisualEmbedding = {
   axes: VisualAxes;
   // raw quality signals — used to warn on bad crops, never stored
   faceConfidence: number; // how confident the face-region detection was
+  visualPresentation: VisualPresentation;
+  presentationConfidence: number; // 0..1
 };
+
+// Matches the Android app's AUTO/MALE/FEMALE/ANY control.
+export type GenderFilter = "AUTO" | "MALE" | "FEMALE" | "ANY";
 
 export type CharacterCollection =
   | "anime" | "games" | "movies" | "animation" | "comics"
   | "historical" | "mythology" | "giantverse";
 
+export type CharacterGender = "male" | "female" | "nonbinary";
+
 export type CharacterEntry = {
   id: string;
   name: string;
+  gender: CharacterGender;
   series: string;
   designer: string;
   studio: string;
