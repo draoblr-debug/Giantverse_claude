@@ -28,6 +28,24 @@ export function VisualCharacterDiscovery() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+  const [hasCamera, setHasCamera] = useState<boolean>(true);
+
+  useEffect(() => {
+    async function checkCamera() {
+      if (typeof navigator !== "undefined" && navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
+        try {
+          const devices = await navigator.mediaDevices.enumerateDevices();
+          const hasVideoInput = devices.some(device => device.kind === "videoinput");
+          setHasCamera(hasVideoInput);
+        } catch (err) {
+          setHasCamera(false);
+        }
+      } else {
+        setHasCamera(false);
+      }
+    }
+    checkCamera();
+  }, []);
 
   const stopCamera = useCallback(() => {
     streamRef.current?.getTracks().forEach((t) => t.stop());
@@ -140,7 +158,9 @@ export function VisualCharacterDiscovery() {
                   not personality prediction, and never touches your Giantverse identity.
                 </p>
                 <div className="flex m-auto" style={{ gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-                  <button type="button" className="btn bdr-rds2" onClick={startCamera}>📷 Take Selfie</button>
+                  {hasCamera && (
+                    <button type="button" className="btn bdr-rds2" onClick={startCamera}>📷 Take Selfie</button>
+                  )}
                   <button type="button" className="btn bdr-rds2" onClick={() => fileRef.current?.click()}>⬆ Upload Image</button>
                 </div>
                 <input ref={fileRef} type="file" accept="image/*" onChange={onFile} style={{ display: "none" }} />
