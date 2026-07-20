@@ -265,9 +265,9 @@ export async function drawCard(canvas: HTMLCanvasElement, params: CardParams): P
   // Footer zone: 1463–1585 (92.3%–100%). Real name sits below the
   // "REAL WORLD IDENTITY" label as its value line, left-aligned with the
   // label's left edge (~10.8%) and dropped down into the empty space
-  // beneath it (~98.8%) so it doesn't crowd the label text above it.
+  // beneath it (~97.8%) so it doesn't crowd the label text above it.
   ctx.font = `${fw(0.016)}px Arial`;
   ctx.fillStyle = GOLD;
   ctx.textAlign = "left";
-  ctx.fillText(params.realName, px(0.108), py(0.988));
+  ctx.fillText(params.realName, px(0.108), py(0.978));
 }
