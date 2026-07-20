@@ -9,18 +9,31 @@
 // resemble this design language" — nothing more.
 
 import type { VisualAxes, VisualEmbedding } from "@/types/visual.types";
+import { detectFaceBoxViaMediaPipe } from "@/lib/visual/mediapipe-face-detector";
 
 const SIZE = 160; // analysis resolution — small keeps it fast and private
 
 type FaceBox = { x: number; y: number; w: number; h: number; confidence: number };
 
-// Native FaceDetector (Chromium behind flags / some mobile browsers).
+// Native FaceDetector (Chromium behind flags / some mobile browsers) — kept
+// as a lightweight second attempt behind MediaPipe, since it costs nothing
+// to try when present.
 type NativeFaceDetector = {
   detect(image: CanvasImageSource): Promise<Array<{ boundingBox: DOMRectReadOnly }>>;
 };
 
 async function detectFaceBox(canvas: HTMLCanvasElement): Promise<FaceBox> {
   const w = canvas.width, h = canvas.height;
+
+  // Primary: a real neural-net face detector (MediaPipe/BlazeFace), run
+  // fully client-side via WASM. This is the actual localization quality
+  // upgrade — everything below it is a fallback chain for when it can't
+  // load (offline first load, unsupported browser, etc.).
+  try {
+    const mp = await detectFaceBoxViaMediaPipe(canvas);
+    if (mp) return mp;
+  } catch { /* fall through */ }
+
   const FD = (window as unknown as { FaceDetector?: new (o?: object) => NativeFaceDetector }).FaceDetector;
   if (FD) {
     try {
@@ -32,7 +45,7 @@ async function detectFaceBox(canvas: HTMLCanvasElement): Promise<FaceBox> {
       }
     } catch { /* fall through to heuristic */ }
   }
-  // Heuristic fallback: locate the densest skin-tone blob, centre-weighted.
+  // Last-resort heuristic: locate the densest skin-tone blob, centre-weighted.
   const ctx = canvas.getContext("2d")!;
   const img = ctx.getImageData(0, 0, w, h).data;
   let minX = w, minY = h, maxX = 0, maxY = 0, count = 0;
