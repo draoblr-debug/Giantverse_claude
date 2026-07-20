@@ -220,57 +220,45 @@ async function renderCompatibilityCard(result: CompatibilityResult, realNameA?: 
     taglineLines.push(currentLine);
   }
 
-  // 2. Sum up visual heights of the text blocks
+  // 2. Layout strategy based on element count
   const hasMentor = !!(result.mentor && result.mentee);
-  const descriptorH = Math.round(W * 0.028); // Slightly larger than original 0.025
-  const mentorH = hasMentor ? Math.round(W * 0.018) : 0; // Slightly larger than 0.016
   
-  // Total tagline block height = (number of lines - 1) * lineH + fontSize
-  const taglineH = (taglineLines.length - 1) * taglineLineH + taglineFontSize;
-  const totalContentH = descriptorH + mentorH + taglineH;
-  
-  // 3. Calculate exact equal gaps
-  // topBound is exactly at the baseline of the ALLY/ROMANCE text
-  // bottomBound is exactly where the Giantverse emblem begins (0.765)
-  const topBound = py(0.682); 
-  const bottomBound = py(0.765); 
-  const availableH = bottomBound - topBound;
-  
-  const numGaps = hasMentor ? 4 : 3;
-  const gap = (availableH - totalContentH) / numGaps;
-  
-  // 4. Draw elements using textBaseline = "middle" for mathematically perfect centering
-  ctx.textBaseline = "middle";
-  let currentY = topBound;
-  
-  // Draw Descriptor
-  currentY += gap + descriptorH / 2;
-  ctx.font = `600 ${descriptorH}px Helvetica, Arial`;
-  ctx.fillStyle = "#EFE9DA";
-  ctx.fillText(`${result.descriptor} ${result.role}`, px(0.5), currentY);
-  currentY += descriptorH / 2;
+  // Font sizes
+  const descriptorFontSize = Math.round(W * 0.028); 
+  const mentorFontSize = Math.round(W * 0.018);
 
-  // Draw Mentor (if present)
+  cy = py(0.682); // Baseline of the ALLY text (starting point)
+  ctx.textBaseline = "alphabetic";
+
+  // 1. Descriptor
+  // If there are 3 elements, we use a slightly tighter gap to fit everything perfectly above the logo.
+  // If there are 2 elements, we use a larger gap to spread out beautifully.
+  const gapToDescriptor = hasMentor ? W * 0.040 : W * 0.050;
+  cy += gapToDescriptor;
+
+  ctx.font = `600 ${descriptorFontSize}px Helvetica, Arial`;
+  ctx.fillStyle = "#EFE9DA";
+  ctx.fillText(`${result.descriptor} ${result.role}`, px(0.5), cy);
+
+  // 2. Mentor (Optional)
   if (hasMentor) {
-    currentY += gap + mentorH / 2;
-    ctx.font = `600 ${mentorH}px Helvetica, Arial`;
+    const gapToMentor = W * 0.030; 
+    cy += gapToMentor;
+    ctx.font = `600 ${mentorFontSize}px Helvetica, Arial`;
     ctx.fillStyle = roleColor;
-    ctx.fillText(`${result.mentor!.name} is the Mentor · ${result.mentee!.name} is the Mentee`, px(0.5), currentY);
-    currentY += mentorH / 2;
+    ctx.fillText(`${result.mentor!.name} is the Mentor · ${result.mentee!.name} is the Mentee`, px(0.5), cy);
   }
 
-  // Draw Tagline
-  currentY += gap + taglineH / 2;
+  // 3. Tagline
+  const gapToTagline = hasMentor ? W * 0.040 : W * 0.050;
+  cy += gapToTagline;
+
   ctx.font = `italic ${taglineFontSize}px Georgia, serif`;
   ctx.fillStyle = "#8A8478";
   
-  const firstLineY = currentY - ((taglineLines.length - 1) * taglineLineH) / 2;
   for (let i = 0; i < taglineLines.length; i++) {
-    ctx.fillText(taglineLines[i], px(0.5), firstLineY + (i * taglineLineH));
+    ctx.fillText(taglineLines[i], px(0.5), cy + (i * taglineLineH));
   }
-  
-  // Reset baseline for safety
-  ctx.textBaseline = "alphabetic";
 
   return canvas;
 }
