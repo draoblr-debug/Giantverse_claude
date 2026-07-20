@@ -2,11 +2,11 @@
 
 // Visual Character Discovery — optional onboarding module.
 //
-// Flow: intro (privacy) → selfie/upload → analyzing → top-5 results →
-// CTA into the EXISTING Giantverse ritual. The visual match is inspiration
-// only; identity generation remains exclusively DOB + name + archetype.
+// Flow: intro (privacy) → upload → analyzing → top-5 results → CTA into
+// the EXISTING Giantverse ritual. The visual match is inspiration only;
+// identity generation remains exclusively DOB + name + archetype.
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useVisualStore } from "@/stores/visual.store";
@@ -16,100 +16,21 @@ import { CharacterResultCard } from "@/components/visual/CharacterResultCard";
 import { DesignPrincipleCard } from "@/components/visual/DesignPrincipleCard";
 import { ShareCard } from "@/components/visual/ShareCard";
 
-type Stage = "intro" | "camera" | "preview" | "analyzing" | "results" | "error";
+type Stage = "intro" | "preview" | "analyzing" | "results" | "error";
 
-const PRIVACY_LINE = "Your photo is only used to generate visual similarity and is not stored.";
+const PRIVACY_LINE = "Your photo never leaves your browser and is not uploaded anywhere.";
 
 export function VisualCharacterDiscovery() {
   const router = useRouter();
   const { photoDataUrl, matches, setPhoto, clearPhoto, setMatches, reset } = useVisualStore();
   const [stage, setStage] = useState<Stage>(matches ? "results" : "intro");
   const [error, setError] = useState<string | null>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const streamRef = useRef<MediaStream | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
-  const [hasCamera, setHasCamera] = useState<boolean>(true);
 
-  useEffect(() => {
-    async function checkCamera() {
-      if (typeof navigator !== "undefined" && navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
-        try {
-          const devices = await navigator.mediaDevices.enumerateDevices();
-          const hasVideoInput = devices.some(device => device.kind === "videoinput");
-          setHasCamera(hasVideoInput);
-        } catch (err) {
-          setHasCamera(false);
-        }
-      } else {
-        setHasCamera(false);
-      }
-    }
-    checkCamera();
-  }, []);
-
-  const stopCamera = useCallback(() => {
-    streamRef.current?.getTracks().forEach((t) => t.stop());
-    streamRef.current = null;
-  }, []);
-
-  useEffect(() => () => stopCamera(), [stopCamera]);
-
-  async function startCamera() {
-    // Camera access requires a secure context. Mobile browsers only exempt
-    // literal "localhost" — a LAN IP over plain HTTP (e.g. testing a phone
-    // against a dev server) is treated as insecure and getUserMedia is
-    // unavailable there, even though it works fine on desktop localhost.
-    if (typeof window !== "undefined" && !window.isSecureContext) {
-      setError("Camera access needs a secure (https://) connection — this page is loaded over http://. Upload a photo instead, or open this page over HTTPS.");
-      return;
-    }
-    if (!navigator.mediaDevices?.getUserMedia) {
-      setError("Camera access isn't supported in this browser — you can upload a photo instead.");
-      return;
-    }
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "user", width: { ideal: 720 } }, audio: false,
-      });
-      streamRef.current = stream;
-      setStage("camera");
-      // attach after render
-      requestAnimationFrame(() => {
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-          videoRef.current.play().catch(() => {});
-        }
-      });
-    } catch (err) {
-      const name = err instanceof Error ? err.name : "";
-      const message =
-        name === "NotAllowedError" || name === "PermissionDeniedError"
-          ? "Camera permission was declined — allow camera access in your browser settings, or upload a photo instead."
-          : name === "NotFoundError" || name === "DevicesNotFoundError"
-          ? "No camera was found on this device — you can upload a photo instead."
-          : name === "NotReadableError" || name === "TrackStartError"
-          ? "Your camera is already in use by another app — close it and try again, or upload a photo instead."
-          : name === "OverconstrainedError"
-          ? "Your camera doesn't support the requested settings — you can upload a photo instead."
-          : "Couldn't access the camera — you can upload a photo instead.";
-      setError(message);
-    }
-  }
-
-  function captureFrame() {
-    const video = videoRef.current;
-    if (!video || video.videoWidth === 0) return;
-    const c = document.createElement("canvas");
-    const s = Math.min(video.videoWidth, video.videoHeight);
-    c.width = 640; c.height = 640;
-    const ctx = c.getContext("2d")!;
-    // mirror to match the on-screen preview
-    ctx.translate(640, 0); ctx.scale(-1, 1);
-    ctx.drawImage(video, (video.videoWidth - s) / 2, (video.videoHeight - s) / 2, s, s, 0, 0, 640, 640);
-    setPhoto(c.toDataURL("image/jpeg", 0.9));
-    stopCamera();
-    setStage("preview");
-  }
+  // The photo is kept in memory (never uploaded) through the results stage
+  // so the share card can embed it — dropped as soon as this module is
+  // left, whichever way the user leaves it.
+  useEffect(() => () => clearPhoto(), [clearPhoto]);
 
   function onFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -129,7 +50,8 @@ export function VisualCharacterDiscovery() {
       const embedding = await computeVisualEmbedding(photoDataUrl);
       const results = matchCharacters(embedding.axes, { count: 5 });
       setMatches(results);
-      clearPhoto(); // pixels dropped the moment analysis completes
+      // photo is kept (not cleared here) so the share card can embed it —
+      // dropped when the module unmounts instead, see the effect above
       setStage("results");
     } catch {
       setError("That image couldn't be analysed — try a clearer, front-facing photo.");
@@ -158,30 +80,11 @@ export function VisualCharacterDiscovery() {
                   not personality prediction, and never touches your Giantverse identity.
                 </p>
                 <div className="flex m-auto" style={{ gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-                  {hasCamera && (
-                    <button type="button" className="btn bdr-rds2" onClick={startCamera}>📷 Take Selfie</button>
-                  )}
-                  <button type="button" className="btn bdr-rds2" onClick={() => fileRef.current?.click()}>⬆ Upload Image</button>
+                  <button type="button" className="btn bdr-rds2" onClick={() => fileRef.current?.click()}>⬆ Upload Your Photo</button>
                 </div>
                 <input ref={fileRef} type="file" accept="image/*" onChange={onFile} style={{ display: "none" }} />
                 <p className="f-10 mt-3" style={{ color: "#6E695F" }}>{PRIVACY_LINE}</p>
                 {error && <p className="f-12 mt-2" style={{ color: "#B4543F" }}>{error}</p>}
-              </motion.div>
-            )}
-
-            {stage === "camera" && (
-              <motion.div key="camera" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="txt-center">
-                <video
-                  ref={videoRef} playsInline muted
-                  className="m-auto mb-3"
-                  style={{ width: "100%", maxWidth: 420, borderRadius: 10, transform: "scaleX(-1)", border: "1px solid #3a2f12" }}
-                />
-                <div className="flex m-auto" style={{ gap: 12, justifyContent: "center" }}>
-                  <button type="button" className="btn bdr-rds2" onClick={captureFrame}>Capture</button>
-                  <button type="button" className="btn bdr-rds2" onClick={() => { stopCamera(); setStage("intro"); }}
-                    style={{ background: "transparent", color: "#8A8478", border: "1px solid #3a2f12" }}>Cancel</button>
-                </div>
-                <p className="f-10 mt-3" style={{ color: "#6E695F" }}>{PRIVACY_LINE}</p>
               </motion.div>
             )}
 
@@ -232,7 +135,7 @@ export function VisualCharacterDiscovery() {
                 </div>
 
                 <div className="mb-4">
-                  <ShareCard match={top} />
+                  <ShareCard match={top} photoDataUrl={photoDataUrl} />
                 </div>
 
                 <div className="txt-center wht-cont p-4 rounded-md" style={{ border: "1px solid #3a2f12" }}>
@@ -246,7 +149,7 @@ export function VisualCharacterDiscovery() {
                 </div>
 
                 <p className="f-10 txt-center mt-3" style={{ color: "#6E695F" }}>
-                  Your photo was analysed in your browser and has already been discarded. {PRIVACY_LINE}
+                  Your photo stays only in your browser, ready for the share card above — it's cleared the moment you leave this page. {PRIVACY_LINE}
                 </p>
               </motion.div>
             )}

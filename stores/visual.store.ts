@@ -7,8 +7,9 @@ import type { CharacterMatch } from "@/types/visual.types";
 // source of truth for identity).
 //
 // Privacy: photoDataUrl lives only in memory for the current tab; nothing
-// here is persisted to storage, and clearPhoto() drops the pixels the
-// moment the user asks (or as soon as analysis completes).
+// here is persisted to storage. It's kept through the results stage so the
+// share card can embed it, and clearPhoto() drops the pixels the moment
+// the user asks (or as soon as the discovery module unmounts).
 
 type VisualStore = {
   photoDataUrl: string | null;   // transient — cleared after analysis/delete
