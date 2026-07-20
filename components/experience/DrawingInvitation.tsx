@@ -17,7 +17,6 @@ const SHOW_DOSSIER_CTA = false;
 export function DrawingInvitation() {
   const router = useRouter();
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const displayCanvasRef = useRef<HTMLCanvasElement>(null);
   const [ready, setReady] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
@@ -81,14 +80,6 @@ export function DrawingInvitation() {
       gvId,
       scoreHistory: scoreHistory ?? undefined,
     }).then(() => {
-      const display = displayCanvasRef.current;
-      if (display) {
-        const scale = Math.min(1, (window.innerWidth - 32) / canvas.width);
-        display.width = Math.round(canvas.width * scale);
-        display.height = Math.round(canvas.height * scale);
-        const dCtx = display.getContext("2d");
-        dCtx?.drawImage(canvas, 0, 0, display.width, display.height);
-      }
       setReady(true);
     });
   }, [legacyName, birthName, archetypeLabel, archetype, order, guidingPromise, traits, firstName, scoreHistory]);
@@ -113,9 +104,6 @@ export function DrawingInvitation() {
 
   return (
     <div className="legacy-container ending-cont w-full min-h-screen flex flex-col items-center justify-center py-10 px-4">
-      {/* Off-screen full-res canvas for download */}
-      <canvas ref={canvasRef} style={{ display: "none" }} />
-
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: ready ? 1 : 0, y: ready ? 0 : 20 }}
@@ -123,8 +111,11 @@ export function DrawingInvitation() {
         className="w-full max-w-[1000px] flex flex-col items-center"
       >
         <div className="poster-cont ptb-6 mxw-900 m-auto">
-          {/* Scaled display canvas replacing the static Poster image */}
-          <canvas ref={displayCanvasRef} className="w-full" style={{ borderRadius: 6, maxWidth: "100%" }} />
+          {/* Full-resolution canvas, CSS-scaled for display so the browser's
+              high-quality downscaler renders it (avoids the blur/aliasing a
+              manual low-res canvas-to-canvas resize produced). Full-res
+              pixels are still used for the PNG download below. */}
+          <canvas ref={canvasRef} className="w-full" style={{ borderRadius: 6, maxWidth: "100%" }} />
         </div>
 
         {ready && (
