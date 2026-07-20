@@ -192,28 +192,30 @@ async function renderCompatibilityCard(result: CompatibilityResult, realNameA?: 
   ctx.lineTo(rightEnd + arrowW, lineY + arrowH);
   ctx.stroke();
 
-  cy += W * 0.035; // Increased spacing between relationship text and small header
+  cy += W * 0.035; // move down from ROMANCE text
 
-  ctx.font = `600 ${Math.round(W * 0.025)}px Helvetica, Arial`;
+  const hasMentor = !!(result.mentor && result.mentee);
+  const gap = hasMentor ? W * 0.015 : W * 0.025;
+
+  ctx.font = `600 ${Math.round(W * 0.028)}px Helvetica, Arial`;
   ctx.fillStyle = "#EFE9DA";
   ctx.fillText(`${result.descriptor} ${result.role}`, px(0.5), cy);
-  cy += W * 0.020;
 
-  if (result.mentor && result.mentee) {
-    ctx.font = `600 ${Math.round(W * 0.016)}px Helvetica, Arial`;
+  if (hasMentor) {
+    cy += gap + W * 0.018;
+    ctx.font = `600 ${Math.round(W * 0.018)}px Helvetica, Arial`;
     ctx.fillStyle = roleColor;
-    ctx.fillText(`${result.mentor.name} is the Mentor · ${result.mentee.name} is the Mentee`, px(0.5), cy);
-    cy += W * 0.018;
+    ctx.fillText(`${result.mentor!.name} is the Mentor · ${result.mentee!.name} is the Mentee`, px(0.5), cy);
   }
 
-  cy += W * 0.012;
-  ctx.font = `italic ${Math.round(W * 0.020)}px Georgia, serif`;
+  cy += gap + W * 0.024;
+  ctx.font = `italic ${Math.round(W * 0.025)}px Georgia, serif`;
   ctx.fillStyle = "#8A8478";
   
   const words = result.tagline.split(" ");
   let line = "";
-  const lineH = W * 0.026;
-  const paraMaxW = px(0.70); // Narrower width to force a 2-line wrap
+  const lineH = W * 0.032;
+  const paraMaxW = px(0.80);
   
   let linesDrawn = 0;
   for (let i = 0; i < words.length; i++) {

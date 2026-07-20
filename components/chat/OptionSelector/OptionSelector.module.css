@@ -10,12 +10,12 @@
 .optionCard {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  padding: 16px 20px;
+  border-radius: 12px;
+  padding: 16px;
   color: #fff;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
 }
 
 .optionText {
@@ -24,33 +24,88 @@
   text-align: left;
 }
 
-.percentagesRow {
+.sliderRow {
   display: flex;
-  justify-content: space-between;
-  gap: 8px;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
 }
 
-.percentCircle {
+.sliderWrapper {
   flex: 1;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 20px;
-  padding: 8px 0;
-  color: #EFE9DA;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 8px 16px;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.slider {
+  flex: 1;
+  -webkit-appearance: none;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--thm-clr-1, #C9A24B);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+.slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--thm-clr-1, #C9A24B);
+  cursor: pointer;
+  border: none;
+  transition: transform 0.2s;
+}
+
+.sliderValue {
   font-size: 0.85rem;
   font-weight: 600;
+  color: #EFE9DA;
+  min-width: 40px;
+  text-align: right;
+}
+
+.submitBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--thm-clr-1, #C9A24B);
+  color: #0B111C;
+  border: none;
   cursor: pointer;
   transition: all 0.2s ease;
-  text-align: center;
+  flex-shrink: 0;
 }
 
-.percentCircle:hover:not(:disabled) {
-  background: var(--thm-clr-1);
-  color: #0B111C;
-  border-color: var(--thm-clr-1);
+.submitBtn:hover:not(:disabled) {
+  transform: scale(1.05);
+  filter: brightness(1.1);
 }
 
-.percentCircle:disabled {
+.submitBtn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
