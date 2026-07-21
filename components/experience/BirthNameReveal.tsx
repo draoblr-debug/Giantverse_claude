@@ -76,14 +76,7 @@ export function BirthNameReveal() {
                           >
                             Begin Survey
                           </button>
-                          <button
-                            type="button"
-                            onClick={() => router.push("/scenario-chat")}
-                            className="btn bdr-rds1 wdth-100p"
-                            style={{ maxWidth: "250px" }}
-                          >
-                            Chat With The Oracle
-                          </button>
+
                         </motion.div>
                       )}
                     </AnimatePresence>

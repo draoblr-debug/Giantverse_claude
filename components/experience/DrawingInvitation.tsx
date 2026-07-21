@@ -170,13 +170,15 @@ export function DrawingInvitation() {
             )}
 
             <div className="txt-center mb-4">
-              <button
-                type="button"
+              <a
+                href="https://thegianthunt.com/"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="btn-outline bdr-rds2"
-                onClick={handleInviteFriend}
+                style={{ display: 'inline-block', textDecoration: 'none' }}
               >
-                {linkCopied ? "✓ Link Copied!" : "🔗 Share With a Friend to Reveal Your Giantverse Relationship"}
-              </button>
+                🔗 Join The Gianthunt
+              </a>
               <p className="f-10 mt-2" style={{ color: "#6E695F" }}>
                 They&apos;ll reveal their own Legacy Name, then land pre-matched against yours.
               </p>
