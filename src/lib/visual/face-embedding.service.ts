@@ -200,10 +200,16 @@ export async function computeVisualEmbedding(imageSrc: string): Promise<VisualEm
   const axesOut: VisualAxes = {
     faceLength: clamp01((cropH / Math.max(1, cropW) - 0.9) / 0.7),
     jawSharpness: clamp01((jawDiag / jawTotal) * 2.2),
-    eyeNarrowness: clamp01(1 - eyeDark * 6),
-    browWeight: clamp01(browDark * 5),
+    // eyeNarrowness/browWeight/hairVolume were saturating to a hard 0 or 1
+    // for nearly every photo (multipliers tuned far too aggressively —
+    // ~17-20% dark-pixel coverage in the eye/brow band was enough to hit
+    // the clamp), turning three of the most heavily-weighted axes into
+    // near-constants that dominated matching regardless of the actual
+    // photo. Widened multipliers give real per-photo variation back.
+    eyeNarrowness: clamp01(1 - eyeDark * 3),
+    browWeight: clamp01(browDark * 1.5),
     hairDarkness: clamp01(1 - topBandLum / 200),
-    hairVolume: clamp01((hairTopDark + hairMidDark) * 1.6),
+    hairVolume: clamp01((hairTopDark + hairMidDark) * 0.7),
     expressionNeutrality: clamp01(1 - mouthActivity / 55),
     symmetry,
     contrast,
