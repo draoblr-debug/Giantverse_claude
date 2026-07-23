@@ -1,0 +1,476 @@
+{
+  "common": {
+    "somethingWentWrong": "Something went wrong."
+  },
+  "languageSelector": {
+    "label": "Language"
+  },
+  "marketing": {
+    "eyebrow": "A brand experience",
+    "tagline": "Every person carries a name that was always theirs. Begin the ritual to discover yours.",
+    "beginRitual": "Begin the Ritual",
+    "discoverVisual": "Discover Your Visual Character",
+    "checkCompatibility": "Check Giant Hunt Compatibility"
+  },
+  "landing": {
+    "reassurance": "There are no right or wrong answers. Giantverse doesn't judge who you are—it helps you discover who you've always been.",
+    "whatIs": {
+      "heading": "What is Giantverse?",
+      "p1": "Every civilization tells stories about heroes.",
+      "p2": "Giantverse imagines a world where every person belongs to a unique archetype.",
+      "p3": "Your personality, motivations and instincts place you naturally within one of thirty-two archetypes spread across five living realms.",
+      "p4": "The goal isn't to label you. The goal is to help you understand yourself."
+    },
+    "lands": {
+      "heading": "The Five Lands",
+      "intro": "Five living realms shape every Giantverse continent. Hover or tap a land to open its story.",
+      "labels": {
+        "landscape": "Landscape",
+        "philosophy": "Philosophy",
+        "energy": "Emotional energy",
+        "identity": "Visual identity"
+      },
+      "realms": {
+        "Neisei": {
+          "epithet": "The Shoreline",
+          "oneLine": "Where every journey begins.",
+          "landscape": "Endless coastline — harbors, tide-markets, and roads that all lead to the sea.",
+          "philosophy": "Nothing grows in isolation; every stranger is a bridge not yet crossed.",
+          "energy": "Open, curious, restless.",
+          "identity": "Sea-glass teal, salt-white sails, horizon light."
+        },
+        "Kuryo": {
+          "epithet": "The Mountain Belt",
+          "oneLine": "Where the mind reaches for the summit.",
+          "landscape": "High, thin-aired peaks — observatories and stairways cut into stone.",
+          "philosophy": "Clarity is earned by climbing higher than comfort allows.",
+          "energy": "Still, sharp, far-seeing.",
+          "identity": "Violet slate, star-charts, cold clear light."
+        },
+        "Murei": {
+          "epithet": "The Living Forest",
+          "oneLine": "Where healing takes root, slowly.",
+          "landscape": "A dense, patient forest of shaded groves and slow rivers.",
+          "philosophy": "Whatever is worth growing is worth growing slowly.",
+          "energy": "Quiet, warm, unhurried.",
+          "identity": "Deep greens, lantern moss, filtered gold light."
+        },
+        "Maruto": {
+          "epithet": "The Living Heart",
+          "oneLine": "Where civilization gathers its strength.",
+          "landscape": "Capitals, universities, and the Guild Headquarters rising together.",
+          "philosophy": "Community is the only monument that maintains itself.",
+          "energy": "Vibrant, proud, purposeful.",
+          "identity": "Gold banners, bronze domes, festival light."
+        },
+        "Harai": {
+          "epithet": "The Broken Heart",
+          "oneLine": "Where survival becomes renewal.",
+          "landscape": "A scarred land of ash fields and stubborn green shoots.",
+          "philosophy": "What falls out of balance can be carried back into it.",
+          "energy": "Fierce, unbowed, hopeful.",
+          "identity": "Ember red, charcoal, first-light dawn."
+        }
+      }
+    },
+    "map": {
+      "heading": "The World Map",
+      "intro": "One continent, five living regions — the anatomy every Giantverse continent shares. Move across the map, and the land will answer.",
+      "labels": {
+        "climate": "Climate",
+        "culture": "Culture",
+        "realm": "Associated realm",
+        "symbols": "Key symbols",
+        "landmarks": "Notable places"
+      },
+      "regions": {
+        "Neisei": {
+          "lore": "Every citizen's story starts on this coast, pulled outward by trade and curiosity.",
+          "climate": "Mild and windswept — salt air, long twilights.",
+          "culture": "Harbor markets, letter-couriers, a hundred spoken tongues.",
+          "symbols": "The open sail, the tide-knot.",
+          "landmarks": "The harbor lanterns, the salt road, the old lighthouse.",
+          "description": "The shoreline where the continent meets the wider world."
+        },
+        "Kuryo": {
+          "lore": "Scholars climb for the kind of clarity that only altitude grants.",
+          "climate": "Cold and thin — crystal-clear skies.",
+          "culture": "Observatories, debate halls, silent ascents.",
+          "symbols": "The summit star, the unrolled chart.",
+          "landmarks": "The summit shrine, the starwatch tower, the frozen pass.",
+          "description": "The mountain belt where thought is clearest."
+        },
+        "Murei": {
+          "lore": "Trust and healing take shape here, far from the noise of the capitals.",
+          "climate": "Humid understory — soft rain, green shade.",
+          "culture": "Grove circles, herb-halls, long apprenticeships.",
+          "symbols": "The rooted tree, the folded leaf.",
+          "landmarks": "The whispering grove, the healing spring, the elder tree.",
+          "description": "The patient forest that rewards slow growth."
+        },
+        "Maruto": {
+          "lore": "Where community becomes something larger than any one person.",
+          "climate": "Temperate plains under festival skies.",
+          "culture": "Guild halls, universities, the great assembly.",
+          "symbols": "The gold citadel, the woven ring.",
+          "landmarks": "The grand hall, the university spire, the guild bell.",
+          "description": "The beating civic heart of the continent."
+        },
+        "Harai": {
+          "lore": "Not a fixed place — it is what the heart becomes when balance is lost, until the Great Turning restores it.",
+          "climate": "Ash winds over recovering ground.",
+          "culture": "Camps of survivors, rebuilders, and stubborn hope.",
+          "symbols": "The cracked shield, the first green shoot.",
+          "landmarks": "The ash camp, the long scar, the ember shrine.",
+          "description": "The scar that teaches renewal."
+        }
+      }
+    },
+    "compass": {
+      "heading": "The Giantverse Compass",
+      "intro": "Thirty-two archetypes arranged as one circle. Neighbors are natural allies; opposites answer the same question differently. Hover the ring to meet them.",
+      "center": "32 Archetypes",
+      "labels": {
+        "quadrant": "Quadrant",
+        "hemisphere": "Hemisphere",
+        "motivation": "Core Motivation",
+        "strength": "Greatest Strength",
+        "blindSpot": "Potential Blind Spot",
+        "allies": "Compatible with",
+        "close": "Close"
+      },
+      "hemispheres": {
+        "north": {
+          "name": "Northern Hemisphere",
+          "description": "Creators who reshape civilization through vision."
+        },
+        "south": {
+          "name": "Southern Hemisphere",
+          "description": "Protectors who strengthen civilization through relationships."
+        }
+      },
+      "quadrants": {
+        "forgers": {
+          "name": "Forgers",
+          "description": "Builders of systems — law, order, and strategy are their raw materials."
+        },
+        "ascenders": {
+          "name": "Ascenders",
+          "description": "Visionaries — they imagine, connect, and grow what could be."
+        },
+        "havens": {
+          "name": "Havens",
+          "description": "Guardians — they protect, heal, and endure for the people they love."
+        },
+        "venturers": {
+          "name": "Venturers",
+          "description": "Explorers — they seek horizons, carry stories, and master the craft of the road."
+        }
+      },
+      "archetypes": {
+        "minshu": {
+          "name": "Democrat",
+          "motivation": "Legitimacy must come from the consent of the many.",
+          "strength": "Builds consensus where others force division.",
+          "blindSpot": "Indecision — waiting for everyone to agree.",
+          "quote": "I lead by listening — every voice shapes the path we walk together."
+        },
+        "sabaki": {
+          "name": "Judge",
+          "motivation": "Fairness, weighed deliberately and without bias.",
+          "strength": "Sees through the noise to what is true.",
+          "blindSpot": "Self-righteousness — the rule chosen over mercy.",
+          "quote": "I hold the scale steady, even when the verdict costs me."
+        },
+        "kanryo": {
+          "name": "Bureaucrat",
+          "motivation": "Order and process that shield everyone from chaos.",
+          "strength": "Diligence that works until it's right.",
+          "blindSpot": "Rigidity — serving the process over the people.",
+          "quote": "I build the structures that protect what matters from chaos."
+        },
+        "sosai": {
+          "name": "Chancellor",
+          "motivation": "Holding the center so the whole doesn't fall apart.",
+          "strength": "Turns vision into something that survives reality.",
+          "blindSpot": "Control — resisting the change the institution needs.",
+          "quote": "I will hold the center so the whole does not fall apart."
+        },
+        "senryaku": {
+          "name": "Strategist",
+          "motivation": "Winning the long game, one calculated move at a time.",
+          "strength": "Sees three moves ahead.",
+          "blindSpot": "Manipulation — people treated as pieces.",
+          "quote": "Every move I make today is setting up tomorrow's victory."
+        },
+        "gijutsu": {
+          "name": "Technocrat",
+          "motivation": "Efficiency — solving with data, not drama.",
+          "strength": "Precision systems that scale.",
+          "blindSpot": "Coldness — people reduced to variables.",
+          "quote": "I solve what others accept — with data, not drama."
+        },
+        "yogen": {
+          "name": "Oracle",
+          "motivation": "Naming the pattern before it happens.",
+          "strength": "Sees connections others miss.",
+          "blindSpot": "Certainty — a hunch mistaken for prophecy.",
+          "quote": "I will speak the pattern I see, even when no one wants to hear it yet."
+        },
+        "tetsugaku": {
+          "name": "Philosopher",
+          "motivation": "Understanding for its own sake, deeper than any answer.",
+          "strength": "Questions that reach the essence.",
+          "blindSpot": "Paralysis — one question too many, one answer too late.",
+          "quote": "I will not stop asking until the world reveals what it truly is."
+        },
+        "kenja": {
+          "name": "Sage",
+          "motivation": "Letting truth settle slowly, then sharing it gently.",
+          "strength": "Patient insight without ego.",
+          "blindSpot": "Passivity — wisdom offered too late to matter.",
+          "quote": "I will wait for the truth to settle, and share it without needing credit."
+        },
+        "rekishi": {
+          "name": "Historian",
+          "motivation": "Remembering honestly — triumphs and shame alike.",
+          "strength": "Holds the accurate record no one can erase.",
+          "blindSpot": "Resentment — a past that won't be put down.",
+          "quote": "I will remember honestly, even when forgetting would be easier."
+        },
+        "riso": {
+          "name": "Visionary",
+          "motivation": "Futures sketched vividly enough to pull the world forward.",
+          "strength": "Sees what doesn't exist yet.",
+          "blindSpot": "Escapism — today left to fend for itself.",
+          "quote": "I will keep dreaming even when the world insists on staying as it is."
+        },
+        "kenchiku": {
+          "name": "Architect",
+          "motivation": "Designing what outlasts its maker.",
+          "strength": "Vision with structure behind it.",
+          "blindSpot": "Detachment — forgetting who lives inside the design.",
+          "quote": "I design what outlasts me — and that is enough."
+        },
+        "gaiko": {
+          "name": "Diplomat",
+          "motivation": "Consensus over conflict, bridges over walls.",
+          "strength": "Holds every side of the table at once.",
+          "blindSpot": "Avoidance — calling the silence peace.",
+          "quote": "I build bridges where others build walls."
+        },
+        "shisha": {
+          "name": "Messenger",
+          "motivation": "Carrying truth to the people who need it most.",
+          "strength": "Connects what would never otherwise meet.",
+          "blindSpot": "Overextension — their own voice going quiet.",
+          "quote": "I carry only what is real, to those who need it most."
+        },
+        "hatsumei": {
+          "name": "Inventor",
+          "motivation": "Finding a new way where the old ways ran out.",
+          "strength": "Learns fastest by experiment.",
+          "blindSpot": "Restlessness — nothing quite gets finished.",
+          "quote": "I will find a new way where the old ways have run out."
+        },
+        "nogyo": {
+          "name": "Farmer",
+          "motivation": "Greatness grown from repeated, unglamorous care.",
+          "strength": "Trusts the slow work.",
+          "blindSpot": "Complacency — patience drifting into neglect.",
+          "quote": "I will tend what grows slowly, trusting the harvest will come."
+        },
+        "kizoku": {
+          "name": "Aristocrat",
+          "motivation": "Leading with inherited certainty and presence.",
+          "strength": "Command that steadies a room.",
+          "blindSpot": "Elitism — pedigree mistaken for worth.",
+          "quote": "I carry the weight of legacy and lead with the confidence it bestows."
+        },
+        "banri": {
+          "name": "Warden",
+          "motivation": "Guarding boundaries others don't know exist.",
+          "strength": "The constant, thankless watch.",
+          "blindSpot": "Suspicion — threats seen where there are none.",
+          "quote": "I will hold this line, long after everyone else has forgotten why it matters."
+        },
+        "kaikaku": {
+          "name": "Reformer",
+          "motivation": "Refusing a broken world when a better one is possible.",
+          "strength": "Courage that outlasts the backlash.",
+          "blindSpot": "Zealotry — burning what was merely imperfect.",
+          "quote": "I will not accept a broken world when a better one is possible."
+        },
+        "kaitaku": {
+          "name": "Pathfinder",
+          "motivation": "The frontier, never comfort, as the destination.",
+          "strength": "Falls, rises, continues.",
+          "blindSpot": "Isolation — pushing too far past the frontier.",
+          "quote": "I reject comfort as a destination — the frontier is where I belong."
+        },
+        "mamori": {
+          "name": "Guardian",
+          "motivation": "Shielding what they love, whatever it costs.",
+          "strength": "Loyalty without condition.",
+          "blindSpot": "Smothering — protecting past the point of growth.",
+          "quote": "I will shield what I love, even when it costs me everything."
+        },
+        "iyashi": {
+          "name": "Healer",
+          "motivation": "Easing what hurts, protecting what heals.",
+          "strength": "Feels what others feel.",
+          "blindSpot": "Self-erasure — nothing left for their own wounds.",
+          "quote": "I will ease what hurts, and protect what heals."
+        },
+        "kensetsu": {
+          "name": "Builder",
+          "motivation": "Making it real with their own hands.",
+          "strength": "Persistence that outlasts doubt.",
+          "blindSpot": "Obsession — never noticing what the work costs.",
+          "quote": "I will make something real that endures long after I am gone."
+        },
+        "seizon": {
+          "name": "Survivor",
+          "motivation": "Endurance, held above everything else.",
+          "strength": "Bends but does not break.",
+          "blindSpot": "Distrust — no one allowed close enough.",
+          "quote": "I will rise from the ash, proving that our light cannot be crushed."
+        },
+        "teisatsu": {
+          "name": "Scout",
+          "motivation": "Going first, so others know the way is possible.",
+          "strength": "Turns fear into momentum.",
+          "blindSpot": "Recklessness — leaping before anyone can follow.",
+          "quote": "I go first — so others know the way is possible."
+        },
+        "monogatari": {
+          "name": "Storyteller",
+          "motivation": "Keeping identity and meaning alive across generations.",
+          "strength": "Around their fire, people remember who they are.",
+          "blindSpot": "Mythologizing — the polish hiding the truth.",
+          "quote": "I will keep telling the story, so no one forgets who we are."
+        },
+        "hozon": {
+          "name": "Custodian",
+          "motivation": "Refusing to let what matters slip away.",
+          "strength": "Devotion, not nostalgia.",
+          "blindSpot": "Stagnation — nothing new allowed through.",
+          "quote": "I will hold on to what matters, long after others have let it go."
+        },
+        "tansa": {
+          "name": "Explorer",
+          "motivation": "Discovery — limitation feared more than the unknown.",
+          "strength": "Courage at the edge of the map.",
+          "blindSpot": "Rootlessness — never staying long enough to build.",
+          "quote": "I will go where no map exists and make my own path."
+        },
+        "koro": {
+          "name": "Navigator",
+          "motivation": "Finding the true course through hidden currents.",
+          "strength": "Calm while everyone else panics.",
+          "blindSpot": "Overcontrol — trusting only their own reading.",
+          "quote": "I will find the true course, even when the stars are hidden."
+        },
+        "yuei": {
+          "name": "Ranger",
+          "motivation": "Walking lightly between the wild and the world.",
+          "strength": "Nature's trust, honestly earned.",
+          "blindSpot": "Non-commitment — belonging fully to neither world.",
+          "quote": "I will walk lightly, so what I protect still has somewhere to stand."
+        },
+        "shokunin": {
+          "name": "Artisan",
+          "motivation": "Mastery — every task given its full weight.",
+          "strength": "Instinct trained by endless practice.",
+          "blindSpot": "Perfectionism — the work never called finished.",
+          "quote": "I will give every task the full weight of my ability."
+        },
+        "takumi": {
+          "name": "Craftsman",
+          "motivation": "Excellence living in the smallest details.",
+          "strength": "Discipline that borders on devotion.",
+          "blindSpot": "Diminishing returns — refining past done.",
+          "quote": "I will refine this until it is right, no matter how long that takes."
+        }
+      }
+    },
+    "journey": {
+      "heading": "How does Giantverse discover your archetype?",
+      "steps": [
+        {
+          "title": "Answer",
+          "caption": "Answer personality questions — honestly, naturally."
+        },
+        {
+          "title": "Resonate",
+          "caption": "Your responses generate confidence scores across eight dimensions."
+        },
+        {
+          "title": "Converge",
+          "caption": "Your strongest archetype is identified."
+        },
+        {
+          "title": "Become",
+          "caption": "Receive your Giantverse identity."
+        }
+      ],
+      "promises": [
+        "There are no correct answers.",
+        "You cannot fail.",
+        "Every archetype is equally valuable.",
+        "The assessment measures natural preferences — not intelligence, success, or talent."
+      ]
+    },
+    "cta": {
+      "heading": "Your name is already out there.",
+      "sub": "Thirty-two archetypes. Five realms. One of them has been waiting for you.",
+      "button": "Begin Your Discovery"
+    }
+  },
+  "birth": {
+    "heading": "Birth Ritual",
+    "firstNameLabel": "First Name",
+    "dateOfBirthLabel": "Date of Birth",
+    "dayPlaceholder": "Day",
+    "monthPlaceholder": "Month",
+    "months": [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    ],
+    "submitLabel": "Find My Giantverse Name",
+    "submittingLabel": "Finding you…",
+    "errors": {
+      "firstNameRequired": "Enter your first name.",
+      "firstNameTooLong": "Keep it under 50 characters.",
+      "firstNameLettersOnly": "Use letters only, starting with a letter.",
+      "dayInvalid": "Enter a valid day.",
+      "monthInvalid": "Select a month.",
+      "dayMonthMismatch": "That day doesn't exist in the selected month.",
+      "generic": "Something went wrong."
+    }
+  },
+  "survey": {
+    "yes": "Yes",
+    "no": "No",
+    "likert": [
+      "Strongly Disagree",
+      "Disagree",
+      "Neutral",
+      "Agree",
+      "Strongly Agree"
+    ],
+    "answerHonestly": "{firstName}, answer honestly — there are no right answers.",
+    "crystallising": "Crystallising your name...",
+    "genericError": "Something went wrong."
+  }
+}

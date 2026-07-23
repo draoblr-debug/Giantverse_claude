@@ -37,8 +37,11 @@ code {
 	--bs-white:255,255,255;
 	--bs-black:0,0,0;
 	
-	--bs-body-font-family1:'Poppins',Arial,Helvetica,sans-serif;
-	--bs-body-font-family2:'Playfair Display',Times New Roman, Times, serif;
+	/* Noto Sans fallbacks after Poppins/Arial so Tamil/Kannada/Hindi/Telugu
+	   text (which those fonts have no glyphs for) still renders correctly —
+	   see app/layout.tsx for where these font variables are loaded. */
+	--bs-body-font-family1:'Poppins',Arial,Helvetica,var(--font-noto-tamil),var(--font-noto-kannada),var(--font-noto-devanagari),var(--font-noto-telugu),sans-serif;
+	--bs-body-font-family2:'Playfair Display',Times New Roman, Times, var(--font-noto-tamil),var(--font-noto-kannada),var(--font-noto-devanagari),var(--font-noto-telugu),serif;
 	--bs-body-font-size:14px;
 	--bs-body-font-weight:400;
 	--bs-body-line-height:28px;

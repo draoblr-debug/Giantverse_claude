@@ -1,6 +1,26 @@
 import type { Dimension } from "@/types/archetype.types";
+import type { Locale } from "@/i18n/config";
 import type { SurveyQuestion } from "./survey-questions";
 import { QUESTION_BANK } from "./survey-question-bank";
+import { QUESTION_BANK as QUESTION_BANK_TA } from "./survey-question-bank.ta";
+import { QUESTION_BANK as QUESTION_BANK_KN } from "./survey-question-bank.kn";
+import { QUESTION_BANK as QUESTION_BANK_HI } from "./survey-question-bank.hi";
+import { QUESTION_BANK as QUESTION_BANK_TE } from "./survey-question-bank.te";
+
+const QUESTION_BANKS_BY_LOCALE: Record<Locale, SurveyQuestion[]> = {
+  en: QUESTION_BANK,
+  ta: QUESTION_BANK_TA,
+  kn: QUESTION_BANK_KN,
+  hi: QUESTION_BANK_HI,
+  te: QUESTION_BANK_TE,
+};
+
+// Selects the question bank whose `text` is displayed to the participant.
+// Every locale bank mirrors the same id/dimension/type per entry, so this
+// only changes what's shown — not which questions get selected below.
+export function getQuestionBank(locale: string): SurveyQuestion[] {
+  return QUESTION_BANKS_BY_LOCALE[locale as Locale] ?? QUESTION_BANK;
+}
 
 const DIMENSIONS: Dimension[] = [
   "VALUES", "FEARS", "DREAMS", "POWER",
@@ -47,11 +67,15 @@ function shuffle<T>(items: T[], rand: () => number): T[] {
  * survey), then shuffles the presentation order so dimensions don't
  * appear in predictable blocks.
  */
-export function selectSurveyQuestions(seed: string, perDimension = 2): SurveyQuestion[] {
+export function selectSurveyQuestions(
+  seed: string,
+  perDimension = 2,
+  bank: SurveyQuestion[] = QUESTION_BANK,
+): SurveyQuestion[] {
   const rand = mulberry32(hashSeed(seed));
 
   const picked = DIMENSIONS.flatMap((dimension) => {
-    const pool = QUESTION_BANK.filter((q) => q.dimension === dimension);
+    const pool = bank.filter((q) => q.dimension === dimension);
     return shuffle(pool, rand).slice(0, perDimension);
   });
 
