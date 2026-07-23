@@ -1,0 +1,565 @@
+/* Landing-page atlas sections — premium fantasy encyclopedia layer.
+   Palette and type ride on legacy-ui.css tokens (thm-clr-1/2/5,
+   font-family1/2); everything here is scoped under .atlas-*. */
+
+.atlas {
+  max-width: 1060px;
+  margin: 0 auto;
+  padding: 0 22px;
+}
+
+.atlas-section {
+  padding: 84px 0 12px 0;
+  /* No position:relative — nothing here anchors to it, and giving each
+     section its own positioned box let later sections' z-index:auto
+     stacking outrank earlier sections wherever a popover overflowed
+     past its section's bottom edge (e.g. a Five Lands card's tooltip
+     bleeding under the World Map heading below it). */
+}
+
+.atlas-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+.atlas-eyebrow span {
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: rgb(var(--bs-thm-clr-5));
+  white-space: nowrap;
+}
+.atlas-eyebrow::before,
+.atlas-eyebrow::after {
+  content: "";
+  height: 1px;
+  width: 72px;
+  background: linear-gradient(90deg, transparent, rgba(201, 168, 76, 0.55));
+}
+.atlas-eyebrow::after {
+  background: linear-gradient(90deg, rgba(201, 168, 76, 0.55), transparent);
+}
+
+.atlas-heading {
+  font-family: var(--bs-body-font-family2);
+  font-size: 34px;
+  line-height: 44px;
+  text-align: center;
+  color: rgb(var(--bs-thm-clr-2));
+  margin-bottom: 12px;
+}
+
+.atlas-intro {
+  max-width: 560px;
+  margin: 0 auto 40px auto;
+  text-align: center;
+  font-size: 14px;
+  line-height: 24px;
+  color: rgba(237, 237, 237, 0.62);
+}
+
+/* ── Cinematic intro ──────────────────────────────────────────── */
+
+.atlas-cinematic {
+  max-width: 620px;
+  margin: 0 auto;
+  text-align: center;
+}
+.atlas-cinematic p {
+  font-family: var(--bs-body-font-family2);
+  font-size: 21px;
+  line-height: 34px;
+  color: rgba(237, 237, 237, 0.88);
+  margin: 0 0 26px 0;
+}
+.atlas-cinematic p:last-child {
+  color: rgb(var(--bs-thm-clr-5));
+}
+
+/* ── Reassurance line under hero CTA ─────────────────────────── */
+
+.atlas-reassure {
+  max-width: 420px;
+  margin: 18px auto 0 auto;
+  text-align: center;
+  font-size: 12px;
+  line-height: 20px;
+  font-style: italic;
+  color: rgba(237, 237, 237, 0.55);
+}
+
+/* ── Popover (shared by realm / map / compass tooltips) ──────── */
+
+.atlas-pop {
+  position: absolute;
+  z-index: 40;
+  width: 300px;
+  max-width: min(320px, 88vw);
+  padding: 16px 18px;
+  border-radius: 12px;
+  border: 1px solid rgba(201, 168, 76, 0.38);
+  /* Fully opaque — this sits over dense page content (card grids, the
+     map, the compass ring), so any transparency reads as illegible
+     overlap rather than a deliberate glass effect. */
+  background: rgb(14, 14, 12);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.65), 0 0 24px rgba(201, 168, 76, 0.07);
+  pointer-events: none;
+  text-align: left;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+.atlas-pop[data-open="true"] {
+  opacity: 1;
+  transform: translateY(0);
+}
+.atlas-pop-title {
+  font-family: var(--bs-body-font-family2);
+  font-size: 17px;
+  line-height: 24px;
+  color: rgb(var(--bs-thm-clr-2));
+  margin-bottom: 2px;
+}
+.atlas-pop-sub {
+  font-size: 11px;
+  line-height: 16px;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: rgb(var(--bs-thm-clr-5));
+  margin-bottom: 10px;
+}
+.atlas-pop-row {
+  margin-bottom: 8px;
+}
+.atlas-pop-row:last-child {
+  margin-bottom: 0;
+}
+.atlas-pop-label {
+  display: block;
+  font-size: 9px;
+  line-height: 13px;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: rgba(201, 168, 76, 0.85);
+  margin-bottom: 1px;
+}
+.atlas-pop-value {
+  display: block;
+  font-size: 12px;
+  line-height: 18px;
+  color: rgba(237, 237, 237, 0.85);
+}
+.atlas-pop-quote {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(201, 168, 76, 0.18);
+  font-family: var(--bs-body-font-family2);
+  font-style: italic;
+  font-size: 13px;
+  line-height: 20px;
+  color: rgba(201, 168, 76, 0.92);
+}
+
+/* ── The Five Lands ──────────────────────────────────────────── */
+
+.atlas-realm-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 14px;
+}
+.atlas-realm-card {
+  position: relative;
+  border: 1px solid rgba(237, 237, 237, 0.1);
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.008));
+  padding: 26px 14px 22px 14px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 240ms ease, border-color 240ms ease, box-shadow 240ms ease;
+}
+.atlas-realm-card:hover,
+.atlas-realm-card:focus-visible,
+.atlas-realm-card[data-open="true"] {
+  transform: translateY(-4px);
+  border-color: var(--realm-accent, rgba(201, 168, 76, 0.5));
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.45), 0 0 22px color-mix(in srgb, var(--realm-accent, #c9a84c) 18%, transparent);
+}
+.atlas-realm-icon {
+  width: 52px;
+  height: 52px;
+  margin: 0 auto 14px auto;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--realm-accent, #c9a84c) 55%, transparent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.atlas-realm-icon svg {
+  width: 26px;
+  height: 26px;
+  stroke: var(--realm-accent, #c9a84c);
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.atlas-realm-name {
+  font-family: var(--bs-body-font-family2);
+  font-size: 19px;
+  line-height: 26px;
+  color: rgb(var(--bs-thm-clr-2));
+}
+.atlas-realm-epithet {
+  font-size: 10px;
+  line-height: 15px;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--realm-accent, rgb(var(--bs-thm-clr-5)));
+  margin-bottom: 8px;
+}
+.atlas-realm-oneline {
+  font-size: 12px;
+  line-height: 18px;
+  color: rgba(237, 237, 237, 0.6);
+}
+/* Realm popovers open below the card — the row sits near the top of
+   its section, so downward always has room in the page flow. */
+.atlas-realm-card .atlas-pop {
+  left: 50%;
+  top: calc(100% + 12px);
+  transform: translate(-50%, 6px);
+}
+.atlas-realm-card .atlas-pop[data-open="true"] {
+  transform: translate(-50%, 0);
+}
+.atlas-realm-card:first-child .atlas-pop {
+  left: 0;
+  transform: translate(0, 6px);
+}
+.atlas-realm-card:first-child .atlas-pop[data-open="true"] {
+  transform: translate(0, 0);
+}
+.atlas-realm-card:last-child .atlas-pop {
+  left: auto;
+  right: 0;
+  transform: translate(0, 6px);
+}
+.atlas-realm-card:last-child .atlas-pop[data-open="true"] {
+  transform: translate(0, 0);
+}
+
+/* ── World map ───────────────────────────────────────────────── */
+
+.atlas-map-wrap {
+  position: relative;
+  border: 1px solid rgba(201, 168, 76, 0.22);
+  border-radius: 16px;
+  /* No overflow:hidden — the cursor tooltip must be able to hang past
+     the frame. The img clips itself to match via its own border-radius. */
+  background: radial-gradient(ellipse 90% 80% at 50% 40%, #10151c 0%, #0a0d12 60%, #07090c 100%);
+}
+.atlas-map-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 15px;
+  pointer-events: none;
+  user-select: none;
+}
+.atlas-map-hotspot {
+  position: absolute;
+  aspect-ratio: 1;
+  /* Zones are precisely sized in %, but that shrinks under ~15px on
+     narrow viewports (24 zones packed onto one detailed image) — the
+     min guarantees a real touch target without enlarging desktop. */
+  min-width: 26px;
+  min-height: 26px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  outline: none;
+}
+.atlas-map-hotspot-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--bs-thm-clr-5) 32%, transparent) 0%, transparent 70%);
+  border: 1px solid transparent;
+  opacity: 0;
+  transform: scale(0.85);
+  transition: opacity 250ms ease, transform 250ms ease, border-color 250ms ease;
+}
+.atlas-map-hotspot:hover .atlas-map-hotspot-ring,
+.atlas-map-hotspot:focus-visible .atlas-map-hotspot-ring,
+.atlas-map-hotspot[data-active="true"] .atlas-map-hotspot-ring {
+  opacity: 1;
+  transform: scale(1);
+  border-color: rgba(201, 168, 76, 0.55);
+}
+
+/* ── Compass ─────────────────────────────────────────────────── */
+
+.atlas-compass-wrap {
+  position: relative;
+  max-width: 720px;
+  margin: 0 auto;
+}
+.atlas-compass-wrap svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.atlas-node {
+  cursor: pointer;
+  outline: none;
+}
+.atlas-node .atlas-node-dot {
+  transition: transform 220ms ease, opacity 220ms ease;
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0.75;
+}
+.atlas-node:hover .atlas-node-dot,
+.atlas-node:focus-visible .atlas-node-dot,
+.atlas-node[data-active="true"] .atlas-node-dot {
+  transform: scale(1.75);
+  opacity: 1;
+}
+.atlas-node[data-active="true"] .atlas-node-halo {
+  opacity: 1;
+}
+.atlas-node-halo {
+  opacity: 0;
+  transition: opacity 220ms ease;
+  pointer-events: none;
+}
+.atlas-ring-label {
+  cursor: pointer;
+  outline: none;
+}
+.atlas-ring-label text {
+  font-size: 13px;
+  letter-spacing: 2.6px;
+  text-transform: uppercase;
+  fill: rgba(237, 237, 237, 0.55);
+  transition: fill 220ms ease;
+}
+.atlas-ring-label:hover text,
+.atlas-ring-label:focus-visible text,
+.atlas-ring-label[data-active="true"] text {
+  fill: rgb(var(--bs-thm-clr-5));
+}
+.atlas-compass-center {
+  font-size: 10px;
+  letter-spacing: 2.4px;
+  text-transform: uppercase;
+  fill: rgba(237, 237, 237, 0.45);
+}
+
+/* ── Journey ─────────────────────────────────────────────────── */
+
+.atlas-journey {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  max-width: 860px;
+  margin: 0 auto;
+}
+.atlas-step {
+  position: relative;
+  text-align: center;
+  padding: 24px 14px;
+  border: 1px solid rgba(237, 237, 237, 0.09);
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.025), rgba(255, 255, 255, 0.005));
+}
+.atlas-step:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -14px;
+  width: 14px;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(201, 168, 76, 0.6), rgba(201, 168, 76, 0.15));
+}
+.atlas-step-num {
+  width: 42px;
+  height: 42px;
+  margin: 0 auto 12px auto;
+  border-radius: 50%;
+  border: 1px solid rgba(201, 168, 76, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--bs-body-font-family2);
+  font-size: 17px;
+  color: rgb(var(--bs-thm-clr-5));
+}
+.atlas-step-title {
+  font-family: var(--bs-body-font-family2);
+  font-size: 17px;
+  line-height: 24px;
+  color: rgb(var(--bs-thm-clr-2));
+  margin-bottom: 6px;
+}
+.atlas-step-caption {
+  font-size: 11.5px;
+  line-height: 17px;
+  color: rgba(237, 237, 237, 0.58);
+}
+.atlas-promises {
+  max-width: 620px;
+  margin: 34px auto 0 auto;
+  padding: 22px 26px;
+  border-radius: 14px;
+  border: 1px solid rgba(201, 168, 76, 0.28);
+  background: rgba(201, 168, 76, 0.045);
+}
+.atlas-promises li {
+  position: relative;
+  padding-left: 22px;
+  font-size: 13px;
+  line-height: 22px;
+  color: rgba(237, 237, 237, 0.82);
+  margin-bottom: 8px;
+}
+.atlas-promises li:last-child {
+  margin-bottom: 0;
+}
+.atlas-promises li::before {
+  content: "✦";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: rgb(var(--bs-thm-clr-5));
+  font-size: 11px;
+}
+
+/* ── Final CTA ───────────────────────────────────────────────── */
+
+.atlas-cta {
+  text-align: center;
+  padding: 90px 0 100px 0;
+}
+.atlas-cta-heading {
+  font-family: var(--bs-body-font-family2);
+  font-size: 30px;
+  line-height: 40px;
+  color: rgb(var(--bs-thm-clr-2));
+  margin-bottom: 10px;
+}
+.atlas-cta-sub {
+  font-size: 13px;
+  line-height: 22px;
+  color: rgba(237, 237, 237, 0.6);
+  margin-bottom: 28px;
+}
+.atlas-cta .btn {
+  background: rgb(var(--bs-thm-clr-5));
+  color: rgb(var(--bs-thm-clr-1));
+  padding: 12px 38px;
+  box-shadow: 0 0 28px rgba(201, 168, 76, 0.25);
+  transition: box-shadow 240ms ease, background 240ms ease;
+}
+.atlas-cta .btn:hover {
+  background: #b3933f;
+  box-shadow: 0 0 40px rgba(201, 168, 76, 0.4);
+}
+
+/* ── Focus visibility ────────────────────────────────────────── */
+
+.atlas-realm-card:focus-visible,
+.atlas-map-hotspot:focus-visible,
+.atlas-node:focus-visible,
+.atlas-ring-label:focus-visible {
+  outline: 2px solid rgba(201, 168, 76, 0.65);
+  outline-offset: 3px;
+}
+
+/* ── Responsive ──────────────────────────────────────────────── */
+
+@media (max-width: 860px) {
+  .atlas-realm-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .atlas-journey {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .atlas-step:not(:last-child)::after {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .atlas-heading {
+    font-size: 27px;
+    line-height: 36px;
+  }
+  .atlas-cinematic p {
+    font-size: 17px;
+    line-height: 28px;
+  }
+  .atlas-realm-grid {
+    grid-template-columns: 1fr;
+  }
+  .atlas-journey {
+    grid-template-columns: 1fr;
+  }
+  /* Popovers become a pinned sheet at the bottom of the viewport so
+     they never overflow small screens. transform needs !important too —
+     MapTooltip/ArchetypeTooltip receive an inline transform (desktop
+     cursor/anchor positioning) that would otherwise out-rank this rule
+     and drag the sheet off-screen. */
+  .atlas-pop,
+  .atlas-realm-card .atlas-pop,
+  .atlas-realm-card:first-child .atlas-pop,
+  .atlas-realm-card:last-child .atlas-pop {
+    position: fixed;
+    left: 50% !important;
+    right: auto !important;
+    top: auto !important;
+    bottom: 14px !important;
+    width: 92vw;
+    max-width: 92vw;
+    transform: translate(-50%, 6px) !important;
+    z-index: 80;
+  }
+  .atlas-pop[data-open="true"],
+  .atlas-realm-card .atlas-pop[data-open="true"],
+  .atlas-realm-card:first-child .atlas-pop[data-open="true"],
+  .atlas-realm-card:last-child .atlas-pop[data-open="true"] {
+    transform: translate(-50%, 0) !important;
+  }
+  /* No lift on touch layouts: a transformed card becomes the containing
+     block for its position:fixed popover, which would break the
+     viewport-pinned sheet above. */
+  .atlas-realm-card:hover,
+  .atlas-realm-card:focus-visible,
+  .atlas-realm-card[data-open="true"] {
+    transform: none;
+  }
+}
+
+/* ── Reduced motion ──────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .atlas-pop,
+  .atlas-realm-card,
+  .atlas-map-hotspot-ring,
+  .atlas-node .atlas-node-dot,
+  .atlas-node-halo,
+  .atlas-ring-label text,
+  .atlas-cta .btn {
+    transition: none !important;
+  }
+  .atlas-realm-card:hover,
+  .atlas-realm-card:focus-visible,
+  .atlas-realm-card[data-open="true"] {
+    transform: none;
+  }
+}
