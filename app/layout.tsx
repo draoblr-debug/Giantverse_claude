@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Noto_Sans_Tamil, Noto_Sans_Kannada, Noto_Sans_Devanagari, Noto_Sans_Telugu } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
+import { LanguageSelector } from "@/components/i18n/LanguageSelector";
 import "./globals.css";
 import "./legacy-ui.css";
 
@@ -44,6 +45,21 @@ export default async function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <NextIntlClientProvider locale={locale} messages={messages}>
+          <div
+            style={{
+              position: "fixed",
+              top: 16,
+              right: 16,
+              zIndex: 100,
+              background: "rgba(10,10,10,0.55)",
+              backdropFilter: "blur(6px)",
+              border: "1px solid rgba(58,47,18,0.7)",
+              borderRadius: 8,
+              padding: "6px 10px",
+            }}
+          >
+            <LanguageSelector />
+          </div>
           {children}
         </NextIntlClientProvider>
       </body>

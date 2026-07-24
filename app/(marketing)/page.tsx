@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
-import { LanguageSelector } from "@/components/i18n/LanguageSelector";
 import { RealmCard } from "@/components/landing/RealmCard";
 import { InteractiveWorldMap } from "@/components/landing/InteractiveWorldMap";
 import { ArchetypeCompass } from "@/components/landing/ArchetypeCompass";
@@ -44,9 +43,6 @@ export default async function LandingPage() {
 
         {/* ── Hero (unchanged, plus the reassurance line) ─────────── */}
         <div className="content">
-          <div className="txt-center mb-2">
-            <LanguageSelector />
-          </div>
           <div className="logo m-auto mb-3">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/Images/thegianthunt.png" alt="The Giant Hunt" title="The Giant Hunt" />
@@ -149,6 +145,55 @@ export default async function LandingPage() {
         <section className="atlas-section">
           <SectionHeading eyebrow="IV" heading={tl("journey.heading")} />
           <JourneyTimeline />
+        </section>
+
+        {/* ── Three Ways In ──────────────────────────────────────── */}
+        <section className="atlas-section">
+          <SectionHeading
+            eyebrow="V"
+            heading={tl("paths.heading")}
+            intro={tl("paths.intro")}
+          />
+          <div className="atlas-paths-grid">
+            <div className="atlas-path-card">
+              <div className="atlas-path-icon">
+                <svg viewBox="0 0 24 24">
+                  <path d="M9 11l3 3L22 4" />
+                  <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+                </svg>
+              </div>
+              <p className="atlas-path-title">{tl("paths.items.survey.title")}</p>
+              <p className="atlas-path-desc">{tl("paths.items.survey.description")}</p>
+              <Link href="/survey" className="atlas-path-link">
+                {tl("paths.items.survey.cta")}
+              </Link>
+            </div>
+            <div className="atlas-path-card">
+              <div className="atlas-path-icon">
+                <svg viewBox="0 0 24 24">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                </svg>
+              </div>
+              <p className="atlas-path-title">{tl("paths.items.chat.title")}</p>
+              <p className="atlas-path-desc">{tl("paths.items.chat.description")}</p>
+              <Link href="/scenario-chat" className="atlas-path-link">
+                {tl("paths.items.chat.cta")}
+              </Link>
+            </div>
+            <div className="atlas-path-card">
+              <div className="atlas-path-icon">
+                <svg viewBox="0 0 24 24">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                  <circle cx="12" cy="13" r="4" />
+                </svg>
+              </div>
+              <p className="atlas-path-title">{tl("paths.items.visual.title")}</p>
+              <p className="atlas-path-desc">{tl("paths.items.visual.description")}</p>
+              <Link href="/visual-discovery" className="atlas-path-link">
+                {tl("paths.items.visual.cta")}
+              </Link>
+            </div>
+          </div>
         </section>
 
         {/* ── Begin Discovery CTA ────────────────────────────────── */}

@@ -440,6 +440,80 @@
   font-size: 11px;
 }
 
+/* ── Three Ways In ───────────────────────────────────────────── */
+
+.atlas-paths-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  max-width: 940px;
+  margin: 0 auto;
+}
+.atlas-path-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  border: 1px solid rgba(237, 237, 237, 0.1);
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.008));
+  padding: 30px 20px 26px 20px;
+  transition: transform 240ms ease, border-color 240ms ease, box-shadow 240ms ease;
+}
+.atlas-path-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(201, 168, 76, 0.5);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.45), 0 0 22px rgba(201, 168, 76, 0.14);
+}
+.atlas-path-icon {
+  width: 52px;
+  height: 52px;
+  margin-bottom: 16px;
+  border-radius: 50%;
+  border: 1px solid rgba(201, 168, 76, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.atlas-path-icon svg {
+  width: 24px;
+  height: 24px;
+  stroke: #c9a84c;
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.atlas-path-title {
+  font-family: var(--bs-body-font-family2);
+  font-size: 19px;
+  line-height: 26px;
+  color: rgb(var(--bs-thm-clr-2));
+  margin-bottom: 8px;
+}
+.atlas-path-desc {
+  font-size: 12.5px;
+  line-height: 20px;
+  color: rgba(237, 237, 237, 0.6);
+  margin-bottom: 20px;
+  flex-grow: 1;
+}
+.atlas-path-link {
+  display: inline-block;
+  font-size: 11px;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: rgb(var(--bs-thm-clr-5));
+  border: 1px solid rgba(201, 168, 76, 0.4);
+  border-radius: 999px;
+  padding: 9px 22px;
+  transition: background 200ms ease, color 200ms ease;
+}
+.atlas-path-link:hover {
+  background: rgb(var(--bs-thm-clr-5));
+  color: rgb(var(--bs-thm-clr-1));
+}
+
 /* ── Final CTA ───────────────────────────────────────────────── */
 
 .atlas-cta {
@@ -476,7 +550,8 @@
 .atlas-realm-card:focus-visible,
 .atlas-map-hotspot:focus-visible,
 .atlas-node:focus-visible,
-.atlas-ring-label:focus-visible {
+.atlas-ring-label:focus-visible,
+.atlas-path-link:focus-visible {
   outline: 2px solid rgba(201, 168, 76, 0.65);
   outline-offset: 3px;
 }
@@ -492,6 +567,10 @@
   }
   .atlas-step:not(:last-child)::after {
     display: none;
+  }
+  .atlas-paths-grid {
+    grid-template-columns: 1fr;
+    max-width: 420px;
   }
 }
 
@@ -554,12 +633,15 @@
   .atlas-node .atlas-node-dot,
   .atlas-node-halo,
   .atlas-ring-label text,
+  .atlas-path-card,
+  .atlas-path-link,
   .atlas-cta .btn {
     transition: none !important;
   }
   .atlas-realm-card:hover,
   .atlas-realm-card:focus-visible,
-  .atlas-realm-card[data-open="true"] {
+  .atlas-realm-card[data-open="true"],
+  .atlas-path-card:hover {
     transform: none;
   }
 }

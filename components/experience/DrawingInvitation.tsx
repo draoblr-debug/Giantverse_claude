@@ -144,13 +144,15 @@ export function DrawingInvitation() {
                   {visualTop.character.series} — {visualTop.character.shape_language}
                 </p>
                 <p className="f-10 mt-2 mb-0 txt-thm-clr-6 italic line-ht-15">
-                  Now create a completely original character inspired by these design principles.
+                  That&apos;s the spark I started from — not the face I&apos;ll wear.
                 </p>
               </div>
             )}
 
             <p className="txt-thm-clr-6 line-ht-24 mxw-320 m-auto mt-3 mb-4 txt-center">
-              Now there&apos;s only one thing I don&apos;t know — what do I look like? In my world, I can&apos;t see my own face. But you can. Would you draw me?
+              {visualTop
+                ? <>Take {visualTop.character.name}&apos;s design language and shape something entirely your own. Would you draw me?</>
+                : <>Now there&apos;s only one thing I don&apos;t know — what do I look like? In my world, I can&apos;t see my own face. But you can. Would you draw me?</>}
             </p>
 
             {SHOW_DOSSIER_CTA && (

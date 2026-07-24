@@ -1,6 +1,5 @@
 import { getTranslations } from "next-intl/server";
 import { BirthRitualForm } from "@/components/experience/BirthRitualForm";
-import { LanguageSelector } from "@/components/i18n/LanguageSelector";
 
 export default async function BirthRitualPage() {
   const t = await getTranslations("birth");
@@ -14,9 +13,6 @@ export default async function BirthRitualPage() {
             <tr>
               <td>
                 <div className="content mxw-385 m-auto">
-                  <div className="txt-center mb-2">
-                    <LanguageSelector />
-                  </div>
                   <div className="logo m-auto mb-2">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src="/Images/thegianthunt.png" alt="The Giant Hunt" title="The Giant Hunt" />

@@ -1,5 +1,3 @@
-import { WHEEL_ORDER } from "@/engines/archetype/archetype-wheel";
-
 // Structural (non-translatable) data for the landing-page atlas sections:
 // realm accents/icons, world-map region geometry, and the compass quadrant/
 // hemisphere layout. All display text lives in the "landing" namespace of
@@ -122,18 +120,57 @@ export const MAP_ZONES: MapZone[] = [
 ];
 
 // ── Compass ─────────────────────────────────────────────────────────
-// The 32-slot wheel from archetype-wheel.ts laid out as a compass:
-// position 0 sits at 9 o'clock and the order runs clockwise over the
-// top, so positions 0–15 fill the northern half (the civilization-
-// shapers — 13 of 16 are Order of Giants) and 16–31 the southern half
-// (the protectors and seekers — 14 of 16 are Order of Hunters).
+// COMPASS_ORDER lays the 32 archetypes out as a true two-axis compass —
+// deliberately a SEPARATE array from WHEEL_ORDER (archetype-wheel.ts).
+// WHEEL_ORDER encodes relationship semantics (opposites exactly 16 slots
+// apart, for the Compatibility Checker's distance math); this array encodes
+// visual position (Order/Temperament quadrants). The two constraints can't
+// share one array: some hand-authored opposite pairs share an Order or a
+// Temperament, so "opposite in content" and "opposite quadrant" aren't the
+// same thing. Position 0 sits at 9 o'clock and the order runs clockwise
+// over the top, so:
+//   - East/West (longitude) = Order: positions 8–23 (the right/eastern
+//     half) are the Order of Giants, positions 24–31 & 0–7 (the left/
+//     western half) are the Order of Hunters.
+//   - North/South (latitude) = Temperament: positions 0–15 (the top/
+//     northern half) are Active archetypes, positions 16–31 (the bottom/
+//     southern half) are Passive.
+// The four quadrants are the intersection of the two: Northeast (Giants,
+// Active) = Forgers, Southeast (Giants, Passive) = Ascenders, Southwest
+// (Hunters, Passive) = Havens, Northwest (Hunters, Active) = Venturers.
 
 export type QuadrantId = "forgers" | "ascenders" | "havens" | "venturers";
-export type HemisphereId = "north" | "south";
+export type NSHemisphereId = "north" | "south";
+export type EWHemisphereId = "east" | "west";
+export type HemisphereId = NSHemisphereId | EWHemisphereId;
+
+export const COMPASS_ORDER: string[] = [
+  // Northwest — Order of Hunters, Active
+  "koro", "teisatsu", "shisha", "tansa", "kensetsu", "hatsumei", "kaitaku", "shokunin",
+  // Northeast — Order of Giants, Active
+  "kizoku", "senryaku", "sosai", "gijutsu", "riso", "kenchiku", "kaikaku", "yogen",
+  // Southeast — Order of Giants, Passive
+  "hozon", "gaiko", "minshu", "sabaki", "tetsugaku", "kenja", "rekishi", "kanryo",
+  // Southwest — Order of Hunters, Passive
+  "mamori", "seizon", "iyashi", "banri", "monogatari", "nogyo", "yuei", "takumi",
+];
+
+const COMPASS_POSITION_BY_ID: Record<string, number> = Object.fromEntries(
+  COMPASS_ORDER.map((id, i) => [id, i]),
+);
+
+/** An archetype's slot on the visual compass (not the semantic WHEEL_ORDER). */
+export function compassPosition(archetypeId: string): number {
+  const pos = COMPASS_POSITION_BY_ID[archetypeId];
+  if (pos === undefined) {
+    throw new Error(`compassPosition: unknown archetype id "${archetypeId}"`);
+  }
+  return pos;
+}
 
 export interface Quadrant {
   id: QuadrantId;
-  /** Wheel positions [start, start+8) belong to this quadrant. */
+  /** Compass positions [start, start+8) belong to this quadrant. */
   start: number;
   color: string;
   /** Unicode symbol engraved beside the quadrant name. */
@@ -141,24 +178,30 @@ export interface Quadrant {
 }
 
 export const QUADRANTS: Quadrant[] = [
-  { id: "forgers", start: 0, color: "#C9A84C", symbol: "⚒" },
-  { id: "ascenders", start: 8, color: "#7FA6E0", symbol: "✦" },
-  { id: "havens", start: 16, color: "#6FAE7F", symbol: "❖" },
-  { id: "venturers", start: 24, color: "#D98A5B", symbol: "➤" },
+  { id: "venturers", start: 0, color: "#D98A5B", symbol: "➤" },
+  { id: "forgers", start: 8, color: "#C9A84C", symbol: "⚒" },
+  { id: "ascenders", start: 16, color: "#7FA6E0", symbol: "✦" },
+  { id: "havens", start: 24, color: "#6FAE7F", symbol: "❖" },
 ];
 
 export function quadrantOf(position: number): Quadrant {
   return QUADRANTS[Math.floor(position / 8)];
 }
 
-export function hemisphereOf(position: number): HemisphereId {
+/** Active (north) vs. Passive (south) — the compass's Temperament axis. */
+export function nsHemisphereOf(position: number): NSHemisphereId {
   return position < 16 ? "north" : "south";
 }
 
-const SLOT_DEGREES = 360 / WHEEL_ORDER.length;
+/** Order of Giants (east) vs. Order of Hunters (west) — the compass's Order axis. */
+export function ewHemisphereOf(position: number): EWHemisphereId {
+  return position >= 8 && position < 24 ? "east" : "west";
+}
+
+const SLOT_DEGREES = 360 / COMPASS_ORDER.length;
 
 /**
- * Standard-position angle (degrees) of a wheel slot's center. Position 0
+ * Standard-position angle (degrees) of a compass slot's center. Position 0
  * is just clockwise of 9 o'clock; the order proceeds clockwise, so the
  * northern hemisphere (0–15) spans the top half of the circle.
  */
@@ -175,5 +218,3 @@ export function wheelPoint(
   const rad = (wheelAngle(position) * Math.PI) / 180;
   return { x: cx + radius * Math.cos(rad), y: cy - radius * Math.sin(rad) };
 }
-
-export { WHEEL_ORDER };

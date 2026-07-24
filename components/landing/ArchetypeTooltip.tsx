@@ -2,8 +2,8 @@
 
 import { useTranslations } from "next-intl";
 import { ARCHETYPE_DEFINITIONS } from "@/engines/archetype/archetype-definitions";
-import { getAllyIds, wheelPosition } from "@/engines/archetype/archetype-wheel";
-import { hemisphereOf, quadrantOf } from "@/content/landing-atlas";
+import { getAllyIds } from "@/engines/archetype/archetype-wheel";
+import { compassPosition, ewHemisphereOf, nsHemisphereOf, quadrantOf } from "@/content/landing-atlas";
 
 // Floating information card for one archetype on the compass. Kept to
 // single-line fields so the card never becomes a wall of text.
@@ -20,9 +20,10 @@ export function ArchetypeTooltip({
 }) {
   const t = useTranslations("landing.compass");
   const def = ARCHETYPE_DEFINITIONS[archetypeId];
-  const position = wheelPosition(archetypeId);
+  const position = compassPosition(archetypeId);
   const quadrant = quadrantOf(position);
-  const hemisphere = hemisphereOf(position);
+  const nsHemisphere = nsHemisphereOf(position);
+  const ewHemisphere = ewHemisphereOf(position);
   const allies = getAllyIds(archetypeId)
     .map((allyId) => t(`archetypes.${allyId}.name`))
     .join(" · ");
@@ -36,7 +37,7 @@ export function ArchetypeTooltip({
         </span>
       </div>
       <div className="atlas-pop-sub">
-        {t(`quadrants.${quadrant.id}.name`)} · {t(`hemispheres.${hemisphere}.name`)}
+        {t(`quadrants.${quadrant.id}.name`)} · {t(`hemispheres.${ewHemisphere}.name`)} · {t(`hemispheres.${nsHemisphere}.name`)}
       </div>
       <div className="atlas-pop-row">
         <span className="atlas-pop-label">{t("labels.motivation")}</span>

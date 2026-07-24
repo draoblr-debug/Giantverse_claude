@@ -1,33 +1,46 @@
 "use client";
 
-// Visual Character Discovery — optional onboarding module.
+// Visual Character Discovery — the third of three ways to reach a
+// Giantverse archetype (alongside the survey and the chat).
 //
-// Flow: intro (privacy) → selfie/upload → analyzing → top-5 results →
-// CTA into the EXISTING Giantverse ritual. The visual match is inspiration
-// only; identity generation remains exclusively DOB + name + archetype.
+// Flow: intro (privacy) → selfie/upload → analyzing → top-5 character
+// matches (each carrying its own archetype tag) → the participant's
+// archetype (sum of similarity by archetype across those top 5, same as
+// the reference app's MainViewModel.generateUserIdentity) → continue into
+// the SAME shared reveal the survey and chat use for the Legacy Name.
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useVisualStore } from "@/stores/visual.store";
+import { useSessionStore } from "@/stores/session.store";
+import { useAssessmentStore } from "@/stores/assessment.store";
 import { computeVisualEmbedding } from "@/lib/visual/face-embedding.service";
 import { matchCharacters } from "@/lib/visual/character-matcher";
+import { visualAxesToSignals } from "@/engines/visual/visual-scoring.engine";
+import { deriveArchetypeFromMatches } from "@/engines/visual/archetype-vote.engine";
 import { CharacterResultCard } from "@/components/visual/CharacterResultCard";
 import { DesignPrincipleCard } from "@/components/visual/DesignPrincipleCard";
-import { ShareCard } from "@/components/visual/ShareCard";
 
 type Stage = "intro" | "camera" | "preview" | "analyzing" | "results" | "error";
 
-const PRIVACY_LINE = "Your photo is only used to generate visual similarity and is not stored.";
+const PRIVACY_LINE = "Your photo is only used to generate visual similarity and your share card — it's never uploaded, and is cleared as soon as you finish this ritual.";
 
 export function VisualCharacterDiscovery() {
   const router = useRouter();
-  const { photoDataUrl, matches, setPhoto, clearPhoto, setMatches, reset } = useVisualStore();
+  const birthName = useSessionStore((state) => state.birthName);
+  const setResult = useAssessmentStore((state) => state.setResult);
+  const { photoDataUrl, matches, signals, archetypeId, archetypeScoreMap, setPhoto, clearPhoto, setMatches, reset } = useVisualStore();
   const [stage, setStage] = useState<Stage>(matches ? "results" : "intro");
   const [error, setError] = useState<string | null>(null);
+  const [continuing, setContinuing] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!birthName) router.replace("/birth");
+  }, [birthName, router]);
 
   const stopCamera = useCallback(() => {
     streamRef.current?.getTracks().forEach((t) => t.stop());
@@ -110,8 +123,12 @@ export function VisualCharacterDiscovery() {
       await new Promise((r) => setTimeout(r, 900));
       const embedding = await computeVisualEmbedding(photoDataUrl);
       const results = matchCharacters(embedding.axes, { count: 5 });
-      setMatches(results);
-      clearPhoto(); // pixels dropped the moment analysis completes
+      const derivedSignals = visualAxesToSignals(embedding.axes);
+      const { archetypeId: votedArchetypeId, scoreMap } = deriveArchetypeFromMatches(results);
+      setMatches(results, derivedSignals, votedArchetypeId, scoreMap);
+      // Kept (not cleared) past this point — the reveal page's share card
+      // uses this same photo. Still never uploaded; cleared once the
+      // ritual finishes (see /reveal's cleanup) or on an explicit retake.
       setStage("results");
     } catch {
       setError("That image couldn't be analysed — try a clearer, front-facing photo.");
@@ -119,7 +136,21 @@ export function VisualCharacterDiscovery() {
     }
   }
 
+  function handleContinue() {
+    if (!signals) return;
+    setContinuing(true);
+    setResult({
+      source: "visual",
+      signals,
+      archetypeId: archetypeId ?? undefined,
+      archetypeScoreMap: archetypeScoreMap ?? undefined,
+    });
+    router.push("/reveal");
+  }
+
   const top = matches?.[0];
+
+  if (!birthName) return null;
 
   return (
     <div className="legacy-container container2" style={{ minHeight: "100vh" }}>
@@ -135,9 +166,9 @@ export function VisualCharacterDiscovery() {
             {stage === "intro" && (
               <motion.div key="intro" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="txt-center">
                 <p className="mxw-385 m-auto txt-center f-14 txt-thm-clr-70-2 line-ht-20 mb-3">
-                  Compare your visual appearance against a curated library of legendary character designs.
-                  This finds the design language you <em>visually resemble</em> — it is not face recognition,
-                  not personality prediction, and never touches your Giantverse identity.
+                  One photo, two things: the character designs you <em>visually resemble</em> — a
+                  comparison against a curated library of legendary designs, not face recognition — and
+                  your Giantverse archetype, drawn directly from the archetypes those matched designs carry.
                 </p>
                 <div className="flex m-auto" style={{ gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
                   <button type="button" className="btn bdr-rds2" onClick={startCamera}>📷 Take Selfie</button>
@@ -211,22 +242,18 @@ export function VisualCharacterDiscovery() {
                   <DesignPrincipleCard character={top.character} />
                 </div>
 
-                <div className="mb-4">
-                  <ShareCard match={top} />
-                </div>
-
                 <div className="txt-center wht-cont p-4 rounded-md" style={{ border: "1px solid #3a2f12" }}>
                   <p className="f-12 txt-thm-clr-70-2 mb-1">
-                    That was inspiration. Your <strong style={{ color: "#C9A24B" }}>original</strong> Giantverse identity is
-                    generated from your name and date of birth — never from your face.
+                    The design resemblance above is more than just for fun — your <strong style={{ color: "#C9A24B" }}>Giantverse archetype</strong> comes
+                    directly from the archetypes carried by these top matches — continue to crystallise your Legacy Name.
                   </p>
-                  <button type="button" className="btn bdr-rds2 mt-2" onClick={() => router.push("/birth")}>
-                    Create My Original Giantverse Identity
+                  <button type="button" className="btn bdr-rds2 mt-2" onClick={handleContinue} disabled={!signals || continuing}>
+                    {continuing ? "Crystallising…" : "Reveal My Giantverse Identity"}
                   </button>
                 </div>
 
                 <p className="f-10 txt-center mt-3" style={{ color: "#6E695F" }}>
-                  Your photo was analysed in your browser and has already been discarded. {PRIVACY_LINE}
+                  Your photo was analysed entirely in your browser. {PRIVACY_LINE}
                 </p>
               </motion.div>
             )}

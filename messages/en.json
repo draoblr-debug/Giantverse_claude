@@ -141,30 +141,38 @@
       },
       "hemispheres": {
         "north": {
-          "name": "Northern Hemisphere",
-          "description": "Creators who reshape civilization through vision."
+          "name": "Active",
+          "description": "Archetypes who move first — driving change through initiative, momentum, and decisive action."
         },
         "south": {
-          "name": "Southern Hemisphere",
+          "name": "Passive",
+          "description": "Archetypes who hold steady — sustaining through patience, endurance, and quiet care."
+        },
+        "east": {
+          "name": "Giants",
+          "description": "Creators who reshape civilization through vision."
+        },
+        "west": {
+          "name": "Hunters",
           "description": "Protectors who strengthen civilization through relationships."
         }
       },
       "quadrants": {
         "forgers": {
           "name": "Forgers",
-          "description": "Builders of systems — law, order, and strategy are their raw materials."
+          "description": "Giants who drive change — vision forged into decisive, lasting action."
         },
         "ascenders": {
           "name": "Ascenders",
-          "description": "Visionaries — they imagine, connect, and grow what could be."
+          "description": "Giants who hold steady — conviction and patience shaping what endures."
         },
         "havens": {
           "name": "Havens",
-          "description": "Guardians — they protect, heal, and endure for the people they love."
+          "description": "Hunters who protect — devotion and quiet endurance for the people they love."
         },
         "venturers": {
           "name": "Venturers",
-          "description": "Explorers — they seek horizons, carry stories, and master the craft of the road."
+          "description": "Hunters who move first — courage and momentum carried into the unknown."
         }
       },
       "archetypes": {
@@ -420,6 +428,27 @@
         "Every archetype is equally valuable.",
         "The assessment measures natural preferences — not intelligence, success, or talent."
       ]
+    },
+    "paths": {
+      "heading": "Three Ways In",
+      "intro": "However you arrive, you land in the same place — a survey, a conversation, or a single photo all measure the same eight dimensions and name the same archetype.",
+      "items": {
+        "survey": {
+          "title": "Take the Survey",
+          "description": "A short set of personality questions. Answer honestly and naturally — there's no right answer to get wrong.",
+          "cta": "Start the Survey"
+        },
+        "chat": {
+          "title": "Talk to the Oracle",
+          "description": "A guided conversation that reads your archetype from how you respond, not just what you say.",
+          "cta": "Start the Conversation"
+        },
+        "visual": {
+          "title": "Show Us a Photo",
+          "description": "Upload a photo, or take one right now. Your expression and proportions are measured on your device — nothing is uploaded or stored.",
+          "cta": "Try the Photo Path"
+        }
+      }
     },
     "cta": {
       "heading": "Your name is already out there.",

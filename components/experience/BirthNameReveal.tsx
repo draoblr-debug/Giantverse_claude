@@ -84,6 +84,14 @@ export function BirthNameReveal() {
                           >
                             Chat With The Oracle
                           </button>
+                          <button
+                            type="button"
+                            onClick={() => router.push("/visual-discovery")}
+                            className="btn bdr-rds1 wdth-100p"
+                            style={{ maxWidth: "250px" }}
+                          >
+                            Discover Through a Selfie
+                          </button>
                         </motion.div>
                       )}
                     </AnimatePresence>
@@ -97,7 +105,7 @@ export function BirthNameReveal() {
                         transition={{ duration: 0.5, delay: 0.15 }}
                         className="f-12 txt-center txt-thm-clr-6 line-ht-20 mxw-320 m-auto mb-3"
                       >
-                        Hi, {birthName}, answer a few questions quickly to find out your Purpose in Giantverse, which is also your Surname.
+                        Hi, {birthName}, choose your path to find out your Purpose in Giantverse, which is also your Surname.
                       </motion.p>
                     )}
                   </AnimatePresence>

@@ -4,8 +4,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import {
   QUADRANTS,
-  WHEEL_ORDER,
-  hemisphereOf,
+  COMPASS_ORDER,
   quadrantOf,
   wheelPoint,
   type HemisphereId,
@@ -26,17 +25,26 @@ type Active =
   | { kind: "hemisphere"; id: HemisphereId; pinned: boolean }
   | null;
 
-// Anchor points (SVG units) for the four quadrant labels and the two
-// hemisphere labels around the ring.
+// Anchor points (SVG units) for the four quadrant labels and the four
+// hemisphere labels around the ring. Quadrant corners: Northwest (Hunters,
+// Active) = Venturers, Northeast (Giants, Active) = Forgers, Southeast
+// (Giants, Passive) = Ascenders, Southwest (Hunters, Passive) = Havens —
+// matches the COMPASS_ORDER blocks in landing-atlas.ts.
 const QUADRANT_LABELS: Record<QuadrantId, { x: number; y: number }> = {
-  forgers: { x: C - 249, y: C - 249 },
-  ascenders: { x: C + 249, y: C - 249 },
-  havens: { x: C + 249, y: C + 249 },
-  venturers: { x: C - 249, y: C + 249 },
+  venturers: { x: C - 249, y: C - 249 },
+  forgers: { x: C + 249, y: C - 249 },
+  ascenders: { x: C + 249, y: C + 249 },
+  havens: { x: C - 249, y: C + 249 },
 };
 const HEMISPHERE_LABELS: Record<HemisphereId, { x: number; y: number }> = {
   north: { x: C, y: 30 },
   south: { x: C, y: SIZE - 22 },
+  // "Giants"/"Hunters" render in Latin script in every locale (see
+  // messages/*.json), so their width is stable — but 34px from the edge
+  // clipped the "Hunters" label's left edge against the viewBox. 46px
+  // keeps a safety margin without pulling the labels noticeably inward.
+  east: { x: SIZE - 46, y: C },
+  west: { x: 46, y: C },
 };
 
 // The 32-archetype compass. Starts visually clean — outer ring, quadrant
@@ -112,10 +120,10 @@ export function ArchetypeCompass() {
   }
 
   const quadrantArcs: Record<QuadrantId, string> = {
-    forgers: `M${C - R_OUTER},${C} A${R_OUTER},${R_OUTER} 0 0 1 ${C},${C - R_OUTER}`,
-    ascenders: `M${C},${C - R_OUTER} A${R_OUTER},${R_OUTER} 0 0 1 ${C + R_OUTER},${C}`,
-    havens: `M${C + R_OUTER},${C} A${R_OUTER},${R_OUTER} 0 0 1 ${C},${C + R_OUTER}`,
-    venturers: `M${C},${C + R_OUTER} A${R_OUTER},${R_OUTER} 0 0 1 ${C - R_OUTER},${C}`,
+    venturers: `M${C - R_OUTER},${C} A${R_OUTER},${R_OUTER} 0 0 1 ${C},${C - R_OUTER}`,
+    forgers: `M${C},${C - R_OUTER} A${R_OUTER},${R_OUTER} 0 0 1 ${C + R_OUTER},${C}`,
+    ascenders: `M${C + R_OUTER},${C} A${R_OUTER},${R_OUTER} 0 0 1 ${C},${C + R_OUTER}`,
+    havens: `M${C},${C + R_OUTER} A${R_OUTER},${R_OUTER} 0 0 1 ${C - R_OUTER},${C}`,
   };
 
   return (
@@ -209,7 +217,7 @@ export function ArchetypeCompass() {
         })}
 
         {/* 32 archetype nodes */}
-        {WHEEL_ORDER.map((archetypeId, position) => {
+        {COMPASS_ORDER.map((archetypeId, position) => {
           const point = wheelPoint(position, R_NODES, C, C);
           const quadrant = quadrantOf(position);
           const isActive = active?.kind === "node" && active.id === archetypeId;
