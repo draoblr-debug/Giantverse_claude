@@ -8,6 +8,7 @@ import { useVisualStore } from "@/stores/visual.store";
 import { useInviteStore } from "@/stores/invite.store";
 import { ARCHETYPE_DEFINITIONS } from "@/engines/archetype/archetype-definitions";
 import { drawCard } from "@/lib/card-generator";
+import { CharacterPromptBuilder } from "@/components/experience/CharacterPromptBuilder";
 
 // The Dossier is a static preview build (see components/dossier/DossierPreview.tsx)
 // not yet ready for general users — hidden here without touching the route,
@@ -154,6 +155,8 @@ export function DrawingInvitation() {
                 ? <>Take {visualTop.character.name}&apos;s design language and shape something entirely your own. Would you draw me?</>
                 : <>Now there&apos;s only one thing I don&apos;t know — what do I look like? In my world, I can&apos;t see my own face. But you can. Would you draw me?</>}
             </p>
+
+            <CharacterPromptBuilder />
 
             {SHOW_DOSSIER_CTA && (
               <div className="txt-center mb-4">

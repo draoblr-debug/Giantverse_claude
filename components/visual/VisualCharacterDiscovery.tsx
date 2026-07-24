@@ -125,7 +125,7 @@ export function VisualCharacterDiscovery() {
       const results = matchCharacters(embedding.axes, { count: 5 });
       const derivedSignals = visualAxesToSignals(embedding.axes);
       const { archetypeId: votedArchetypeId, scoreMap } = deriveArchetypeFromMatches(results);
-      setMatches(results, derivedSignals, votedArchetypeId, scoreMap);
+      setMatches(results, derivedSignals, votedArchetypeId, scoreMap, embedding.axes, embedding.faceConfidence);
       // Kept (not cleared) past this point — the reveal page's share card
       // uses this same photo. Still never uploaded; cleared once the
       // ritual finishes (see /reveal's cleanup) or on an explicit retake.

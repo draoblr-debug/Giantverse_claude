@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { CharacterMatch } from "@/types/visual.types";
+import type { CharacterMatch, VisualAxes } from "@/types/visual.types";
 import type { Signal } from "@/types/archetype.types";
 
 // Visual Character Discovery state — one of three ways (alongside survey
@@ -22,6 +22,13 @@ type VisualStore = {
   signals: Signal[] | null;
   archetypeId: string | null;
   archetypeScoreMap: Record<string, number> | null;
+  // The participant's OWN measured facial geometry (not a character's
+  // design profile) — kept alongside `matches` so downstream features (the
+  // ending page's AI art prompt builder) can describe the actual photo
+  // analysed, not just which character it was closest to. Same privacy
+  // rules as photoDataUrl: in-memory only, cleared with everything else.
+  axes: VisualAxes | null;
+  faceConfidence: number | null;
   analyzedAt: number | null;
 
   setPhoto: (dataUrl: string) => void;
@@ -31,6 +38,8 @@ type VisualStore = {
     signals: Signal[],
     archetypeId: string | null,
     archetypeScoreMap: Record<string, number>,
+    axes?: VisualAxes,
+    faceConfidence?: number,
   ) => void;
   reset: () => void;
 };
@@ -41,11 +50,20 @@ export const useVisualStore = create<VisualStore>((set) => ({
   signals: null,
   archetypeId: null,
   archetypeScoreMap: null,
+  axes: null,
+  faceConfidence: null,
   analyzedAt: null,
 
   setPhoto: (dataUrl) => set({ photoDataUrl: dataUrl }),
   clearPhoto: () => set({ photoDataUrl: null }),
-  setMatches: (matches, signals, archetypeId, archetypeScoreMap) =>
-    set({ matches, signals, archetypeId, archetypeScoreMap, analyzedAt: Date.now() }),
-  reset: () => set({ photoDataUrl: null, matches: null, signals: null, archetypeId: null, archetypeScoreMap: null, analyzedAt: null }),
+  setMatches: (matches, signals, archetypeId, archetypeScoreMap, axes, faceConfidence) =>
+    set({
+      matches, signals, archetypeId, archetypeScoreMap,
+      axes: axes ?? null, faceConfidence: faceConfidence ?? null,
+      analyzedAt: Date.now(),
+    }),
+  reset: () => set({
+    photoDataUrl: null, matches: null, signals: null, archetypeId: null, archetypeScoreMap: null,
+    axes: null, faceConfidence: null, analyzedAt: null,
+  }),
 }));
