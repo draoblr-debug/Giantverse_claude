@@ -54,8 +54,9 @@ export function CharacterPromptBuilder() {
     <div className="wht-cont mxw-450 m-auto mb-4" style={{ border: "1px solid #3a2f12", borderRadius: 8, padding: 16 }}>
       <p className="f-10 mb-1 txt-thm-clr-6 txt-upp">🎨 AI Art Prompt</p>
       <p className="f-12 mb-2 txt-thm-clr-5 line-ht-20">
-        A structured prompt for generating original concept art of {legacyName} — built from{" "}
-        {prompt.facialFeatures ? "your archetype's lore and your own measured facial geometry" : "your archetype's lore"}.
+        A structured prompt for generating original concept art of {legacyName} — built from your archetype&apos;s lore
+        {prompt.environment && ", its home realm and continent"}
+        {prompt.facialFeatures && ", and your own measured facial geometry"}.
         {prompt.styleReference && " Never a likeness of the character it draws design inspiration from."}
       </p>
 

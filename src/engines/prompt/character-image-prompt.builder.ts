@@ -1,13 +1,20 @@
 // CharacterImagePromptBuilder — assembles a structured JSON prompt for
 // generating original character art of the participant's Giantverse
-// identity, drawing on the three things the ritual actually knows about
-// them:
-//   1. LORE      — the archetype's own description, guiding promise, traits
-//                   and shadow (src/engines/archetype/archetype-definitions.ts)
-//   2. FACE       — the participant's OWN measured facial geometry, if they
-//                   went through Visual Character Discovery (VisualAxes —
-//                   never the matched character's design profile)
-//   3. ARCHETYPE  — order (Giant/Hunter), temperament, realm/guild
+// identity, drawing on the things the ritual actually knows about them:
+//   1. LORE        — the archetype's own description, guiding promise,
+//                     traits and shadow (archetype-definitions.ts)
+//   2. ENVIRONMENT — the archetype's realmBias resolved against the real
+//                     Realm lore (src/engines/realms.ts: terrain, tagline,
+//                     what it represents), plus a continent name for scene
+//                     flavor. Continents are cosmetic map-artwork labels —
+//                     every continent contains all five realms — so the
+//                     continent here is a stable-per-archetype flavor pick,
+//                     not a lore-level residency (see landing-atlas.ts).
+//   3. FACE        — the participant's OWN measured facial geometry, if
+//                     they went through Visual Character Discovery
+//                     (VisualAxes — never the matched character's design
+//                     profile)
+//   4. ARCHETYPE   — order (Giant/Hunter), temperament, realm/guild
 //
 // This never claims to reproduce the participant's likeness — facial axes
 // are translated into generic shape-language descriptors (as the visual
@@ -17,6 +24,20 @@
 
 import type { ArchetypeProfile, Order } from "@/types/archetype.types";
 import type { CharacterMatch, VisualAxes } from "@/types/visual.types";
+import { REALMS } from "@/engines/realms";
+
+// Cosmetic continent labels from the world-map artwork (landing-atlas.ts) —
+// every continent contains all five realm zones, so any archetype can be
+// flavored onto any of them. Picked deterministically per archetype (below)
+// so the same archetype always gets the same continent, not a fresh one
+// every time the prompt is regenerated.
+const CONTINENTS = ["Akaru", "Ryūsen", "Kaigen", "Seikora", "Hoshima", "Kurogane"] as const;
+
+function pickContinent(seed: string): string {
+  let hash = 0;
+  for (let i = 0; i < seed.length; i++) hash = (hash * 31 + seed.charCodeAt(i)) >>> 0;
+  return CONTINENTS[hash % CONTINENTS.length];
+}
 
 export type CharacterImagePrompt = {
   subject: {
@@ -35,6 +56,16 @@ export type CharacterImagePrompt = {
     realm: string | null;
     guild: string | null;
   };
+  environment: {
+    continent: string;
+    realmId: string;
+    realmName: string;
+    realmJapanese: string;
+    tagline: string;
+    description: string;
+    represents: string[];
+    summary: string;
+  } | null;
   facialFeatures: {
     summary: string;
     details: string[];
@@ -122,6 +153,23 @@ export function buildCharacterImagePrompt(params: {
   const traitDescriptions = archetypeProfile?.traitDescriptions ?? (["", "", "", ""] as [string, string, string, string]);
   const loreTraits = traits.map((name, i) => ({ name, description: traitDescriptions[i] ?? "" }));
 
+  const realm = archetypeProfile?.realmBias ? REALMS[archetypeProfile.realmBias] : undefined;
+  const environment = realm
+    ? (() => {
+        const continent = pickContinent(archetypeProfile?.id ?? archetypeLabel);
+        return {
+          continent,
+          realmId: realm.id,
+          realmName: realm.name,
+          realmJapanese: realm.japanese,
+          tagline: realm.tagline,
+          description: realm.description,
+          represents: realm.represents,
+          summary: `Set on the continent of ${continent}, within ${realm.name} (${realm.japanese}) — ${realm.tagline.toLowerCase()} ${realm.description}`,
+        };
+      })()
+    : null;
+
   const facialFeatures = visualAxes
     ? {
         summary:
@@ -148,6 +196,7 @@ export function buildCharacterImagePrompt(params: {
   const promptParts = [
     `An original fantasy character portrait of "${legacyName}", ${archetypeLabel.toLowerCase()} of the Giantverse.`,
     guidingPromise,
+    environment ? environment.summary : null,
     facialFeatures ? facialFeatures.summary : null,
     styleReference
       ? `Shape language inspired by the design principles of ${styleReference.inspiredBy} (${styleReference.shapeLanguage}) — an original character, not a likeness.`
@@ -172,6 +221,7 @@ export function buildCharacterImagePrompt(params: {
       realm: archetypeProfile?.realmBias ?? null,
       guild: archetypeProfile?.guild ?? null,
     },
+    environment,
     facialFeatures,
     styleReference,
     artDirection,
