@@ -25,6 +25,79 @@
 import type { ArchetypeProfile, Order } from "@/types/archetype.types";
 import type { CharacterMatch, VisualAxes } from "@/types/visual.types";
 import { REALMS } from "@/engines/realms";
+import { ARCHETYPE_DEFINITIONS } from "@/engines/archetype/archetype-definitions";
+
+// The 3 next-highest-scoring archetypes after the winner — "present in the
+// answers, close enough that a slightly different run could have named them
+// instead" (same definition/count as the reveal page's invisibleArchetypes).
+// Used here as costume INSPIRATION, not lore: a few of their guild/order
+// traits get woven into the outfit as accents, so two participants who land
+// on the same primary archetype don't get an identical costume description
+// — the near-misses are different for almost everyone.
+const INVISIBLE_ARCHETYPE_COUNT = 3;
+
+function findInvisibleArchetypes(winnerId: string, scoreMap: Record<string, number> | null | undefined): ArchetypeProfile[] {
+  if (!scoreMap) return [];
+  return Object.entries(scoreMap)
+    .filter(([id]) => id !== winnerId)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, INVISIBLE_ARCHETYPE_COUNT)
+    .map(([id]) => ARCHETYPE_DEFINITIONS[id])
+    .filter((profile): profile is ArchetypeProfile => !!profile);
+}
+
+// One garment/material/accessory identity per guild — the actual source of
+// costume variety, since guild (unlike Order) has 8 distinct values across
+// the 32 archetypes.
+const GUILD_COSTUME: Record<string, { garment: string; material: string; accessory: string }> = {
+  "Guild of Governance": {
+    garment: "structured formal robes with a stiff standing collar",
+    material: "heavy brocade over lacquered panelling",
+    accessory: "a seal-of-office pendant",
+  },
+  "Guild of Strategists": {
+    garment: "a fitted tactical coat with map-case pockets",
+    material: "layered canvas and dark oiled leather",
+    accessory: "a folding brass compass at the belt",
+  },
+  "Guild of Philosophy": {
+    garment: "flowing layered robes with wide sleeves",
+    material: "unbleached linen and undyed wool",
+    accessory: "a string of worn prayer beads",
+  },
+  "Guild of Diplomats": {
+    garment: "a tailored travel coat with a sash of rank",
+    material: "fine wool with silk trim",
+    accessory: "a wax-sealed letter case",
+  },
+  "Guild of Builders": {
+    garment: "a reinforced work harness over a sturdy tunic",
+    material: "canvas, leather straps, and riveted metal plates",
+    accessory: "a multi-tool belt",
+  },
+  "Guild of Survivors": {
+    garment: "patched, layered survival gear",
+    material: "salvaged leather and weathered cloth",
+    accessory: "a bundle of scavenged tools",
+  },
+  "Guild of Guardians": {
+    garment: "banded armor over a padded underlayer",
+    material: "burnished metal plates and thick hide",
+    accessory: "a warding sigil",
+  },
+  "Guild of Artisans": {
+    garment: "a practical apron over rolled sleeves",
+    material: "canvas and soft leather, stained with craft",
+    accessory: "a roll of hand tools",
+  },
+};
+
+const ORDER_TEMPERAMENT_CUT: Record<string, string> = {
+  "GIANT_ACTIVE": "a monumental, forward-driving silhouette",
+  "GIANT_PASSIVE": "a grounded, weighted silhouette that holds its stance",
+  "HUNTER_ACTIVE": "a lean, dynamic silhouette built for sudden movement",
+  "HUNTER_PASSIVE": "a watchful, economical silhouette that gives nothing away",
+};
 
 // Cosmetic continent labels from the world-map artwork (landing-atlas.ts) —
 // every continent contains all five realm zones, so any archetype can be
@@ -64,6 +137,14 @@ export type CharacterImagePrompt = {
     tagline: string;
     description: string;
     represents: string[];
+    summary: string;
+  } | null;
+  costume: {
+    silhouette: string;
+    garment: string;
+    material: string;
+    accessory: string;
+    invisibleInfluences: { archetype: string; guild: string; accent: string }[];
     summary: string;
   } | null;
   facialFeatures: {
@@ -147,11 +228,47 @@ export function buildCharacterImagePrompt(params: {
   visualAxes: VisualAxes | null;
   faceConfidence: number | null;
   visualTop: CharacterMatch | null;
+  scoreMap?: Record<string, number> | null;
 }): CharacterImagePrompt {
-  const { legacyName, archetypeLabel, archetypeProfile, order, guidingPromise, traits, visualAxes, faceConfidence, visualTop } = params;
+  const { legacyName, archetypeLabel, archetypeProfile, order, guidingPromise, traits, visualAxes, faceConfidence, visualTop, scoreMap } = params;
 
   const traitDescriptions = archetypeProfile?.traitDescriptions ?? (["", "", "", ""] as [string, string, string, string]);
   const loreTraits = traits.map((name, i) => ({ name, description: traitDescriptions[i] ?? "" }));
+
+  const costume = (() => {
+    const guild = archetypeProfile?.guild;
+    const base = guild ? GUILD_COSTUME[guild] : undefined;
+    if (!base || !archetypeProfile) return null;
+
+    const silhouette = ORDER_TEMPERAMENT_CUT[`${order}_${archetypeProfile.temperament}`] ?? "a distinctive, purposeful silhouette";
+    const invisibleArchetypes = findInvisibleArchetypes(archetypeProfile.id, scoreMap);
+    const invisibleInfluences = invisibleArchetypes
+      .filter((a) => a.guild && a.guild !== guild) // only genuinely different guilds add a new accent
+      .map((a) => {
+        const accentGuild = a.guild as string;
+        const accentSource = GUILD_COSTUME[accentGuild];
+        return {
+          archetype: a.label,
+          guild: accentGuild,
+          accent: accentSource
+            ? `a ${accentSource.accessory.replace(/^(a|an)\s+/i, "")} echoing the ${accentGuild}`
+            : `a bearing that echoes the ${a.label}`,
+        };
+      });
+
+    const influenceText = invisibleInfluences.length > 0
+      ? ` Subtle accents nod to the near-miss archetypes this participant almost became: ${invisibleInfluences.map((i) => i.accent).join("; ")}.`
+      : "";
+
+    return {
+      silhouette,
+      garment: base.garment,
+      material: base.material,
+      accessory: base.accessory,
+      invisibleInfluences,
+      summary: `Wearing ${base.garment} in ${base.material}, cut into ${silhouette}, finished with ${base.accessory}.${influenceText}`,
+    };
+  })();
 
   const realm = archetypeProfile?.realmBias ? REALMS[archetypeProfile.realmBias] : undefined;
   const environment = realm
@@ -197,6 +314,7 @@ export function buildCharacterImagePrompt(params: {
     `An original fantasy character portrait of "${legacyName}", ${archetypeLabel.toLowerCase()} of the Giantverse.`,
     guidingPromise,
     environment ? environment.summary : null,
+    costume ? costume.summary : null,
     facialFeatures ? facialFeatures.summary : null,
     styleReference
       ? `Shape language inspired by the design principles of ${styleReference.inspiredBy} (${styleReference.shapeLanguage}) — an original character, not a likeness.`
@@ -222,6 +340,7 @@ export function buildCharacterImagePrompt(params: {
       guild: archetypeProfile?.guild ?? null,
     },
     environment,
+    costume,
     facialFeatures,
     styleReference,
     artDirection,

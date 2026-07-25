@@ -17,7 +17,7 @@ export function CharacterPromptBuilder() {
   const [expanded, setExpanded] = useState(false);
   const [copied, setCopied] = useState<"json" | "prompt" | null>(null);
 
-  const { legacyName, archetypeLabel, archetype, order, guidingPromise, traits } = useSessionStore();
+  const { legacyName, archetypeLabel, archetype, order, guidingPromise, traits, scores } = useSessionStore();
   const { axes, faceConfidence, matches } = useVisualStore();
   const visualTop = matches?.[0] ?? null;
 
@@ -33,8 +33,9 @@ export function CharacterPromptBuilder() {
       visualAxes: axes,
       faceConfidence,
       visualTop,
+      scoreMap: scores,
     });
-  }, [legacyName, archetypeLabel, archetype, order, guidingPromise, traits, axes, faceConfidence, visualTop]);
+  }, [legacyName, archetypeLabel, archetype, order, guidingPromise, traits, axes, faceConfidence, visualTop, scores]);
 
   if (!prompt) return null;
 
@@ -56,6 +57,7 @@ export function CharacterPromptBuilder() {
       <p className="f-12 mb-2 txt-thm-clr-5 line-ht-20">
         A structured prompt for generating original concept art of {legacyName} — built from your archetype&apos;s lore
         {prompt.environment && ", its home realm and continent"}
+        {prompt.costume && prompt.costume.invisibleInfluences.length > 0 && ", a costume shaped by the archetypes you almost became"}
         {prompt.facialFeatures && ", and your own measured facial geometry"}.
         {prompt.styleReference && " Never a likeness of the character it draws design inspiration from."}
       </p>
