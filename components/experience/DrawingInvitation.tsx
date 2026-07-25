@@ -9,6 +9,7 @@ import { useInviteStore } from "@/stores/invite.store";
 import { ARCHETYPE_DEFINITIONS } from "@/engines/archetype/archetype-definitions";
 import { drawCard } from "@/lib/card-generator";
 import { CharacterPromptBuilder } from "@/components/experience/CharacterPromptBuilder";
+import { REALM_META, pickContinentForRealm, type RealmId } from "@/content/landing-atlas";
 
 // The Dossier is a static preview build (see components/dossier/DossierPreview.tsx)
 // not yet ready for general users — hidden here without touching the route,
@@ -23,7 +24,7 @@ export function DrawingInvitation() {
   const [downloading, setDownloading] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
 
-  const { birthName, legacyName, archetypeLabel, archetype, order, guidingPromise, traits, firstName, scoreHistory, resetExperience } =
+  const { birthName, legacyName, archetypeLabel, archetype, order, guidingPromise, traits, firstName, resetExperience } =
     useSessionStore();
   const visualMatches = useVisualStore((s) => s.matches);
   const visualTop = visualMatches?.[0] ?? null;
@@ -61,9 +62,14 @@ export function DrawingInvitation() {
     if (!legacyName || !birthName || !archetypeLabel || !archetype || !order || !guidingPromise || !traits) return;
 
     const profile = ARCHETYPE_DEFINITIONS[archetype];
-    const traitDescriptions = profile?.traitDescriptions ?? ["", "", "", ""] as [string, string, string, string];
     const romaji = profile?.romajiName ?? archetype;
     const gvId = `GV-${String(Date.now()).slice(-6)}`;
+
+    // Birthplace in Giantverse: a personal flavor pick for this one card,
+    // not a fixed archetype→realm fact (see pickContinentForRealm).
+    const realmId = (profile?.realmBias ?? "Maruto") as RealmId;
+    const continentName = pickContinentForRealm(realmId, legacyName);
+    const landType = `${realmId} — ${REALM_META[realmId].epithet}`;
 
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -71,16 +77,15 @@ export function DrawingInvitation() {
     drawCard(canvas, {
       birthName,
       legacyName,
-      archetypeId: archetype,
       archetypeLabel,
       archetypeRomaji: romaji,
       order,
       guidingPromise,
       traits,
-      traitDescriptions,
       realName: firstName,
       gvId,
-      scoreHistory: scoreHistory ?? undefined,
+      continentName,
+      landType,
     }).then(() => {
       const display = displayCanvasRef.current;
       if (display) {
@@ -92,7 +97,7 @@ export function DrawingInvitation() {
       }
       setReady(true);
     });
-  }, [legacyName, birthName, archetypeLabel, archetype, order, guidingPromise, traits, firstName, scoreHistory]);
+  }, [legacyName, birthName, archetypeLabel, archetype, order, guidingPromise, traits, firstName]);
 
   if (!legacyName) return null;
 

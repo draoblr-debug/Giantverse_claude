@@ -12,6 +12,14 @@ export interface RealmMeta {
   accent: string;
   /** 24x24 stroke icon path(s) drawn in the realm card. */
   iconPaths: string[];
+  /**
+   * English display epithet (e.g. "The Mountain Belt") — mirrors
+   * messages/en.json's landing.lands.realms.<id>.epithet. Duplicated here
+   * because the canvas-rendered identity card (card-generator.ts) draws
+   * plain English text and has no reach into next-intl; every other
+   * consumer of this data should keep using the translated copy instead.
+   */
+  epithet: string;
 }
 
 // No archetype is tied to a realm here — any of the 32 archetypes can be
@@ -26,10 +34,12 @@ export const REALM_META: Record<RealmId, RealmMeta> = {
       "M4 19c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2",
       "M14 4l5 5h-3.5v3h-3V9H9z",
     ],
+    epithet: "The Shoreline",
   },
   Kuryo: {
     accent: "#9B8CC9",
     iconPaths: ["M3 19L9.5 6l4.5 7 2.5-4L21 19z", "M9.5 6l1.5 3-1.5 2-1.5-2z"],
+    epithet: "The Mountain Belt",
   },
   Murei: {
     accent: "#6FAE7F",
@@ -37,14 +47,17 @@ export const REALM_META: Record<RealmId, RealmMeta> = {
       "M12 21v-6",
       "M12 15c-4.2 0-6.5-2.4-6.5-5.4C5.5 6.2 8.2 4 12 4s6.5 2.2 6.5 5.6c0 3-2.3 5.4-6.5 5.4z",
     ],
+    epithet: "The Living Forest",
   },
   Maruto: {
     accent: "#C9A84C",
     iconPaths: ["M5 20V10.5L8 8V5h2.5v2h3V5H16v3l3 2.5V20z", "M10.5 20v-4h3v4"],
+    epithet: "The Living Heart",
   },
   Harai: {
     accent: "#D96C5B",
     iconPaths: ["M12 3l7.5 8.5L12 21 4.5 11.5z", "M12 3l-2 7 3 2-1.5 6"],
+    epithet: "The Broken Heart",
   },
 };
 
@@ -118,6 +131,20 @@ export const MAP_ZONES: MapZone[] = [
   { id: "Harai", continent: "Kurogane", xPct: 84.0, yPct: 58.6, radiusPct: 2 },
   { id: "Neisei", continent: "Kurogane", xPct: 82.7, yPct: 71.5, radiusPct: 2 },
 ];
+
+// Deterministically picks one of the continents that carries this realm's
+// zone (3 for Maruto/Harai, since a continent's "heart" is only ever one of
+// the two; 6 for the other three realms, which appear on every continent).
+// Seeded by a stable per-identity string (the Legacy Name) so the same
+// person's card always shows the same birthplace across reloads, without
+// hard-coding a fixed realm→continent link — any of a realm's eligible
+// continents is an equally valid personal result.
+export function pickContinentForRealm(realmId: RealmId, seed: string): string {
+  const options = [...new Set(MAP_ZONES.filter((z) => z.id === realmId).map((z) => z.continent))];
+  let hash = 0;
+  for (let i = 0; i < seed.length; i++) hash = (hash * 31 + seed.charCodeAt(i)) >>> 0;
+  return options[hash % options.length];
+}
 
 // ── Compass ─────────────────────────────────────────────────────────
 // COMPASS_ORDER lays the 32 archetypes out as a true two-axis compass —
