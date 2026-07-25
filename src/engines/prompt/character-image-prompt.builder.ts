@@ -218,6 +218,38 @@ const ORDER_ART_DIRECTION: Record<Order, CharacterImagePrompt["artDirection"]> =
   },
 };
 
+// Lighting sourced from the participant's REALM rather than their Order —
+// Order only has two values, so keying lighting off it meant every Hunter
+// (half the cast) got the identical "cool edge-light" description.
+//
+// Inspired by Sangam-era Tamil poetics (Tolkāppiyam's Thiṇai/திணை
+// classification): each of the five classical landscapes carries its own
+// canonical time of day and season, not just a mood. This app's five realms
+// already mirror those five landscapes closely enough to borrow their light
+// directly rather than inventing something arbitrary:
+//   Kuryo (mountains)   ≈ குறிஞ்சி Kuriñci — deep night, dew/cold season
+//   Murei (forest)      ≈ முல்லை Mullai   — dusk, rainy season
+//   Maruto (river-plain) ≈ மருதம் Marutam — dawn
+//   Neisei (coast)      ≈ நெய்தல் Neytal  — sunset/twilight
+//   Harai (wasteland)   ≈ பாலை Pālai     — high noon, hot season
+// Continent is woven into the sentence for per-person flavor (see
+// buildLighting below) even though the light quality itself is realm-driven
+// — continents don't otherwise carry any distinct physical trait to hang a
+// second axis of variation on.
+const REALM_THINAI_LIGHTING: Record<string, string> = {
+  Kuryo: "cold, high-altitude moonlight and starlight, a faint silver-blue glow through thin night air and drifting mist — the deep-night hour and dew-cold season of the mountain heights",
+  Murei: "soft, diffused dusk light filtering through rain-heavy forest canopy, a muted grey-green glow with mist rising off wet leaves — the evening hour of the rainy season in the deep woods",
+  Maruto: "warm golden dawn light breaking low across fertile plains and river-mist, a soft horizontal glow catching dust and haze — the first-light hour of the civic heartland",
+  Neisei: "warm amber sunset light low over open water, long shadows and a salt-haze glow on the tideline — the dusk hour where every journey along this coast begins",
+  Harai: "harsh, high-contrast noon sun overhead, heat-shimmer haze and bleached-white light against stark black shadow — the hottest hour of the dry season, when the land itself is in crisis",
+};
+
+function buildLighting(order: Order, environment: CharacterImagePrompt["environment"]): string {
+  const base = environment ? REALM_THINAI_LIGHTING[environment.realmId] : undefined;
+  if (!base || !environment) return ORDER_ART_DIRECTION[order].lighting;
+  return `${base}, as it falls over ${environment.continent}`;
+}
+
 export function buildCharacterImagePrompt(params: {
   legacyName: string;
   archetypeLabel: string;
@@ -308,7 +340,7 @@ export function buildCharacterImagePrompt(params: {
       }
     : null;
 
-  const artDirection = ORDER_ART_DIRECTION[order];
+  const artDirection = { ...ORDER_ART_DIRECTION[order], lighting: buildLighting(order, environment) };
 
   const promptParts = [
     `An original fantasy character portrait of "${legacyName}", ${archetypeLabel.toLowerCase()} of the Giantverse.`,
