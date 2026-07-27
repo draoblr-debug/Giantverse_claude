@@ -40,6 +40,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
       communicates: ["Precision", "Control", "Calmness", "Efficiency"],
       through: ["narrow eyes", "compact silhouette", "muted palette", "clean geometry"],
     },
+    creatorLinks: { youtube: "https://www.youtube.com/watch?v=OFmaKyWk1HQ" },
   },
   {
     id: "gojo-satoru", name: "Gojo Satoru", series: "Jujutsu Kaisen",
@@ -58,6 +59,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
       communicates: ["Effortless power", "Unreadability", "Charisma"],
       through: ["hidden eyes", "high-contrast palette", "loose posture over tall frame", "a smile doing the acting"],
     },
+    creatorLinks: { youtube: "https://www.youtube.com/watch?v=JDnmg149frU" },
   },
   {
     id: "sasuke-uchiha", name: "Sasuke Uchiha", series: "Naruto",
@@ -148,6 +150,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
       communicates: ["Unignorable optimism", "Motion", "Approachability"],
       through: ["maximum-warmth costume colour", "triangular hair over round face", "open-mouth default expression", "high-energy silhouette"],
     },
+    creatorLinks: { youtube: "https://www.youtube.com/watch?v=tQzSgx6el1E", imdb: "https://www.imdb.com/name/nm1618263/" },
   },
   {
     id: "violet-evergarden", name: "Violet Evergarden", series: "Violet Evergarden",
@@ -184,6 +187,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
       communicates: ["Defiance of limits", "Visible cost of ambition"],
       through: ["flamboyant coat compensating scale", "metal arm kept visible", "golden braid as signature break", "red/black/gold triad"],
     },
+    creatorLinks: { youtube: "https://www.youtube.com/watch?v=DpghTkatzgo" },
   },
   {
     id: "goku", name: "Son Goku", series: "Dragon Ball",
@@ -202,6 +206,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
       communicates: ["Strength without menace", "Instant recognisability"],
       through: ["a hair silhouette ownable at any size", "warm costume", "round facial base under sharp hair", "economy of line for weekly production"],
     },
+    creatorLinks: { youtube: "https://www.youtube.com/watch?v=7idJzEPZq1I" },
   },
   {
     id: "monkey-d-luffy", name: "Monkey D. Luffy", series: "One Piece",
@@ -220,6 +225,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
       communicates: ["Total freedom", "Loyalty to a promise"],
       through: ["circle-family everything", "the outline-breaking hat", "two scars with stories", "a design drawable ten thousand times"],
     },
+    creatorLinks: { imdb: "https://www.imdb.com/name/nm1520917/" },
   },
   {
     id: "l-lawliet", name: "L Lawliet", series: "Death Note",
@@ -238,6 +244,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
       communicates: ["Analysis over presentation", "Otherness"],
       through: ["eye bags as permanent feature", "monochrome costume", "broken posture line", "hair that refuses grooming"],
     },
+    creatorLinks: { articles: [{ label: "Comics Alliance: An Interview With Death Note Artist Takeshi Obata", url: "https://comicsalliance.com/death-note-bakuman-all-you-need-is-kill-takeshi-obata-interview/" }] },
   },
   {
     id: "sailor-moon", name: "Usagi Tsukino (Sailor Moon)", series: "Sailor Moon",
@@ -256,6 +263,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
       communicates: ["Radiant hope", "Approachable heroism"],
       through: ["maximum-circle shape family", "signature twin-bun break", "saturated accents on white", "eyes as the design's stage"],
     },
+    creatorLinks: { youtube: "https://www.youtube.com/watch?v=F5zBXihw2QY", imdb: "https://www.imdb.com/name/nm0847603/" },
   },
   {
     id: "spike-spiegel", name: "Spike Spiegel", series: "Cowboy Bebop",
@@ -438,6 +446,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
       communicates: ["Energy", "Approachability at every reading distance"],
       through: ["warm-advance/cool-recede colour split", "graphic eye objects", "web-lines doubling as form wireframe", "three deliberate reading distances"],
     },
+    creatorLinks: { youtube: "https://www.youtube.com/watch?v=5ro3nHBBkSU" },
   },
   {
     id: "miles-morales", name: "Miles Morales", series: "Spider-Verse",
@@ -600,6 +609,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
       communicates: ["Earnestness", "Growth under pressure"],
       through: ["freckle cluster as an ordinary-kid marker", "curly unruly hair", "fists bandaged from self-injury", "green as the least flashy hero color on the roster"],
     },
+    creatorLinks: { articles: [{ label: "Anime News Network: Interview with My Hero Academia creator Kohei Horikoshi", url: "https://www.animenewsnetwork.com/feature/2018-08-24/interview-my-hero-academia-creator-kohei-horikoshi/.135449" }] },
   },
   {
     id: "katsuki-bakugo", name: "Katsuki Bakugo", series: "My Hero Academia",
@@ -978,6 +988,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
       communicates: ["Post-human detachment", "Controlled precision"],
       through: ["unnatural but seamless lavender hair", "minimal tactical suit with no ornament", "perfectly symmetrical engineered features", "flat, unreadable default expression"],
     },
+    creatorLinks: { articles: [{ label: "Ghost in the Shell Official: Shirow Masamune on creating Ghost in the Shell", url: "https://theghostintheshell.jp/en/feature/interview01_2" }] },
   },
   {
     id: "faye-valentine", name: "Faye Valentine", series: "Cowboy Bebop",
@@ -1068,6 +1079,7 @@ export const CHARACTER_DATABASE: CharacterEntry[] = [
       communicates: ["Grim endurance", "Trauma worn openly"],
       through: ["oversized sword breaking realistic proportion", "facial and body scarring left visible", "heavy dark armor", "permanently tense, ready stance"],
     },
+    creatorLinks: { youtube: "https://www.youtube.com/watch?v=VpBmjiUojrk" },
   },
   {
     id: "griffith", name: "Griffith", series: "Berserk",

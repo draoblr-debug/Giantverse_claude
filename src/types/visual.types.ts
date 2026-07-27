@@ -96,6 +96,16 @@ export type CharacterEntry = {
   // Narrows the matching candidate pool to the cluster(s) the user's own
   // axes best fit, same as the reference app's ClusterManager.
   cluster?: string;
+  // Real, verified links about the character's actual creator — for the
+  // dossier's visual-match pages. Populated for a first batch of the most
+  // iconic, well-documented characters only; deliberately left undefined
+  // everywhere else rather than guessing a URL that might not exist or
+  // might point to the wrong person. Add more as they're researched.
+  creatorLinks?: {
+    youtube?: string;
+    imdb?: string;
+    articles?: { label: string; url: string }[];
+  };
 };
 
 export type CharacterMatch = {

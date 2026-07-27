@@ -66,6 +66,26 @@ export function createLocalizedBirthRitualSchema(t: {
     });
 }
 
+const visualMatchInputSchema = z.object({
+  name: z.string().trim().min(1).max(80),
+  series: z.string().trim().min(1).max(120),
+  designer: z.string().trim().min(1).max(120),
+  studio: z.string().trim().min(1).max(120),
+  franchise: z.string().trim().min(1).max(120),
+  similarity: z.number().min(0).max(100),
+  description: z.string().trim().max(500),
+  shapeLanguage: z.string().trim().max(200),
+  communicates: z.array(z.string().trim().max(60)).max(10),
+  through: z.array(z.string().trim().max(120)).max(10),
+  creatorLinks: z
+    .object({
+      youtube: z.string().url().optional(),
+      imdb: z.string().url().optional(),
+      articles: z.array(z.object({ label: z.string().max(160), url: z.string().url() })).max(5).optional(),
+    })
+    .optional(),
+});
+
 export const dossierGenerateSchema = z.object({
   realName: z.string().trim().max(50).optional().default(""),
   birthName: z.string().trim().min(1).max(50),
@@ -74,4 +94,8 @@ export const dossierGenerateSchema = z.object({
   order: z.enum(["GIANT", "HUNTER"]),
   guidingPromise: z.string().trim().min(1).max(300),
   scores: z.record(z.string(), z.number()).nullable().optional(),
+  // Top-5 visual-discovery matches, when the participant went through that
+  // path — rendered as individual pages in the dossier (see build_visual_
+  // matches() in generate_dossier.py). Absent for name+DOB/survey-only runs.
+  visualMatches: z.array(visualMatchInputSchema).max(5).optional(),
 });

@@ -45,8 +45,22 @@ PAGES: list[dict] = []          # {cls, section, body, spark:bool}
 _spark_i = 0
 
 
-def add(section: str, body: str, cls: str = "dark", spark: bool = True, center: bool = True, glyph: bool = True):
-    PAGES.append({"cls": cls, "section": section, "body": body, "spark": spark, "center": center, "glyph": glyph})
+def add(section: str, body: str, cls: str = "dark", spark: bool = True, center: bool = True, glyph: bool = True,
+        tier: str = "static", dynamic_id: str | None = None, overlay: str | None = None, conditional: str | None = None):
+    # tier drives the pre-build/assemble split (see assemble_static_body() and
+    # build_page_recipe() below): "static" pages are safe to pre-render once
+    # per archetype and reuse for every participant sharing that archetype
+    # (this bucket also happens to include pages that are literally identical
+    # for every archetype, e.g. quote/secret pages — no separate "universal"
+    # tier is needed, since both are consumed identically at assembly time);
+    # "dynamic" pages weave the participant's own name into flowing prose and
+    # must be authored fresh per request (dynamic_id names which one);
+    # "character" pages are the 5 visual-match pages, pre-built once per
+    # character and selected per request. overlay/conditional flag static
+    # pages that need a small per-request patch (numeric bars, confidence
+    # text) or may be skipped entirely (no visual matches for this session).
+    PAGES.append({"cls": cls, "section": section, "body": body, "spark": spark, "center": center, "glyph": glyph,
+                  "tier": tier, "dynamic_id": dynamic_id, "overlay": overlay, "conditional": conditional})
 
 
 def next_spark() -> str:
@@ -83,7 +97,7 @@ def build_front():
         <p class="cover-title">CHARACTER GENESIS DOSSIER</p>
         <p class="cover-ed">PREMIUM COLLECTOR'S EDITION · 2.0</p>
         <p class="cover-meta">The Giant Hunt · Giantverse Record {esc(P['gv_id'])}</p>
-      </div>""", spark=False, center=True, glyph=False)
+      </div>""", spark=False, center=True, glyph=False, tier="dynamic", dynamic_id="cover")
 
     add("COLLECTOR'S PLATE", f"""
       <div class="plate">
@@ -95,13 +109,13 @@ def build_front():
         <p class="body dim center">One identity. One record. One entry in the world-record attempt.<br/>
         No other copy of this book contains this name.</p>
         <p class="plate-id">{esc(P['gv_id'])}</p>
-      </div>""", spark=False, center=True, glyph=False)
+      </div>""", spark=False, center=True, glyph=False, tier="dynamic", dynamic_id="plate")
 
     toc = [
         ("I", "Identity", "Who arrived, and who was revealed"),
         ("II", "Archetype Analysis", "The Survivor, measured and mirrored on screen"),
         ("III", "The Wheel of Thirty-Two", "Your position — and the engine beneath it"),
-        ("IV", "Giantverse Lore", "The realm and guild that raised your character"),
+        ("IV", "Giantverse Lore", "The realm that raised your character"),
         ("V", "The Cast Around You", "Eight design briefs derived from your seat"),
         ("VI", "Hero Journey", "Seven beats of your personal Hunt"),
         ("VII", "Character Design Blueprint", "Your professional design brief"),
@@ -159,7 +173,7 @@ def master_study(i: int):
       {blocks(m['blocks'])}
       <div class="comm"><p><span class="gold">APPLIED TO YOUR RECORD</span> — {esc(fmt(m['apply']))}</p></div>
       <p class="fineprint">Master studies teach principles, never imitation. Study why it works; design your own answer.</p>
-    """)
+    """, tier="dynamic", dynamic_id=f"master-study-{i}")
 
 
 # ── CH I — IDENTITY ───────────────────────────────────────────────────
@@ -176,13 +190,13 @@ def build_identity():
       <p class="body dim">The Legacy Name is not a replacement of the Birth Name — it is the Birth Name, kept.
       {esc(P['birth_name'])} is who arrived at the Hunt. {esc(P['legacy_name'])} is who the Hunt revealed.
       Both are entered in this record, and both are yours.</p>
-    """)
+    """, tier="dynamic", dynamic_id="identity-record-1")
     rows = [("Giantverse ID", P['gv_id']), ("Real Name", P['real_name']), ("Birth Name", P['birth_name']),
             ("Legacy Name", P['legacy_name']), ("Order", P['order']),
             ("Primary Archetype", f"{P['archetype']} · {P['archetype_jp']} ({P['archetype_kanji']})"),
             ("Secondary Archetype", f"{P['secondary']} · {P['secondary_jp']}"),
             ("Home Realm", f"{P['realm_name']} · {P['realm_jp']}"),
-            ("Calling", P['guild']), ("Personal Symbol", P['symbol'])]
+            ("Personal Symbol", P['symbol'])]
     table = "\n".join(f'<div class="id-row"><span class="id-k">{esc(k)}</span><span class="id-v">{esc(v)}</span></div>' for k, v in rows)
     add("IDENTITY", f"""
       {kicker('IDENTITY', 'RECORD TWO')}
@@ -190,9 +204,8 @@ def build_identity():
       <div class="rule"></div>
       <div class="id-table">{table}</div>
       <p class="lab">SYMBOL MEANING</p><p class="body">{esc(P['symbol_meaning'])}</p>
-      <p class="lab">GUILD TAGLINE</p><p class="body">{esc(P['guild_tagline'])}</p>
       <p class="lab">REALM</p><p class="body dim">{esc(P['realm_desc'])}</p>
-    """)
+    """, tier="dynamic", dynamic_id="identity-record-2")
     add("IDENTITY", f"""
       {kicker('IDENTITY', 'RECORD THREE')}
       <h2 class="serif">The Four Traits</h2>
@@ -209,6 +222,43 @@ def bar(pct: int) -> str:
     return f'<div class="bar"><div class="bar-fill" style="width:{pct}%"></div><span class="bar-pct">{pct}%</span></div>'
 
 
+def visual_match_page(m: dict, i: int):
+    """One page per top-5 Visual Character Discovery match — the real,
+    personalized counterpart to the generic screen_examples a few pages
+    back. Links are only ever rendered when creator_links carries a real,
+    pre-verified URL; nothing here is guessed at render time."""
+    cl = m.get("creator_links")
+    link_lines = []
+    if cl:
+        if cl.get("youtube"):
+            link_lines.append(f'<p class="body"><a href="{esc(cl["youtube"])}">{esc(cl["youtube"])}</a></p>')
+        if cl.get("imdb"):
+            link_lines.append(f'<p class="body"><a href="{esc(cl["imdb"])}">{esc(cl["imdb"])}</a></p>')
+        for art in cl.get("articles") or []:
+            link_lines.append(f'<p class="body"><a href="{esc(art["url"])}">{esc(art["label"])}</a></p>')
+    links_html = (
+        f'<p class="lab">LEARN MORE ABOUT THE CREATOR</p>{"".join(link_lines)}'
+        if link_lines
+        else '<p class="lab">LEARN MORE ABOUT THE CREATOR</p><p class="body dim">Not yet verified for this character — check back in a future edition.</p>'
+    )
+    add("ARCHETYPE ANALYSIS", f"""
+      {kicker('VISUAL MATCH · No. ' + str(i + 1), f"{m['similarity']}% SIMILARITY")}
+      <h2 class="serif">{esc(m['name'])}</h2>
+      <p class="sub">{esc(m['series'])}</p>
+      <div class="rule"></div>
+      <p class="lab">DESIGNER</p><p class="body">{esc(m['designer'])}</p>
+      <p class="lab">STUDIO</p><p class="body">{esc(m['studio'])}</p>
+      <p class="lab">FRANCHISE</p><p class="body">{esc(m['franchise'])}</p>
+      <p class="lab">SHAPE LANGUAGE</p><p class="body">{esc(m['shape_language'])}</p>
+      <p class="body dim">{esc(m['description'])}</p>
+      <p class="lab">DESIGN PRINCIPLES</p>
+      <p class="body">Communicates: {esc(', '.join(m['communicates']))}</p>
+      <p class="body dim">Through: {esc(', '.join(m['through']))}</p>
+      {links_html}
+      <p class="fineprint">Matched by design language, not identity — an inspiration for the character you draw, never a claim about your own face.</p>
+    """, tier="character")
+
+
 def build_archetype():
     quote_page("archetype", "ARCHETYPE ANALYSIS")
     add("ARCHETYPE ANALYSIS", f"""
@@ -222,7 +272,13 @@ def build_archetype():
       <p class="body dim">The current running underneath the primary.</p>
       <p class="lab">GROWTH ARCHETYPE</p><p class="body">{esc(P['growth_note'])}</p>
       <p class="lab">SHADOW ARCHETYPE</p><p class="body">{esc(P['shadow_name'])} — {esc(P['shadow_desc'])}</p>
-    """)
+    """, tier="dynamic", dynamic_id="archetype-bars")
+    # ^ dynamic, not overlay: the two bars' Y position depends on how many
+    # lines the archetype description wraps to above them, which varies per
+    # archetype — not safe to overlay onto a pre-built page at a fixed
+    # coordinate. Unlike the wheel page below, this page has no complex
+    # graphics worth preserving from WeasyPrint, so full Node authoring is
+    # the simpler and more robust choice.
     strengths = blocks(P['traits'])
     add("ARCHETYPE ANALYSIS", f"""
       {kicker('ARCHETYPE', 'PROFILE')}
@@ -273,6 +329,18 @@ def build_archetype():
       evidence: what the character keeps, repairs, refuses to put down. Your symbol — {esc(P['symbol'])} — is that
       evidence, pre-designed. The pages ahead tell you where to put it.</p></div>
     """)
+    visual_matches = P.get('visual_matches') or []
+    if visual_matches:
+        add("ARCHETYPE ANALYSIS", f"""
+          {kicker('ARCHETYPE', 'ON SCREEN · YOUR OWN MATCHES')}
+          <h2 class="serif">Your Visual Discovery Matches</h2>
+          <p class="sub">Unlike the five characters on the previous pages, these are the ones your OWN photo actually
+          matched — ranked by design similarity, not archetype.</p>
+          <div class="rule"></div>
+          <p class="body dim">The pages that follow study each match's real designer: what they built, and how.</p>
+        """, conditional="has-visual-matches")
+        for i, m in enumerate(visual_matches[:5]):
+            visual_match_page(m, i)
     w = P['wound_page']
     add("ARCHETYPE ANALYSIS", f"""
       {kicker('ARCHETYPE', 'PSYCHOLOGY · NEW IN 2.0')}
@@ -299,7 +367,7 @@ def wheel_svg() -> str:
             col, rr, fw = GOLD, 7, "700"
         elif i in w['neighbour_idxs']:
             col, rr, fw = "#E4D9B8", 4.5, "600"
-        elif i in w['guild_idxs']:
+        elif i in w['realmmate_idxs']:
             col, rr, fw = "#7B8FA3", 4, "400"
         elif i == w['opposite_idx']:
             col, rr, fw = "#B4543F", 4.5, "600"
@@ -329,9 +397,9 @@ def build_wheel():
       {kicker('ARCHETYPE', 'MAP')}
       <h2 class="serif">The Wheel of Thirty-Two</h2>
       <p class="sub">Your position among all thirty-two archetypes. Gold — you. Pale gold — your wheel neighbours.
-      Blue-grey — your Guild. Red — your Opposite. The arrow marks your growth direction.</p>
+      Blue-grey — your Realm. Red — your Opposite. The arrow marks your growth direction.</p>
       {wheel_svg()}
-    """, spark=False, glyph=False, center=False)
+    """, spark=False, glyph=False, center=False, overlay="wheel-confidence")
     w = P['wheel']
     add("THE WHEEL OF THIRTY-TWO", f"""
       {kicker('ARCHETYPE', 'MAP')}
@@ -373,7 +441,7 @@ def build_lore():
       read it as a designer reads a character's childhood.</p>
       <div class="rule"></div>
       {blocks(P['lore_realm'])}
-    """)
+    """, tier="dynamic", dynamic_id="lore-realm-1")
     add("GIANTVERSE LORE", f"""
       {kicker('LORE', 'HOME REALM')}
       <h2 class="serif">{esc(P['realm_name'])}: Craft &amp; Arms</h2>
@@ -387,22 +455,6 @@ def build_lore():
       <div class="rule"></div>
       <p class="body">{esc(P['lore_legend'][0])}</p>
       <p class="body dim">{esc(P['lore_legend'][1])}</p>
-    """)
-    add("GIANTVERSE LORE", f"""
-      {kicker('LORE', 'CALLING')}
-      <h2 class="serif">{esc(P['guild'])}</h2>
-      <p class="sub">{esc(P['guild_tagline'])}</p>
-      <div class="rule"></div>
-      {blocks(P['lore_guild'])}
-    """)
-    add("GIANTVERSE LORE", f"""
-      {kicker('LORE', 'CALLING')}
-      <h2 class="serif">Rites &amp; Reputation</h2>
-      <div class="rule"></div>
-      {blocks(P['lore_guild2'])}
-      <p class="body dim">{esc(P['legacy_name'])} has taken this oath, passed this rite, and carries this reputation
-      into every room. Decide how comfortably it sits — a character wearing their Guild loosely is as interesting as
-      one wearing it proudly.</p>
     """)
     st = P['lore_story']
     add("GIANTVERSE LORE", f"""
@@ -431,7 +483,7 @@ def build_cast():
       <div class="rule"></div>
       <div class="toc">{listing}</div>
       {commentary(COMMENTARY['cast'])}
-    """)
+    """, tier="dynamic", dynamic_id="cast-listing")
     for role, title, sub, sym, why, how, lesson in P['cast']:
         add("THE CAST AROUND YOU", f"""
           {kicker('RELATIONSHIPS', role)}
@@ -450,7 +502,7 @@ def build_cast():
       <p class="sub">If {esc(P['legacy_name'])} could choose any three companions for the Hunt, the wheel recommends these.</p>
       <div class="rule"></div>
       {team}
-    """)
+    """, tier="dynamic", dynamic_id="cast-perfect-team")
     secret_page(2)
 
 
@@ -466,8 +518,14 @@ def build_journey():
       your position on the wheel. Use it as the spine of your character's story, or argue with it. Both are canon.</p>
       <div class="rule"></div>
       <div class="toc">{beats}</div>
-    """)
+    """, tier="dynamic", dynamic_id="journey-listing")
     for i, (title, body) in enumerate(P['journey']):
+        # Beats 0-2 (Why You Were Chosen / The Quest / The Greatest Fear)
+        # splice legacy_name/birth_name/guiding_promise mid-sentence
+        # (persona_builder.py:206-215) — must be authored fresh per session.
+        # Beats 3-6 reference only the primary/growth archetype profiles —
+        # archetype-invariant, safe to pre-build.
+        beat_kwargs = {"tier": "dynamic", "dynamic_id": f"journey-beat-{i}"} if i < 3 else {}
         add("HERO JOURNEY", f"""
           <div class="beat">
             {kicker('HERO JOURNEY', f'BEAT {i+1} OF 7')}
@@ -475,7 +533,7 @@ def build_journey():
             <div class="rule" style="width:36mm;margin-left:auto;margin-right:auto"></div>
             <p class="beat-text">{esc(body)}</p>
           </div>
-        """, center=True)
+        """, center=True, **beat_kwargs)
     master_study(2)  # Luffy
 
 
@@ -492,7 +550,7 @@ def build_blueprint():
       {blocks([("SHAPE LANGUAGE", f"{b['shape']} — {b['shape_note']}"), ("WHY", b['shape_why']),
                ("HEIGHT & BUILD", b['build']), ("SILHOUETTE", b['silhouette'])])}
       {commentary(COMMENTARY['blueprint_shape'])}
-    """)
+    """, tier="dynamic", dynamic_id="blueprint-shape")
     chips = "\n".join(
         f'<div class="chip"><div class="chip-swatch" style="background:{hx}"></div>'
         f'<p class="chip-name">{esc(nm)}</p><p class="chip-hex">{esc(hx)}</p><p class="chip-role">{esc(role)}</p></div>'
@@ -631,7 +689,7 @@ def build_hunt():
           ("STEP 3 — BUILD ON THE SHEETS", "Work through the workbook in order: head grid → eyes → expressions → poses → costume → turnaround. Each sheet feeds the next."),
           ("STEP 4 — FINAL TURNAROUND", "Present front, side and back on the turnaround sheet at a consistent head count. Flat colour from your palette page. This is your submission artwork."),
       ])}
-    """)
+    """, tier="dynamic", dynamic_id="hunt-designing")
     add("THE GIANT HUNT", f"""
       {kicker('THE GIANT HUNT', 'GUIDE')}
       <h2 class="serif">Submission Guidelines</h2>
@@ -672,7 +730,7 @@ def build_hunt():
           ("YOUR PART", f"{P['legacy_name']} is one name in the attempt. If the record stands, every counted participant is part of a world record — permanently, and provably."),
           ("AFTER SUBMISSION", "You'll receive confirmation of receipt, then verification status, then — record or not — your entry joins the public Giantverse gallery unless you opt out. Selected designs are featured; all verified designs are counted."),
       ])}
-    """)
+    """, tier="dynamic", dynamic_id="hunt-world-record")
     add("FOUNDING CREATOR", f"""
       {kicker("FOUNDER'S PASS")}
       <h2 class="serif">Founding Creator Benefits</h2>
@@ -684,7 +742,7 @@ def build_hunt():
           ("PLANNED PLATFORM BENEFITS", "As the Giantverse platform grows, founding creators are first in line for: a public creator profile, access to future platform updates and creator tools, eligibility for a future creator marketplace, and priority entry to future competitions and events."),
           ("THE HONEST PRINT", "Items listed as planned are exactly that — planned platform benefits and future features under active development, not guaranteed outcomes and not financial returns of any kind. What you are buying today is fully delivered today: this dossier, the masterclass, the workbook, and your verified place in the Hunt."),
       ])}
-    """)
+    """, tier="dynamic", dynamic_id="founding-benefits")
     add("FOUNDING CREATOR", f"""
       <div class="godraw">
         {kicker("FOUNDER'S PASS")}
@@ -697,7 +755,7 @@ def build_hunt():
         character design course. The Giantverse has done its part.</p>
         <p class="beat-text gold" style="font-size:15pt">The Hunt is waiting, {esc(P['legacy_name'])}.</p>
       </div>
-    """, spark=False, center=True, glyph=False)
+    """, spark=False, center=True, glyph=False, tier="dynamic", dynamic_id="founding-go-draw")
     add("COLOPHON", f"""
       <div class="plate">
         <p class="kicker">COLOPHON</p>
@@ -712,7 +770,7 @@ def build_hunt():
         <div class="cover-rule"></div>
         <p class="q-text" style="font-size:15pt">{esc(SPARKS[-1])}</p>
       </div>
-    """, spark=False, center=True, glyph=False)
+    """, spark=False, center=True, glyph=False, tier="dynamic", dynamic_id="colophon")
 
 
 # ── CSS + assembly ───────────────────────────────────────────────────
@@ -854,7 +912,12 @@ h2.serif {{ font-size: 24pt; color: #EFE9DA; margin: 2mm 0 2.5mm; }}
 """
 
 
-def assemble() -> str:
+def _run_pipeline() -> None:
+    """Resets PAGES and runs every chapter builder in book order against the
+    current module-level P. Shared by assemble()/assemble_static_body()/
+    build_page_recipe() so the page order can never drift between them —
+    they differ only in which of the resulting PAGES they keep."""
+    PAGES.clear()
     build_front()
     build_identity()
     build_archetype()
@@ -867,9 +930,11 @@ def assemble() -> str:
     build_workbook()
     build_hunt()
 
-    total = len(PAGES)
+
+def _render_sheets(pages: list[dict]) -> str:
+    total = len(pages)
     sheets = []
-    for i, pg in enumerate(PAGES):
+    for i, pg in enumerate(pages):
         n = i + 1
         spark = f'<p class="sparkline">{esc(next_spark())}</p>' if pg["spark"] and n > 1 else ""
         footer = "" if n == 1 else (
@@ -880,6 +945,70 @@ def assemble() -> str:
         sheets.append(
             f'<div class="sheet {pg["cls"]}">{glyph}<div class="{wrap_cls}">{pg["body"]}</div>{spark}{footer}</div>')
     return f"<!doctype html><html><head><meta charset='utf-8'><style>{CSS}</style></head><body>{''.join(sheets)}</body></html>"
+
+
+def assemble() -> str:
+    """Full ad-hoc book for the current module-level P — every page,
+    dynamic and static alike. Used by main() for one-off renders (e.g. the
+    Dossier 1.0 sample) — not part of the pre-build/assemble split below."""
+    _run_pipeline()
+    return _render_sheets(PAGES)
+
+
+def assemble_static_body(persona: dict) -> str:
+    """The ~85 pre-buildable pages for one archetype: every page tagged
+    tier=="static" (this bucket already includes both the pages that are
+    identical for literally everyone — quotes, secrets, masterclass — and
+    the pages that are identical only for this archetype — traits, lore,
+    cast, wheel geometry — since both are consumed identically at assembly
+    time, no further split is needed). Excludes tier="dynamic" (rendered
+    fresh per request in Node/pdf-lib) and tier="character" (pre-built
+    separately, once per character, in Node). `persona` should carry a
+    non-empty visual_matches list (even placeholder entries) so the
+    conditional="has-visual-matches" intro page is included — the real
+    per-request assembler decides at merge time whether a given participant
+    actually has matches to show."""
+    global P
+    P = persona
+    _run_pipeline()
+    static_pages = [pg for pg in PAGES if pg["tier"] == "static"]
+    return _render_sheets(static_pages)
+
+
+def build_page_recipe(persona: dict) -> list[dict]:
+    """The canonical, code-derived page order as a flat list of slot
+    descriptors — computed once (not per archetype, since the relative
+    tier sequence is identical for every archetype) and consumed by the
+    Node assembler to know, in order: pull the next page from the
+    pre-built archetype PDF ("static"), draw a fresh page ("dynamic", by
+    dynamic_id), or copy the next pre-built character page ("character",
+    by slot index). `persona` must carry 5 (placeholder) visual_matches
+    entries so every character slot appears in the recipe."""
+    global P
+    P = persona
+    _run_pipeline()
+    recipe = []
+    character_slot = 0
+    for pg in PAGES:
+        # section/cls travel on every slot (not just static) so the Node
+        # assembler can redact-and-redraw a correct footer over whatever
+        # placeholder footer the pre-built pages carry, and so dynamic/
+        # character pages get a footer in the same style.
+        if pg["tier"] == "dynamic":
+            recipe.append({"tier": "dynamic", "id": pg["dynamic_id"], "section": pg["section"], "cls": pg["cls"]})
+        elif pg["tier"] == "character":
+            recipe.append({"tier": "character", "slot": character_slot, "section": pg["section"], "cls": pg["cls"]})
+            character_slot += 1
+        else:
+            slot = {"tier": "static", "section": pg["section"], "cls": pg["cls"]}
+            if pg["overlay"]:
+                slot["overlay"] = pg["overlay"]
+            if pg["conditional"]:
+                slot["conditional"] = pg["conditional"]
+            if pg.get("quote"):
+                slot["quote"] = True
+            recipe.append(slot)
+    return recipe
 
 
 def main():

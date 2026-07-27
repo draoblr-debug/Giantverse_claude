@@ -32,7 +32,6 @@ export type ArchetypeProfile = {
   japaneseName: string;
   romajiName: string;
   realmBias?: string;
-  guild?: string;
   weights: Record<Dimension, number>; // 0.0 – 2.0, how strongly this dimension defines the archetype
   antiWeights: Record<Dimension, number>; // signals that argue against this archetype
   description: string;

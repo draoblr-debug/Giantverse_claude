@@ -157,29 +157,30 @@ export function pickContinentForRealm(realmId: RealmId, seed: string): string {
 // same thing. Position 0 sits at 9 o'clock and the order runs clockwise
 // over the top, so:
 //   - East/West (longitude) = Order: positions 8–23 (the right/eastern
-//     half) are the Order of Giants, positions 24–31 & 0–7 (the left/
-//     western half) are the Order of Hunters.
+//     half) are the Order of Hunters, positions 24–31 & 0–7 (the left/
+//     western half) are the Order of Giants.
 //   - North/South (latitude) = Temperament: positions 0–15 (the top/
 //     northern half) are Active archetypes, positions 16–31 (the bottom/
 //     southern half) are Passive.
-// The four quadrants are the intersection of the two: Northeast (Giants,
-// Active) = Forgers, Southeast (Giants, Passive) = Ascenders, Southwest
-// (Hunters, Passive) = Havens, Northwest (Hunters, Active) = Venturers.
+// The four quadrants are the intersection of the two: Northwest (Giants,
+// Active) = Forgers, Southwest (Giants, Passive) = Ascenders, Northeast
+// (Hunters, Active) = Venturers, Southeast (Hunters, Passive) = Keepers —
+// Giants read on screen-left, Hunters on screen-right.
 
-export type QuadrantId = "forgers" | "ascenders" | "havens" | "venturers";
+export type QuadrantId = "forgers" | "ascenders" | "keepers" | "venturers";
 export type NSHemisphereId = "north" | "south";
 export type EWHemisphereId = "east" | "west";
 export type HemisphereId = NSHemisphereId | EWHemisphereId;
 
 export const COMPASS_ORDER: string[] = [
-  // Northwest — Order of Hunters, Active
-  "koro", "teisatsu", "shisha", "tansa", "kensetsu", "hatsumei", "kaitaku", "shokunin",
-  // Northeast — Order of Giants, Active
+  // Northwest — Order of Giants, Active
   "kizoku", "senryaku", "sosai", "gijutsu", "riso", "kenchiku", "kaikaku", "yogen",
-  // Southeast — Order of Giants, Passive
-  "hozon", "gaiko", "minshu", "sabaki", "tetsugaku", "kenja", "rekishi", "kanryo",
-  // Southwest — Order of Hunters, Passive
+  // Northeast — Order of Hunters, Active
+  "koro", "teisatsu", "shisha", "tansa", "kensetsu", "hatsumei", "kaitaku", "shokunin",
+  // Southeast — Order of Hunters, Passive
   "mamori", "seizon", "iyashi", "banri", "monogatari", "nogyo", "yuei", "takumi",
+  // Southwest — Order of Giants, Passive
+  "hozon", "gaiko", "minshu", "sabaki", "tetsugaku", "kenja", "rekishi", "kanryo",
 ];
 
 const COMPASS_POSITION_BY_ID: Record<string, number> = Object.fromEntries(
@@ -205,10 +206,10 @@ export interface Quadrant {
 }
 
 export const QUADRANTS: Quadrant[] = [
-  { id: "venturers", start: 0, color: "#D98A5B", symbol: "➤" },
-  { id: "forgers", start: 8, color: "#C9A84C", symbol: "⚒" },
-  { id: "ascenders", start: 16, color: "#7FA6E0", symbol: "✦" },
-  { id: "havens", start: 24, color: "#6FAE7F", symbol: "❖" },
+  { id: "forgers", start: 0, color: "#C9A84C", symbol: "⚒" },
+  { id: "venturers", start: 8, color: "#D98A5B", symbol: "➤" },
+  { id: "keepers", start: 16, color: "#6FAE7F", symbol: "❖" },
+  { id: "ascenders", start: 24, color: "#7FA6E0", symbol: "✦" },
 ];
 
 export function quadrantOf(position: number): Quadrant {
@@ -220,7 +221,7 @@ export function nsHemisphereOf(position: number): NSHemisphereId {
   return position < 16 ? "north" : "south";
 }
 
-/** Order of Giants (east) vs. Order of Hunters (west) — the compass's Order axis. */
+/** Order of Hunters (east) vs. Order of Giants (west) — the compass's Order axis. */
 export function ewHemisphereOf(position: number): EWHemisphereId {
   return position >= 8 && position < 24 ? "east" : "west";
 }

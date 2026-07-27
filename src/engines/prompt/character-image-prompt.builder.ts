@@ -14,7 +14,7 @@
 //                     they went through Visual Character Discovery
 //                     (VisualAxes — never the matched character's design
 //                     profile)
-//   4. ARCHETYPE   — order (Giant/Hunter), temperament, realm/guild
+//   4. ARCHETYPE   — order (Giant/Hunter), temperament, realm
 //
 // This never claims to reproduce the participant's likeness — facial axes
 // are translated into generic shape-language descriptors (as the visual
@@ -30,7 +30,7 @@ import { ARCHETYPE_DEFINITIONS } from "@/engines/archetype/archetype-definitions
 // The 3 next-highest-scoring archetypes after the winner — "present in the
 // answers, close enough that a slightly different run could have named them
 // instead" (same definition/count as the reveal page's invisibleArchetypes).
-// Used here as costume INSPIRATION, not lore: a few of their guild/order
+// Used here as costume INSPIRATION, not lore: a few of their realm/order
 // traits get woven into the outfit as accents, so two participants who land
 // on the same primary archetype don't get an identical costume description
 // — the near-misses are different for almost everyone.
@@ -46,49 +46,35 @@ function findInvisibleArchetypes(winnerId: string, scoreMap: Record<string, numb
     .filter((profile): profile is ArchetypeProfile => !!profile);
 }
 
-// One garment/material/accessory identity per guild — the actual source of
-// costume variety, since guild (unlike Order) has 8 distinct values across
-// the 32 archetypes.
-const GUILD_COSTUME: Record<string, { garment: string; material: string; accessory: string }> = {
-  "Guild of Governance": {
+// One garment/material/accessory identity per realm — the actual source of
+// costume variety, since realm (unlike Order) has 5 distinct values across
+// the 32 archetypes, each grounded in that realm's own established lore
+// (src/engines/realms.ts).
+const REALM_COSTUME: Record<string, { garment: string; material: string; accessory: string }> = {
+  Kuryo: {
+    garment: "layered high-altitude robes with a deep cowl",
+    material: "quilted wool over violet-grey, slate-toned wraps",
+    accessory: "a folded star-chart carried at the hip",
+  },
+  Murei: {
+    garment: "soft, unstructured layered wraps that move with the body",
+    material: "undyed linen and forest-toned wool, worn soft with age",
+    accessory: "a sprig of grove-moss tied at the wrist",
+  },
+  Maruto: {
     garment: "structured formal robes with a stiff standing collar",
     material: "heavy brocade over lacquered panelling",
-    accessory: "a seal-of-office pendant",
+    accessory: "a civic seal pendant",
   },
-  "Guild of Strategists": {
-    garment: "a fitted tactical coat with map-case pockets",
-    material: "layered canvas and dark oiled leather",
-    accessory: "a folding brass compass at the belt",
-  },
-  "Guild of Philosophy": {
-    garment: "flowing layered robes with wide sleeves",
-    material: "unbleached linen and undyed wool",
-    accessory: "a string of worn prayer beads",
-  },
-  "Guild of Diplomats": {
+  Neisei: {
     garment: "a tailored travel coat with a sash of rank",
-    material: "fine wool with silk trim",
+    material: "salt-worn canvas with sea-glass teal trim",
     accessory: "a wax-sealed letter case",
   },
-  "Guild of Builders": {
-    garment: "a reinforced work harness over a sturdy tunic",
-    material: "canvas, leather straps, and riveted metal plates",
-    accessory: "a multi-tool belt",
-  },
-  "Guild of Survivors": {
+  Harai: {
     garment: "patched, layered survival gear",
-    material: "salvaged leather and weathered cloth",
+    material: "salvaged leather and weathered, ember-scorched cloth",
     accessory: "a bundle of scavenged tools",
-  },
-  "Guild of Guardians": {
-    garment: "banded armor over a padded underlayer",
-    material: "burnished metal plates and thick hide",
-    accessory: "a warding sigil",
-  },
-  "Guild of Artisans": {
-    garment: "a practical apron over rolled sleeves",
-    material: "canvas and soft leather, stained with craft",
-    accessory: "a roll of hand tools",
   },
 };
 
@@ -127,7 +113,6 @@ export type CharacterImagePrompt = {
     traits: { name: string; description: string }[];
     shadow: { trait: string; description: string };
     realm: string | null;
-    guild: string | null;
   };
   environment: {
     continent: string;
@@ -144,7 +129,7 @@ export type CharacterImagePrompt = {
     garment: string;
     material: string;
     accessory: string;
-    invisibleInfluences: { archetype: string; guild: string; accent: string }[];
+    invisibleInfluences: { archetype: string; realm: string; accent: string }[];
     summary: string;
   } | null;
   facialFeatures: {
@@ -268,22 +253,22 @@ export function buildCharacterImagePrompt(params: {
   const loreTraits = traits.map((name, i) => ({ name, description: traitDescriptions[i] ?? "" }));
 
   const costume = (() => {
-    const guild = archetypeProfile?.guild;
-    const base = guild ? GUILD_COSTUME[guild] : undefined;
+    const realmId = archetypeProfile?.realmBias;
+    const base = realmId ? REALM_COSTUME[realmId] : undefined;
     if (!base || !archetypeProfile) return null;
 
     const silhouette = ORDER_TEMPERAMENT_CUT[`${order}_${archetypeProfile.temperament}`] ?? "a distinctive, purposeful silhouette";
     const invisibleArchetypes = findInvisibleArchetypes(archetypeProfile.id, scoreMap);
     const invisibleInfluences = invisibleArchetypes
-      .filter((a) => a.guild && a.guild !== guild) // only genuinely different guilds add a new accent
+      .filter((a) => a.realmBias && a.realmBias !== realmId) // only genuinely different realms add a new accent
       .map((a) => {
-        const accentGuild = a.guild as string;
-        const accentSource = GUILD_COSTUME[accentGuild];
+        const accentRealm = a.realmBias as string;
+        const accentSource = REALM_COSTUME[accentRealm];
         return {
           archetype: a.label,
-          guild: accentGuild,
+          realm: accentRealm,
           accent: accentSource
-            ? `a ${accentSource.accessory.replace(/^(a|an)\s+/i, "")} echoing the ${accentGuild}`
+            ? `a ${accentSource.accessory.replace(/^(a|an)\s+/i, "")} echoing ${accentRealm}`
             : `a bearing that echoes the ${a.label}`,
         };
       });
@@ -369,7 +354,6 @@ export function buildCharacterImagePrompt(params: {
       traits: loreTraits,
       shadow: archetypeProfile?.shadow ?? { trait: "", description: "" },
       realm: archetypeProfile?.realmBias ?? null,
-      guild: archetypeProfile?.guild ?? null,
     },
     environment,
     costume,

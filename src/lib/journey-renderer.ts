@@ -2,13 +2,14 @@
 //
 // Renders the participant's turn-by-turn drift across the 32 archetypes as
 // a radial map: Giants fill the western semicircle, Hunters the eastern;
-// spokes are colored by guild; the traced route is the participant's own
+// spokes are colored by realm; the traced route is the participant's own
 // path, docking on the winning archetype. The renderer owns zero world
 // data — it is constructed from ARCHETYPE_DEFINITIONS, and score snapshots
 // referencing unknown archetype ids throw, so schema drift can never
 // silently introduce a 33rd archetype.
 
 import { ARCHETYPE_DEFINITIONS } from "@/engines/archetype/archetype-definitions";
+import { REALM_META } from "@/content/landing-atlas";
 
 export interface TurnSnapshot {
   category: string;
@@ -54,10 +55,6 @@ const CALLING_COLORS: Record<"Giant" | "Hunter", string> = {
   Giant: "#C9A24B", // brass — thought
   Hunter: "#4FA3A5", // teal — action
 };
-const GUILD_PALETTE = [
-  "#C9A24B", "#4FA3A5", "#7286B8", "#6FA06A",
-  "#B4543F", "#9B6FB8", "#C4885A", "#8A9BA8",
-];
 
 function toXY(angleDeg: number, r: number, cx: number, cy: number) {
   const a = ((angleDeg - 90) * Math.PI) / 180;
@@ -115,7 +112,9 @@ const QUADRANT_SW_GIANTS = ["gaiko", "tetsugaku", "senryaku", "riso", "yogen", "
 const QUADRANT_NW_GIANTS = ["gijutsu", "minshu", "kizoku", "kanryo", "kenchiku", "sabaki", "sosai", "kaikaku"];
 
 // Spoke layout built once from canonical archetype definitions.
-// Guild → color in first-seen order; Calling color as fallback.
+// Realm → color (REALM_META's own accent, so this stays in sync with the
+// same 5 colors used everywhere else realms are shown); Calling color as
+// fallback for the rare archetype with no realmBias.
 const SPOKES: Record<string, Spoke> = (() => {
   const byId = new Map(
     Object.values(ARCHETYPE_DEFINITIONS).map((a) => [
@@ -125,21 +124,14 @@ const SPOKES: Record<string, Spoke> = (() => {
         title: a.label,
         surname: a.romajiName,
         calling: (a.order === "GIANT" ? "Giant" : "Hunter") as "Giant" | "Hunter",
-        guild: a.guild,
+        realmId: a.realmBias,
       },
     ]),
   );
   const all = [...byId.values()];
 
-  const palette = new Map<string, string>();
-  let slot = 0;
-  for (const a of all) {
-    if (a.guild && !palette.has(a.guild)) {
-      palette.set(a.guild, GUILD_PALETTE[slot++ % GUILD_PALETTE.length]);
-    }
-  }
   const colorOf = (a: (typeof all)[number]) =>
-    (a.guild && palette.get(a.guild)) || CALLING_COLORS[a.calling];
+    (a.realmId && REALM_META[a.realmId as keyof typeof REALM_META]?.accent) || CALLING_COLORS[a.calling];
 
   const hunters = [...QUADRANT_NE_HUNTERS, ...QUADRANT_SE_HUNTERS].map((id) => byId.get(id)).filter((a): a is (typeof all)[number] => Boolean(a));
   const giants = [...QUADRANT_SW_GIANTS, ...QUADRANT_NW_GIANTS].map((id) => byId.get(id)).filter((a): a is (typeof all)[number] => Boolean(a));

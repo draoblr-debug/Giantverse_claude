@@ -11,10 +11,12 @@ import { drawCard } from "@/lib/card-generator";
 import { CharacterPromptBuilder } from "@/components/experience/CharacterPromptBuilder";
 import { REALM_META, pickContinentForRealm, type RealmId } from "@/content/landing-atlas";
 
-// The Dossier is a static preview build (see components/dossier/DossierPreview.tsx)
-// not yet ready for general users — hidden here without touching the route,
-// generator, or the rest of the flow, so it can be switched back on later.
-const SHOW_DOSSIER_CTA = false;
+// The Dossier is a static preview build (see components/dossier/DossierPreview.tsx).
+const SHOW_DOSSIER_CTA = true;
+
+// The AI Art Prompt builder — hidden without touching the route, generator,
+// or the rest of the flow, so it can be switched back on later.
+const SHOW_PROMPT_BUILDER = false;
 
 export function DrawingInvitation() {
   const router = useRouter();
@@ -161,7 +163,7 @@ export function DrawingInvitation() {
                 : <>Now there&apos;s only one thing I don&apos;t know — what do I look like? In my world, I can&apos;t see my own face. But you can. Would you draw me?</>}
             </p>
 
-            <CharacterPromptBuilder />
+            {SHOW_PROMPT_BUILDER && <CharacterPromptBuilder />}
 
             {SHOW_DOSSIER_CTA && (
               <div className="txt-center mb-4">

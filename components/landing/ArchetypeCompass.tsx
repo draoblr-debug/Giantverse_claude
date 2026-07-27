@@ -26,15 +26,16 @@ type Active =
   | null;
 
 // Anchor points (SVG units) for the four quadrant labels and the four
-// hemisphere labels around the ring. Quadrant corners: Northwest (Hunters,
-// Active) = Venturers, Northeast (Giants, Active) = Forgers, Southeast
-// (Giants, Passive) = Ascenders, Southwest (Hunters, Passive) = Havens —
-// matches the COMPASS_ORDER blocks in landing-atlas.ts.
+// hemisphere labels around the ring. Quadrant corners: Northwest (Giants,
+// Active) = Forgers, Northeast (Hunters, Active) = Venturers, Southeast
+// (Hunters, Passive) = Keepers, Southwest (Giants, Passive) = Ascenders —
+// matches the COMPASS_ORDER blocks in landing-atlas.ts. Giants read on
+// screen-left, Hunters on screen-right.
 const QUADRANT_LABELS: Record<QuadrantId, { x: number; y: number }> = {
-  venturers: { x: C - 249, y: C - 249 },
-  forgers: { x: C + 249, y: C - 249 },
-  ascenders: { x: C + 249, y: C + 249 },
-  havens: { x: C - 249, y: C + 249 },
+  forgers: { x: C - 249, y: C - 249 },
+  venturers: { x: C + 249, y: C - 249 },
+  keepers: { x: C + 249, y: C + 249 },
+  ascenders: { x: C - 249, y: C + 249 },
 };
 const HEMISPHERE_LABELS: Record<HemisphereId, { x: number; y: number }> = {
   north: { x: C, y: 30 },
@@ -120,10 +121,10 @@ export function ArchetypeCompass() {
   }
 
   const quadrantArcs: Record<QuadrantId, string> = {
-    venturers: `M${C - R_OUTER},${C} A${R_OUTER},${R_OUTER} 0 0 1 ${C},${C - R_OUTER}`,
-    forgers: `M${C},${C - R_OUTER} A${R_OUTER},${R_OUTER} 0 0 1 ${C + R_OUTER},${C}`,
-    ascenders: `M${C + R_OUTER},${C} A${R_OUTER},${R_OUTER} 0 0 1 ${C},${C + R_OUTER}`,
-    havens: `M${C},${C + R_OUTER} A${R_OUTER},${R_OUTER} 0 0 1 ${C - R_OUTER},${C}`,
+    forgers: `M${C - R_OUTER},${C} A${R_OUTER},${R_OUTER} 0 0 1 ${C},${C - R_OUTER}`,
+    venturers: `M${C},${C - R_OUTER} A${R_OUTER},${R_OUTER} 0 0 1 ${C + R_OUTER},${C}`,
+    keepers: `M${C + R_OUTER},${C} A${R_OUTER},${R_OUTER} 0 0 1 ${C},${C + R_OUTER}`,
+    ascenders: `M${C},${C + R_OUTER} A${R_OUTER},${R_OUTER} 0 0 1 ${C - R_OUTER},${C}`,
   };
 
   return (

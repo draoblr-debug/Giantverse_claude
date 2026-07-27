@@ -149,12 +149,12 @@
           "description": "Archetypes who hold steady — sustaining through patience, endurance, and quiet care."
         },
         "east": {
-          "name": "Giants",
-          "description": "Creators who reshape civilization through vision."
-        },
-        "west": {
           "name": "Hunters",
           "description": "Protectors who strengthen civilization through relationships."
+        },
+        "west": {
+          "name": "Giants",
+          "description": "Creators who reshape civilization through vision."
         }
       },
       "quadrants": {
@@ -166,8 +166,8 @@
           "name": "Ascenders",
           "description": "Giants who hold steady — conviction and patience shaping what endures."
         },
-        "havens": {
-          "name": "Havens",
+        "keepers": {
+          "name": "Keepers",
           "description": "Hunters who protect — devotion and quiet endurance for the people they love."
         },
         "venturers": {

@@ -15,7 +15,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
   minshu: {
     id: "minshu", label: "Democrat", order: "GIANT", temperament: "PASSIVE",
     japaneseName: "民主", romajiName: "Minshū",
-    realmBias: "Maruto", guild: "Guild of Governance",
+    realmBias: "Maruto",
     weights: weights({ VALUES: 2.0, POWER: 1.2, PEOPLE: 2.0 }),
     antiWeights: NO_ANTI_WEIGHTS,
     description: "Believes legitimacy comes from the consent of the many, not the few.",
@@ -28,7 +28,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
   kizoku: {
     id: "kizoku", label: "Aristocrat", order: "GIANT", temperament: "ACTIVE",
     japaneseName: "貴族", romajiName: "Kizoku",
-    realmBias: "Maruto", guild: "Guild of Governance",
+    realmBias: "Maruto",
     weights: weights({ POWER: 2.0, LEADERSHIP: 1.6, DECISIONS: 1.2 }),
     antiWeights: NO_ANTI_WEIGHTS,
     description: "Leads with inherited certainty and intuitive command.",
@@ -41,7 +41,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
   kanryo: {
     id: "kanryo", label: "Bureaucrat", order: "GIANT", temperament: "PASSIVE",
     japaneseName: "官僚", romajiName: "Kanryō",
-    realmBias: "Maruto", guild: "Guild of Governance",
+    realmBias: "Maruto",
     weights: weights({ DECISIONS: 2.0, VALUES: 1.4, FEARS: 1.2 }),
     antiWeights: NO_ANTI_WEIGHTS,
     description: "Finds safety and fairness in process, dreads chaos.",
@@ -54,7 +54,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
   gijutsu: {
     id: "gijutsu", label: "Technocrat", order: "GIANT", temperament: "ACTIVE",
     japaneseName: "技術", romajiName: "Gijutsu",
-    realmBias: "Maruto", guild: "Guild of Strategists",
+    realmBias: "Maruto",
     weights: weights({ MOTIVATION: 2.0, DECISIONS: 1.6 }),
     antiWeights: weights({ PEOPLE: 1.2 }),
     description: "Optimises for efficiency; people-politics is noise to filter out.",
@@ -67,7 +67,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
   tetsugaku: {
     id: "tetsugaku", label: "Philosopher", order: "GIANT", temperament: "PASSIVE",
     japaneseName: "哲学", romajiName: "Tetsugaku",
-    realmBias: "Kuryo", guild: "Guild of Philosophy",
+    realmBias: "Kuryo",
     weights: weights({ VALUES: 1.6, DREAMS: 2.0, MOTIVATION: 1.2 }),
     antiWeights: NO_ANTI_WEIGHTS,
     description: "Chases understanding for its own sake, deeper than any single answer.",
@@ -80,7 +80,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
   gaiko: {
     id: "gaiko", label: "Diplomat", order: "GIANT", temperament: "PASSIVE",
     japaneseName: "外交", romajiName: "Gaikō",
-    realmBias: "Neisei", guild: "Guild of Diplomats",
+    realmBias: "Neisei",
     weights: weights({ PEOPLE: 2.0, DECISIONS: 1.4, FEARS: 1.2 }),
     antiWeights: NO_ANTI_WEIGHTS,
     description: "Builds consensus, dreads open conflict more than slow progress.",
@@ -93,7 +93,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
   kenchiku: {
     id: "kenchiku", label: "Architect", order: "GIANT", temperament: "ACTIVE",
     japaneseName: "建築", romajiName: "Kenchiku",
-    realmBias: "Maruto", guild: "Guild of Builders",
+    realmBias: "Maruto",
     weights: weights({ DREAMS: 2.0, MOTIVATION: 1.6, LEADERSHIP: 1.2 }),
     antiWeights: NO_ANTI_WEIGHTS,
     description: "Designs systems meant to outlast the person who built them.",
@@ -106,7 +106,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
   kaikaku: {
     id: "kaikaku", label: "Reformer", order: "GIANT", temperament: "ACTIVE",
     japaneseName: "改革", romajiName: "Kaikaku",
-    realmBias: "Harai", guild: "Guild of Survivors",
+    realmBias: "Harai",
     weights: weights({ VALUES: 1.6, MOTIVATION: 2.0, FEARS: 1.2 }),
     antiWeights: NO_ANTI_WEIGHTS,
     description: "Driven by justice, dreads stagnation more than backlash.",
@@ -119,7 +119,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
   sabaki: {
     id: "sabaki", label: "Judge", order: "GIANT", temperament: "PASSIVE",
     japaneseName: "裁き", romajiName: "Sabaki",
-    realmBias: "Maruto", guild: "Guild of Governance",
+    realmBias: "Maruto",
     weights: weights({ VALUES: 2.0, POWER: 1.2, DECISIONS: 1.6 }),
     antiWeights: NO_ANTI_WEIGHTS,
     description: "Weighs fairness deliberately; authority must be earned, not assumed.",
@@ -132,7 +132,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
   senryaku: {
     id: "senryaku", label: "Strategist", order: "GIANT", temperament: "ACTIVE",
     japaneseName: "戦略", romajiName: "Senryaku",
-    realmBias: "Kuryo", guild: "Guild of Strategists",
+    realmBias: "Kuryo",
     weights: weights({ LEADERSHIP: 2.0, MOTIVATION: 1.4, DECISIONS: 1.6 }),
     antiWeights: NO_ANTI_WEIGHTS,
     description: "Plays the long game; every move is calculated toward winning.",
@@ -147,7 +147,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
   tansa: {
     id: "tansa", label: "Explorer", order: "HUNTER", temperament: "ACTIVE",
     japaneseName: "探査", romajiName: "Tansa",
-    realmBias: "Neisei", guild: "Guild of Diplomats",
+    realmBias: "Neisei",
     weights: weights({ FEARS: 1.2, DREAMS: 2.0, MOTIVATION: 1.6 }),
     antiWeights: NO_ANTI_WEIGHTS,
     description: "Fears limitation more than the unknown; needs to discover.",
@@ -160,7 +160,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
   mamori: {
     id: "mamori", label: "Guardian", order: "HUNTER", temperament: "PASSIVE",
     japaneseName: "守り", romajiName: "Mamori",
-    realmBias: "Murei", guild: "Guild of Guardians",
+    realmBias: "Murei",
     weights: weights({ VALUES: 1.6, PEOPLE: 2.0, FEARS: 1.4 }),
     antiWeights: NO_ANTI_WEIGHTS,
     description: "Loyal and protective; loss of the people they shield is the deepest fear.",
@@ -173,7 +173,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
   kensetsu: {
     id: "kensetsu", label: "Builder", order: "HUNTER", temperament: "ACTIVE",
     japaneseName: "建設", romajiName: "Kensetsu",
-    realmBias: "Maruto", guild: "Guild of Builders",
+    realmBias: "Maruto",
     weights: weights({ MOTIVATION: 2.0, DREAMS: 1.4, LEADERSHIP: 1.2 }),
     antiWeights: NO_ANTI_WEIGHTS,
     description: "Driven to make things real with their own hands.",
@@ -186,7 +186,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
   hatsumei: {
     id: "hatsumei", label: "Inventor", order: "HUNTER", temperament: "ACTIVE",
     japaneseName: "発明", romajiName: "Hatsumei",
-    realmBias: "Kuryo", guild: "Guild of Strategists",
+    realmBias: "Kuryo",
     weights: weights({ MOTIVATION: 1.6, DREAMS: 2.0, DECISIONS: 1.2 }),
     antiWeights: NO_ANTI_WEIGHTS,
     description: "Curiosity-led; comfortable deciding by experiment rather than certainty.",
@@ -199,7 +199,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
   teisatsu: {
     id: "teisatsu", label: "Scout", order: "HUNTER", temperament: "ACTIVE",
     japaneseName: "偵察", romajiName: "Teisatsu",
-    realmBias: "Neisei", guild: "Guild of Guardians",
+    realmBias: "Neisei",
     weights: weights({ LEADERSHIP: 1.6, FEARS: 1.2, MOTIVATION: 1.4 }),
     antiWeights: NO_ANTI_WEIGHTS,
     description: "Goes first into the unknown and turns fear of it into momentum.",
@@ -212,7 +212,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
   shisha: {
     id: "shisha", label: "Messenger", order: "HUNTER", temperament: "ACTIVE",
     japaneseName: "使者", romajiName: "Shisha",
-    realmBias: "Neisei", guild: "Guild of Diplomats",
+    realmBias: "Neisei",
     weights: weights({ PEOPLE: 1.6, VALUES: 1.4, MOTIVATION: 1.6 }),
     antiWeights: NO_ANTI_WEIGHTS,
     description: "Bridges people and truths that wouldn't otherwise connect.",
@@ -225,7 +225,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
   shokunin: {
     id: "shokunin", label: "Artisan", order: "HUNTER", temperament: "ACTIVE",
     japaneseName: "職人", romajiName: "Shokunin",
-    realmBias: "Murei", guild: "Guild of Artisans",
+    realmBias: "Murei",
     weights: weights({ MOTIVATION: 2.0, VALUES: 1.4, DECISIONS: 1.2 }),
     antiWeights: NO_ANTI_WEIGHTS,
     description: "Pursues mastery and craft; decisions come from trained instinct.",
@@ -238,7 +238,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
   iyashi: {
     id: "iyashi", label: "Healer", order: "HUNTER", temperament: "PASSIVE",
     japaneseName: "癒し", romajiName: "Iyashi",
-    realmBias: "Murei", guild: "Guild of Artisans",
+    realmBias: "Murei",
     weights: weights({ PEOPLE: 2.0, VALUES: 1.6, FEARS: 1.2 }),
     antiWeights: NO_ANTI_WEIGHTS,
     description: "Cares deeply; others' suffering is what they fear most.",
@@ -251,7 +251,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
   kaitaku: {
     id: "kaitaku", label: "Pathfinder", order: "HUNTER", temperament: "ACTIVE",
     japaneseName: "開拓", romajiName: "Kaitaku",
-    realmBias: "Harai", guild: "Guild of Survivors",
+    realmBias: "Harai",
     weights: weights({ MOTIVATION: 1.6, DREAMS: 2.0, FEARS: 1.0 }),
     antiWeights: NO_ANTI_WEIGHTS,
     description: "Pioneers toward new worlds; rejects comfort as a destination.",
@@ -264,7 +264,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
   seizon: {
     id: "seizon", label: "Survivor", order: "HUNTER", temperament: "PASSIVE",
     japaneseName: "生存", romajiName: "Seizon",
-    realmBias: "Harai", guild: "Guild of Survivors",
+    realmBias: "Harai",
     weights: weights({ FEARS: 2.0, VALUES: 1.6, MOTIVATION: 1.4 }),
     antiWeights: NO_ANTI_WEIGHTS,
     description: "Endures; resilience is the value they hold above all others.",
@@ -279,7 +279,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
   riso: {
     id: "riso", label: "Visionary", order: "GIANT", temperament: "ACTIVE",
     japaneseName: "理想", romajiName: "Risō",
-    realmBias: "Kuryo", guild: "Guild of Strategists",
+    realmBias: "Kuryo",
     weights: weights({ DREAMS: 2.0, MOTIVATION: 1.6, VALUES: 1.2 }),
     antiWeights: NO_ANTI_WEIGHTS,
     description: "Sees the shape of what doesn't exist yet; sketches futures vivid enough to pull the world forward.",
@@ -292,7 +292,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
   kenja: {
     id: "kenja", label: "Sage", order: "GIANT", temperament: "PASSIVE",
     japaneseName: "賢者", romajiName: "Kenja",
-    realmBias: "Murei", guild: "Guild of Philosophy",
+    realmBias: "Murei",
     weights: weights({ VALUES: 2.0, DREAMS: 1.4, PEOPLE: 1.2 }),
     antiWeights: weights({ POWER: 0.8 }),
     description: "Lets truth settle slowly; offers wisdom gently to those still searching.",
@@ -305,7 +305,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
   sosai: {
     id: "sosai", label: "Chancellor", order: "GIANT", temperament: "ACTIVE",
     japaneseName: "総裁", romajiName: "Sōsai",
-    realmBias: "Maruto", guild: "Guild of Governance",
+    realmBias: "Maruto",
     weights: weights({ LEADERSHIP: 2.0, DECISIONS: 1.6, VALUES: 1.2 }),
     antiWeights: NO_ANTI_WEIGHTS,
     description: "The quiet spine behind institutions; translates vision into something that survives contact with reality.",
@@ -318,7 +318,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
   yogen: {
     id: "yogen", label: "Oracle", order: "GIANT", temperament: "ACTIVE",
     japaneseName: "予言", romajiName: "Yogen",
-    realmBias: "Kuryo", guild: "Guild of Philosophy",
+    realmBias: "Kuryo",
     weights: weights({ MOTIVATION: 1.8, DREAMS: 1.6, DECISIONS: 1.2 }),
     antiWeights: weights({ POWER: 0.6 }),
     description: "Notices what hasn't happened yet — through a mind that sees connections others miss.",
@@ -331,7 +331,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
   rekishi: {
     id: "rekishi", label: "Historian", order: "GIANT", temperament: "PASSIVE",
     japaneseName: "歴史", romajiName: "Rekishi",
-    realmBias: "Murei", guild: "Guild of Philosophy",
+    realmBias: "Murei",
     weights: weights({ VALUES: 2.0, MOTIVATION: 1.6, FEARS: 1.2 }),
     antiWeights: NO_ANTI_WEIGHTS,
     description: "Gathers what happened — triumphs and shameful parts alike — so no one can pretend it didn't.",
@@ -344,7 +344,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
   hozon: {
     id: "hozon", label: "Custodian", order: "GIANT", temperament: "PASSIVE",
     japaneseName: "保存", romajiName: "Hozon",
-    realmBias: "Murei", guild: "Guild of Artisans",
+    realmBias: "Murei",
     weights: weights({ VALUES: 1.8, FEARS: 1.6, MOTIVATION: 1.2 }),
     antiWeights: weights({ POWER: 0.6 }),
     description: "Refuses to let a tradition, language, or way of life slip away; care is not nostalgia but stubborn devotion.",
@@ -359,7 +359,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
   koro: {
     id: "koro", label: "Navigator", order: "HUNTER", temperament: "ACTIVE",
     japaneseName: "航路", romajiName: "Kōro",
-    realmBias: "Neisei", guild: "Guild of Diplomats",
+    realmBias: "Neisei",
     weights: weights({ DECISIONS: 2.0, LEADERSHIP: 1.4, MOTIVATION: 1.2 }),
     antiWeights: NO_ANTI_WEIGHTS,
     description: "Reads currents no one else notices; calculates the way through when the group panics.",
@@ -372,7 +372,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
   banri: {
     id: "banri", label: "Warden", order: "HUNTER", temperament: "PASSIVE",
     japaneseName: "万里", romajiName: "Banri",
-    realmBias: "Harai", guild: "Guild of Guardians",
+    realmBias: "Harai",
     weights: weights({ VALUES: 1.8, FEARS: 1.6, LEADERSHIP: 1.2 }),
     antiWeights: weights({ DREAMS: 0.8 }),
     description: "Guards boundaries that others don't even know exist; constant, thankless watch.",
@@ -385,7 +385,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
   nogyo: {
     id: "nogyo", label: "Farmer", order: "HUNTER", temperament: "PASSIVE",
     japaneseName: "農業", romajiName: "Nōgyō",
-    realmBias: "Maruto", guild: "Guild of Builders",
+    realmBias: "Maruto",
     weights: weights({ MOTIVATION: 2.0, VALUES: 1.6, DREAMS: 1.0 }),
     antiWeights: weights({ POWER: 0.8 }),
     description: "Understands greatness is built on unglamorous, repeated care; trusts slow effort over sudden force.",
@@ -398,7 +398,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
   yuei: {
     id: "yuei", label: "Ranger", order: "HUNTER", temperament: "PASSIVE",
     japaneseName: "遊衛", romajiName: "Yuei",
-    realmBias: "Murei", guild: "Guild of Guardians",
+    realmBias: "Murei",
     weights: weights({ VALUES: 1.8, MOTIVATION: 1.6, PEOPLE: 1.2 }),
     antiWeights: weights({ POWER: 0.6 }),
     description: "Moves between civilization and the wild with equal ease; nature trusts them for it.",
@@ -411,7 +411,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
   monogatari: {
     id: "monogatari", label: "Storyteller", order: "HUNTER", temperament: "PASSIVE",
     japaneseName: "物語", romajiName: "Monogatari",
-    realmBias: "Neisei", guild: "Guild of Diplomats",
+    realmBias: "Neisei",
     weights: weights({ PEOPLE: 2.0, VALUES: 1.6, MOTIVATION: 1.2 }),
     antiWeights: NO_ANTI_WEIGHTS,
     description: "Keeps identity, memory, and meaning alive across generations; around their fire, people remember who they are.",
@@ -424,7 +424,7 @@ export const ARCHETYPE_DEFINITIONS: Record<string, ArchetypeProfile> = {
   takumi: {
     id: "takumi", label: "Craftsman", order: "HUNTER", temperament: "PASSIVE",
     japaneseName: "匠", romajiName: "Takumi",
-    realmBias: "Maruto", guild: "Guild of Builders",
+    realmBias: "Maruto",
     weights: weights({ MOTIVATION: 2.0, DECISIONS: 1.6, VALUES: 1.2 }),
     antiWeights: NO_ANTI_WEIGHTS,
     description: "Believes excellence lives in the smallest details; discipline borders on devotion.",

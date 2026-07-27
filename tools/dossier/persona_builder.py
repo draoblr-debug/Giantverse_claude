@@ -14,7 +14,6 @@ computed here — it arrives already decided, from the existing DOB + name +
 survey engine. This module only dresses that identity in book form.
 """
 from realm_lore import REALM_LORE
-from guild_lore import GUILD_LORE
 
 # A small, deliberately conservative pool of already-well-known characters
 # used for the "on screen" pages. Each is tagged with the themes its design
@@ -108,13 +107,12 @@ def build_persona(payload: dict) -> dict:
     """payload keys: real_name, birth_name, legacy_name, gv_id, order,
     primary (ArchetypeProfile-shaped dict, snake_case), secondary (same
     shape), secondary_pct, confidence, wheel (order32_labels, you_idx,
-    neighbour_idxs, opposite_idx, guild_idxs, central_question, growth,
+    neighbour_idxs, opposite_idx, realmmate_idxs, central_question, growth,
     neighbours_text, compatible_text, opposite_text), realm_id."""
     primary = payload["primary"]
     secondary = payload["secondary"]
     wheel = payload["wheel"]
     realm = _lookup_realm(payload.get("realm_id"))
-    guild = GUILD_LORE.get(primary["guild"], GUILD_LORE["Guild of Survivors"])
 
     order_full = "Giants" if payload["order"] == "GIANT" else "Hunters"
     order_short = "GIANTS" if payload["order"] == "GIANT" else "HUNTERS"
@@ -137,7 +135,7 @@ def build_persona(payload: dict) -> dict:
     other_ally = wheel["other_ally"]
     quarter = wheel["quarter"]
     opposite = wheel["opposite"]
-    guildmate = wheel.get("guildmate")
+    realmmate = wheel.get("realmmate")
 
     cast = [
         _cast_entry(
@@ -155,11 +153,11 @@ def build_persona(payload: dict) -> dict:
             f"{quarter['traits'][0]} — the strength you respect most because it costs you the most to practise.",
         ),
         _cast_entry(
-            "THE MENTOR", f"The Elder {guildmate['label']} of the {primary['guild']}" if guildmate else f"The Elder of the {primary['guild']}",
-            guildmate or growth, f"THE {(guildmate or growth)['traits'][0].upper()}",
-            f"Your own Guild, seen further down the path — proof your Calling can be answered a different way.",
+            "THE MENTOR", f"The Elder {realmmate['label']} of {realm['realm_name']}" if realmmate else f"The Elder of {realm['realm_name']}",
+            realmmate or growth, f"THE {(realmmate or growth)['traits'][0].upper()}",
+            f"Your own Realm, seen further down the path — proof your home ground can be answered a different way.",
             "They will not correct your path; they will show you the map of theirs and let the difference teach.",
-            f"“{(guildmate or growth)['guiding_promise']}” — a promise you were never asked to make, kept by someone who shares your hall.",
+            f"“{(realmmate or growth)['guiding_promise']}” — a promise you were never asked to make, kept by someone who shares your ground.",
         ),
         _cast_entry(
             "THE RIVAL", f"The {opposite['label']} Across the Wheel", opposite,
@@ -198,9 +196,9 @@ def build_persona(payload: dict) -> dict:
 
     team = [
         [growth["romaji_name"].upper(), growth["label"], f"Momentum — the {growth['label']} converts your {self_trait0.lower()} into motion."],
-        [guildmate["romaji_name"].upper() if guildmate else growth["romaji_name"].upper(),
-         guildmate["label"] if guildmate else growth["label"],
-         "Perspective — a fellow member of your Guild, fluent in your Calling's craft." if guildmate else "Perspective — someone who has already paid for the lessons you're about to buy."],
+        [realmmate["romaji_name"].upper() if realmmate else growth["romaji_name"].upper(),
+         realmmate["label"] if realmmate else growth["label"],
+         "Perspective — a fellow child of your Realm, fluent in your Calling's craft." if realmmate else "Perspective — someone who has already paid for the lessons you're about to buy."],
         [quarter["romaji_name"].upper(), quarter["label"], f"Depth — the quarter-turn companion, fluent in what you find hardest."],
     ]
 
@@ -288,8 +286,6 @@ def build_persona(payload: dict) -> dict:
         "realm_name": realm["realm_name"],
         "realm_jp": realm["realm_jp"],
         "realm_desc": payload.get("realm_description", realm.get("realm_tagline", "")),
-        "guild": primary["guild"],
-        "guild_tagline": guild["guild_tagline"],
         "symbol": realm["symbol"],
         "symbol_meaning": realm["symbol_meaning"],
         "traits": traits,
@@ -298,29 +294,27 @@ def build_persona(payload: dict) -> dict:
         "wheel": {
             "position_note": f"Position {wheel['you_idx'] + 1} of 32 — the {primary['label']} ({primary['romaji_name']}).",
             "neighbours": f"{growth['label']} ({growth['romaji_name']}) · {other_ally['label']} ({other_ally['romaji_name']}) — the directions of natural drift as your answers evolve.",
-            "compatible": wheel.get("compatible_text", f"{quarter['label']} · members of the {primary['guild']}."),
+            "compatible": wheel.get("compatible_text", f"{quarter['label']} · fellow travelers of {realm['realm_name']}."),
             "opposite": f"{opposite['label']} ({opposite['romaji_name']}) — not an enemy: the other answer to your shared question.",
             "question": wheel["central_question"],
             "growth": f"Toward the {growth['label']} — the neighbour your scores already lean into.",
             "order32": wheel["order32_labels"],
             "you_idx": wheel["you_idx"],
             "neighbour_idxs": wheel["neighbour_idxs"],
-            "guild_idxs": wheel["guild_idxs"],
+            "realmmate_idxs": wheel["realmmate_idxs"],
             "opposite_idx": wheel["opposite_idx"],
         },
         "lore_realm": realm["lore_realm"],
         "lore_craft": realm["lore_craft"],
         "lore_legend": realm["lore_legend"],
-        "lore_guild": guild["lore_guild"],
-        "lore_guild2": guild["lore_guild2"],
         "lore_story": {
             "title": f"The Record of the {primary['label']}s",
             "sub": f"The story every {primary['label']} is measured against.",
-            "body": f"Long before {payload['legacy_name']} took the name, the {primary['guild']} kept a record of every "
-                    f"{primary['label']} who answered the call the same way: {primary['description']} The record is not a "
+            "body": f"Long before {payload['legacy_name']} took the name, generations of {primary['label']}s "
+                    f"kept a record of every one of them who answered the call the same way: {primary['description']} The record is not a "
                     f"list of victories — it is a list of the moment each of them chose, at cost, what a {primary['label']} is for.",
             "cultural": f"{primary['label']}s greet each other by naming the trait they're proudest of that week — a small, "
-                        f"specific honesty the Guild considers more truthful than a formal title.",
+                        f"specific honesty considered more truthful than a formal title.",
             "closing": f"One day, the record-keepers will tell a story like this about {payload['legacy_name']}. The pages "
                        f"that follow — the Hero Journey — are its first draft.",
         },
@@ -345,7 +339,7 @@ def build_persona(payload: dict) -> dict:
             ],
             "head_note": "A character's shadow belongs in the acting long before it enters the plot.",
             "wardrobe": [
-                ["COSTUME", f"Base layers in {realm['realm_name']} materials (see palette), cut in {shape['shape_word']}-family blocks; one field layer carrying the {primary['guild']} insignia at chest or shoulder."],
+                ["COSTUME", f"Base layers in {realm['realm_name']} materials (see palette), cut in {shape['shape_word']}-family blocks; one field layer carrying the Order of {order_full} sigil at chest or shoulder."],
                 ["ACCESSORIES", f"A worn, personal token referencing “{realm['symbol']}” — small enough for close-ups, distinctive enough for merchandise."],
                 ["WEAPON / TOOL", f"Whatever best expresses {self_trait0.lower()} in use — function first, ornament second."],
                 ["TEXTURES", f"Let the surface show the Order: {'ceremonial finish and clean seams' if payload['order']=='GIANT' else 'travel wear and field repairs'}, consistent with how a {primary['label']} actually lives."],
@@ -362,6 +356,11 @@ def build_persona(payload: dict) -> dict:
                             f"literal trait name. {primary['traits'][0]} is never drawn as a label — it's drawn as a choice about "
                             f"silhouette, palette, or posture that the audience feels before they can name it. That's the brief for your own design too.",
         "wound_page": wound_page,
+        # Present only when the participant went through Visual Character
+        # Discovery — each entry already carries everything the dossier page
+        # needs (see VisualMatchInput in persona-payload.ts); nothing further
+        # to derive here.
+        "visual_matches": payload.get("visual_matches", []),
     }
     return persona
 
