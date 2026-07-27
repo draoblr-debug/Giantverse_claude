@@ -1,7 +1,7 @@
 "use client";
 
 // Dossier Preview + paywall — shown after identity generation. Presents
-// the participant's own 109-page "Dossier 2.0" book as a flip-through
+// the participant's own 111-page "Dossier 2.0" book as a flip-through
 // double-page-spread magazine (see DossierBook): a curiosity-driving ~10%
 // of pages (cover, contents, chapter-opening legendary quotes) are fully
 // visible, the rest show a locked page you can still flip past. Paying
@@ -58,6 +58,7 @@ export function DossierPreview() {
           order: session.order,
           guidingPromise: session.guidingPromise,
           scores: session.scores,
+          scoreHistory: session.scoreHistory,
           visualMatches: visualMatches?.length
             ? visualMatches.map((m) => ({
                 name: m.character.name,
@@ -122,14 +123,18 @@ export function DossierPreview() {
     if (!docPromise) return null;
     const doc = await docPromise;
     const page = await doc.getPage(pageNum);
-    const viewport = page.getViewport({ scale: 1.6 });
+    // Scaled up for the edge-to-edge reader (DossierBook now displays pages
+    // at up to ~560px wide, on retina screens up to 2-3x that in device
+    // pixels) — render high enough that body text stays crisp at that size
+    // instead of upscaled from a thumbnail-sized canvas.
+    const viewport = page.getViewport({ scale: 2.4 });
     const canvas = document.createElement("canvas");
     canvas.width = viewport.width;
     canvas.height = viewport.height;
     const ctx = canvas.getContext("2d");
     if (!ctx) return null;
     await page.render({ canvasContext: ctx, viewport, canvas }).promise;
-    return canvas.toDataURL("image/jpeg", 0.85);
+    return canvas.toDataURL("image/jpeg", 0.92);
   }, [getDoc]);
 
   const previewSet = useMemo(() => new Set(previewPages), [previewPages]);
@@ -159,14 +164,17 @@ export function DossierPreview() {
   return (
     <div className="legacy-container container2" style={{ minHeight: "100vh" }}>
       <div className="head-bdr"></div>
-      <div className="container-fluid" style={{ paddingBottom: 48 }}>
-        <div className="content" style={{ maxWidth: 820, margin: "0 auto", paddingTop: 40 }}>
+      {/* .container-fluid's own stylesheet rule caps it at 550px (app/legacy-ui.css) —
+          fine for the rest of the narrow, mobile-first ritual flow, but the dossier
+          reader needs real room to be readable, so it's overridden inline here only. */}
+      <div className="container-fluid" style={{ paddingBottom: 48, maxWidth: 1280 }}>
+        <div className="content" style={{ maxWidth: 1240, margin: "0 auto", paddingTop: 40, paddingLeft: 16, paddingRight: 16 }}>
           <p className="f-12 txt-center txt-thm-clr-50-2 txt-upp letter-spacing2 mb-1">Giantverse Dossier</p>
           <h1 className="txt-center h2 fw-600 mb-2" style={{ color: "#EFE9DA", fontFamily: "Georgia, serif" }}>
             The Character Genesis Dossier
           </h1>
           <p className="mxw-450 m-auto txt-center f-13 txt-thm-clr-70-2 line-ht-20 mb-4">
-            A 109-page premium collector's-edition book, personalized to {legacyName} — legendary-creator master
+            A 111-page premium collector's-edition book, personalized to {legacyName} — legendary-creator master
             studies, a full character-design blueprint, and a personalized Hero Journey. Flip through it below —
             locked pages open the way in.
           </p>
@@ -210,7 +218,7 @@ export function DossierPreview() {
                     character design blueprint, the Hero Journey and the drawing workbook are still locked.
                   </p>
                   <button type="button" className="btn bdr-rds2 mt-2" onClick={() => setShowPayment(true)}>
-                    Unlock Full Dossier — ₹499
+                    Register to Giant Hunt at ₹999 to unlock the full Dossier
                   </button>
                 </div>
               ) : (

@@ -1,3 +1,5 @@
+import { renderJourneyMap, type TurnSnapshot } from "@/lib/journey-renderer";
+
 export type CardParams = {
   birthName: string;
   legacyName: string;
@@ -12,6 +14,19 @@ export type CardParams = {
   continentName: string;
   /** Realm id + epithet for this result's birthplace, e.g. "Kuryo — The Mountain Belt". */
   landType: string;
+  /** Canonical archetype id (e.g. "kizoku") — needed to dock the journey
+   * glyph on the right wheel spoke; archetypeLabel/archetypeRomaji alone
+   * aren't enough since renderJourneyMap keys everything off the id. */
+  archetypeId: string;
+  /** Per-turn score snapshots for the journey glyph — absent for identities
+   * generated via a path that never recorded turn-by-turn history, in which
+   * case the template's decorative circle is simply left empty. */
+  scoreHistory?: TurnSnapshot[] | null;
+  /** Final per-archetype scores — used only to pick the top 3 archetypes
+   * labelled on the journey glyph's rim (the winner plus its two closest
+   * runners-up). Absent for identities from a path that never recorded a
+   * score map, in which case only the winner's spoke gets a label. */
+  scores?: Record<string, number> | null;
 };
 
 const GOLD = "#C9A84C";
@@ -55,6 +70,43 @@ export async function drawCard(canvas: HTMLCanvasElement, params: CardParams): P
   const px = (pct: number) => W * pct;
   const py = (pct: number) => H * pct;
   const fw = (pct: number) => W * pct;
+
+  // ── ARCHETYPE JOURNEY MAP — the template's blank decorative circle on
+  // the left panel (empty, tick-marked ring under the GIANTVERSE trident)
+  // is a designed placeholder for this. Circle center/radius were measured
+  // directly off the template art (pixel-scanned the gold ring, the same
+  // way every other field position here was calibrated). Rendered a good
+  // deal larger than its final draw size and scaled down for retina
+  // sharpness; inset slightly inside the ring so the glyph's own content
+  // doesn't collide with the template's decorative rim.
+  if (params.scoreHistory?.length) {
+    const ringCx = px(0.172);
+    const ringCy = py(0.730);
+    const ringR = px(0.121);
+    const drawR = ringR * 0.88;
+    const renderSize = 480;
+
+    // Top 3 archetypes by final score — the winner (labelled via
+    // finalSimpleLabel, same plain style as the other two so it doesn't
+    // need the full pill-boxed callout) plus its two closest runners-up.
+    const topIds = Object.entries(params.scores ?? {})
+      .sort((a, b) => b[1] - a[1])
+      .map(([id]) => id)
+      .filter((id) => id !== params.archetypeId)
+      .slice(0, 2);
+
+    const glyph = renderJourneyMap(params.scoreHistory, {
+      finalArchetypeId: params.archetypeId,
+      size: renderSize,
+      transparent: true,
+      detail: "mini",
+      labelMode: "none",
+      showFinalLabel: false,
+      finalSimpleLabel: true,
+      highlightArchetypeIds: topIds,
+    });
+    ctx.drawImage(glyph, ringCx - drawR, ringCy - drawR, drawR * 2, drawR * 2);
+  }
 
   // Shrinks font size until the text fits maxWidth; sets ctx.font and returns the size.
   const fitFont = (text: string, baseSize: number, maxWidth: number, style: string): number => {

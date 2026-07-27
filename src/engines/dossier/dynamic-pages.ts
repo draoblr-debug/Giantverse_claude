@@ -2,6 +2,7 @@ import { PDFDocument, PDFPage } from "pdf-lib";
 import type { buildPersonaPayload } from "@/engines/dossier/persona-payload";
 import { lookupRealmLore } from "@/engines/dossier/realm-lore-book";
 import { MASTER_STUDIES, LAST_SPARK, shapeFamilyOf, accentNameOf } from "@/engines/dossier/dossier-content";
+import { drawJourneyMapPage, drawJourneyMapExplainerPage } from "@/engines/dossier/journey-map-page";
 import {
   newSheet, loadFonts, drawKicker, drawHeading, drawSub, drawRule, drawLab, drawBody, drawLabBody,
   drawFineprint, drawCommBox, drawBar, safeText, DossierFonts, MARGIN_LEFT, CONTENT_WIDTH, PAGE_WIDTH, PAGE_HEIGHT,
@@ -389,6 +390,8 @@ export async function renderDynamicPage(
   else if (dynamicId === "blueprint-shape") drawBlueprintShape(page, fonts, cursorY, payload);
   else if (dynamicId === "hunt-designing") drawHuntDesigning(page, fonts, cursorY, payload);
   else if (dynamicId === "hunt-world-record") drawHuntWorldRecord(page, fonts, cursorY, payload);
+  else if (dynamicId === "journey-map") drawJourneyMapPage(page, fonts, cursorY, payload);
+  else if (dynamicId === "journey-map-explainer") drawJourneyMapExplainerPage(page, fonts, cursorY, payload);
   else if (dynamicId === "founding-benefits") drawFoundingBenefits(page, fonts, cursorY, payload);
   else if (dynamicId === "founding-go-draw") drawFoundingGoDraw(page, fonts, payload);
   else if (dynamicId === "colophon") drawColophon(page, fonts, payload);

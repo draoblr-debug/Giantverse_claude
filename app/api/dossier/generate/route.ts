@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
       { status: 400 },
     );
   }
-  const { realName, birthName, legacyName, archetypeId, order, guidingPromise, scores, visualMatches } = parsed.data;
+  const { realName, birthName, legacyName, archetypeId, order, guidingPromise, scores, visualMatches, scoreHistory } = parsed.data;
 
   let payload: ReturnType<typeof buildPersonaPayload>;
   try {
@@ -30,6 +30,7 @@ export async function POST(req: NextRequest) {
       guidingPromise,
       scores: scores ?? null,
       visualMatches: visualMatches ?? null,
+      scoreHistory: scoreHistory ?? null,
     });
   } catch {
     return NextResponse.json({ error: "Unrecognised archetype." }, { status: 400 });

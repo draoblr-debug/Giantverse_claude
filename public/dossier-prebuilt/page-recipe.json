@@ -146,6 +146,18 @@
     "cls": "dark"
   },
   {
+    "tier": "dynamic",
+    "id": "journey-map",
+    "section": "THE WHEEL OF THIRTY-TWO",
+    "cls": "dark"
+  },
+  {
+    "tier": "dynamic",
+    "id": "journey-map-explainer",
+    "section": "THE WHEEL OF THIRTY-TWO",
+    "cls": "dark"
+  },
+  {
     "tier": "static",
     "section": "BEHIND THE ENGINE",
     "cls": "dark"

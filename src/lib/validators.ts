@@ -86,6 +86,13 @@ const visualMatchInputSchema = z.object({
     .optional(),
 });
 
+const turnSnapshotSchema = z.object({
+  category: z.string().trim().max(80),
+  scores: z.record(z.string(), z.number()).refine((s) => Object.keys(s).length <= 40, {
+    message: "too many archetype scores in one turn snapshot",
+  }),
+});
+
 export const dossierGenerateSchema = z.object({
   realName: z.string().trim().max(50).optional().default(""),
   birthName: z.string().trim().min(1).max(50),
@@ -98,4 +105,7 @@ export const dossierGenerateSchema = z.object({
   // path — rendered as individual pages in the dossier (see build_visual_
   // matches() in generate_dossier.py). Absent for name+DOB/survey-only runs.
   visualMatches: z.array(visualMatchInputSchema).max(5).optional(),
+  // Per-turn score snapshots — powers the Archetype Journey Map page.
+  // Absent for identities from a path that never recorded turn history.
+  scoreHistory: z.array(turnSnapshotSchema).max(40).nullable().optional(),
 });

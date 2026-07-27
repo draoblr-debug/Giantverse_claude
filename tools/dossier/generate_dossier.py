@@ -409,6 +409,25 @@ def build_wheel():
                ("COMPATIBLE ARCHETYPES", w['compatible']), ("OPPOSITE", w['opposite']),
                ("THE CENTRAL QUESTION", w['question']), ("GROWTH DIRECTION", w['growth'])])}
     """)
+    # Archetype Journey Map + its explainer — the participant's own turn-by-
+    # turn convergence path across the wheel. Genuinely per-session (needs
+    # real quiz score history, not just the archetype), so these are
+    # rendered fresh in Node/pdf-lib (see src/engines/dossier/journey-map-
+    # page.ts) rather than pre-built per archetype. This body is never
+    # rendered by WeasyPrint — dynamic-tier pages are excluded from
+    # assemble_static_body() — it exists only so build_page_recipe() has a
+    # real page to record the slot for (and so a local `assemble()` run of
+    # the static sample doesn't leave two blank sheets).
+    add("THE WHEEL OF THIRTY-TWO", f"""
+      {kicker('ARCHETYPE', 'MAP')}
+      <h2 class="serif">Your Archetype Journey</h2>
+      <p class="sub">Rendered dynamically per participant — see journey-map-page.ts.</p>
+    """, tier="dynamic", dynamic_id="journey-map")
+    add("THE WHEEL OF THIRTY-TWO", f"""
+      {kicker('ARCHETYPE', 'MAP')}
+      <h2 class="serif">What Your Journey Map Shows</h2>
+      <p class="sub">Rendered dynamically per participant — see journey-map-page.ts.</p>
+    """, tier="dynamic", dynamic_id="journey-map-explainer")
     steps = "\n".join(
         f'<div class="pipe-row"><span class="pipe-n">{i+1:02d}</span><span class="pipe-k">{esc(k)}</span>'
         f'<span class="pipe-t">{esc(t)}</span></div>' for i, (k, t) in enumerate(ENGINE_PIPELINE))

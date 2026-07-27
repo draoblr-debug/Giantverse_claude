@@ -26,7 +26,7 @@ export function DrawingInvitation() {
   const [downloading, setDownloading] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
 
-  const { birthName, legacyName, archetypeLabel, archetype, order, guidingPromise, traits, firstName, resetExperience } =
+  const { birthName, legacyName, archetypeLabel, archetype, order, guidingPromise, traits, firstName, scoreHistory, scores, resetExperience } =
     useSessionStore();
   const visualMatches = useVisualStore((s) => s.matches);
   const visualTop = visualMatches?.[0] ?? null;
@@ -88,6 +88,9 @@ export function DrawingInvitation() {
       gvId,
       continentName,
       landType,
+      archetypeId: archetype,
+      scoreHistory,
+      scores,
     }).then(() => {
       const display = displayCanvasRef.current;
       if (display) {
@@ -99,7 +102,7 @@ export function DrawingInvitation() {
       }
       setReady(true);
     });
-  }, [legacyName, birthName, archetypeLabel, archetype, order, guidingPromise, traits, firstName]);
+  }, [legacyName, birthName, archetypeLabel, archetype, order, guidingPromise, traits, firstName, scoreHistory, scores]);
 
   if (!legacyName) return null;
 

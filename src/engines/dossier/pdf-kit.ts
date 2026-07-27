@@ -54,7 +54,7 @@ export const CONTENT_WIDTH = PAGE_WIDTH - MARGIN_LEFT - MARGIN_RIGHT;
 export const CONTENT_TOP_Y = PAGE_HEIGHT - MARGIN_TOP; // y of the top of the content box
 export const CONTENT_BOTTOM_Y = MARGIN_BOTTOM; // y of the bottom of the content box
 
-function hex(h: string): RGB {
+export function hex(h: string): RGB {
   const n = parseInt(h.replace("#", ""), 16);
   return rgb(((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255);
 }

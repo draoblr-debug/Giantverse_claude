@@ -2,6 +2,7 @@ import { ARCHETYPE_DEFINITIONS } from "@/engines/archetype/archetype-definitions
 import { WHEEL_ORDER, OPPOSITE_TENSIONS } from "@/engines/archetype/archetype-wheel";
 import { REALMS } from "@/engines/realms";
 import type { ArchetypeProfile } from "@/types/archetype.types";
+import type { TurnSnapshot } from "@/lib/journey-renderer";
 
 // Turns a live Giantverse identity (already decided by the existing
 // DOB + name + survey engine) into the JSON payload the Python dossier
@@ -43,6 +44,11 @@ export type SessionSnapshot = {
   // Present only when the participant went through Visual Character
   // Discovery — absent for name+DOB/survey-only identities.
   visualMatches?: VisualMatchInput[] | null;
+  // Per-turn score snapshots — powers the dossier's Archetype Journey Map
+  // page (src/engines/dossier/journey-map-page.ts). Absent for identities
+  // from a path that never recorded turn-by-turn history, in which case
+  // that page falls back to a straight dock line with no traced route.
+  scoreHistory?: TurnSnapshot[] | null;
 };
 
 function snakeProfile(p: ArchetypeProfile) {
@@ -155,5 +161,12 @@ export function buildPersonaPayload(session: SessionSnapshot) {
       compatible_text: compatibleText,
     },
     visual_matches: visualMatches,
+    score_history: session.scoreHistory ?? null,
+    // Full per-archetype score map — kept alongside score_history (rather
+    // than derived from its last entry) so the dossier's Invisible
+    // Archetypes copy (journey-map-page.ts) always has a score to rank by,
+    // even for identities generated via a path that never recorded
+    // turn-by-turn history.
+    scores: session.scores ?? null,
   };
 }

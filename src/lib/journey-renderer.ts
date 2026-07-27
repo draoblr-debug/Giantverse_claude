@@ -29,9 +29,22 @@ export interface JourneyRenderOptions {
   // text at all) — e.g. the card inset labels the winner plus a few
   // runner-ups so the rim isn't just unlabeled dots.
   highlightArchetypeIds?: string[];
+  // The winning archetype's name/romaji callout box, drawn regardless of
+  // `detail`. Default true. Set false where the archetype name is already
+  // printed elsewhere right next to the glyph (e.g. the ID card's tiny
+  // circular inset) — the box's width isn't shrink-to-fit against the
+  // glyph's own bounds, only the canvas edge, so at a very small `size` it
+  // can extend past a tightly-fitted circular frame.
+  showFinalLabel?: boolean;
+  // When showFinalLabel is false, optionally still label the winning spoke
+  // with the same small plain-text treatment used for highlighted runner-
+  // ups (rather than the bigger pill-boxed callout) — e.g. the ID card
+  // inset labelling its top 3 archetypes: the winner reads the same as its
+  // two runner-ups instead of standing out with a box. Default false.
+  finalSimpleLabel?: boolean;
 }
 
-interface Spoke {
+export interface Spoke {
   id: string;
   angleDeg: number; // 0° = north, clockwise
   title: string;
@@ -40,23 +53,27 @@ interface Spoke {
   color: string;
 }
 
-interface Waypoint {
+export interface Waypoint {
   x: number;
   y: number;
   leaderId: string | null;
   category: string;
 }
 
-const INK = "#0B111C";
-const PAPER = "#EAE4D3";
-const DIM = "#9AA0AC";
-const BRASS = "#C9A24B";
-const CALLING_COLORS: Record<"Giant" | "Hunter", string> = {
+export const INK = "#0B111C";
+export const PAPER = "#EAE4D3";
+export const DIM = "#9AA0AC";
+export const BRASS = "#C9A24B";
+export const CALLING_COLORS: Record<"Giant" | "Hunter", string> = {
   Giant: "#C9A24B", // brass — thought
   Hunter: "#4FA3A5", // teal — action
 };
 
-function toXY(angleDeg: number, r: number, cx: number, cy: number) {
+// Exported so non-canvas renderers (e.g. the dossier's pdf-lib page, which
+// has no DOM/Canvas2D available) can reproduce the exact same geometry
+// without duplicating the trajectory/ranking math — see
+// src/engines/dossier/journey-map-page.ts.
+export function toXY(angleDeg: number, r: number, cx: number, cy: number) {
   const a = ((angleDeg - 90) * Math.PI) / 180;
   return { x: cx + r * Math.cos(a), y: cy + r * Math.sin(a) };
 }
@@ -65,7 +82,7 @@ function toXY(angleDeg: number, r: number, cx: number, cy: number) {
 // travelling in direction (dirX,dirY). Used to size rotated labels so
 // they shrink-to-fit instead of clipping off small canvases (e.g. the
 // ~250px card inset) when a label happens to point near an edge.
-function reachToEdge(x: number, y: number, dirX: number, dirY: number, S: number): number {
+export function reachToEdge(x: number, y: number, dirX: number, dirY: number, S: number): number {
   let reach = Infinity;
   if (dirX > 1e-6) reach = Math.min(reach, (S - x) / dirX);
   else if (dirX < -1e-6) reach = Math.min(reach, (0 - x) / dirX);
@@ -75,7 +92,7 @@ function reachToEdge(x: number, y: number, dirX: number, dirY: number, S: number
 }
 
 // Catmull-Rom smoothing for canvas bezier drawing
-function bezierSegments(pts: Array<{ x: number; y: number }>) {
+export function bezierSegments(pts: Array<{ x: number; y: number }>) {
   const segs: Array<[number, number, number, number, number, number]> = [];
   for (let i = 0; i < pts.length - 1; i++) {
     const p0 = pts[Math.max(0, i - 1)];
@@ -115,7 +132,7 @@ const QUADRANT_NW_GIANTS = ["gijutsu", "minshu", "kizoku", "kanryo", "kenchiku",
 // Realm → color (REALM_META's own accent, so this stays in sync with the
 // same 5 colors used everywhere else realms are shown); Calling color as
 // fallback for the rare archetype with no realmBias.
-const SPOKES: Record<string, Spoke> = (() => {
+export const SPOKES: Record<string, Spoke> = (() => {
   const byId = new Map(
     Object.values(ARCHETYPE_DEFINITIONS).map((a) => [
       a.id,
@@ -167,7 +184,7 @@ function assertKnown(turns: TurnSnapshot[]) {
   }
 }
 
-function computeRadialTrajectory(
+export function computeRadialTrajectory(
   turns: TurnSnapshot[],
   R: number,
   cx: number,
@@ -249,6 +266,8 @@ export function renderJourneyMap(
     gammaStep = 0.22,
     accentColor = BRASS,
     highlightArchetypeIds = [],
+    showFinalLabel = true,
+    finalSimpleLabel = false,
   } = opts;
   const highlightIds = new Set(highlightArchetypeIds);
 
@@ -379,7 +398,11 @@ export function renderJourneyMap(
       detail !== "mini"
         ? labelMode !== "none" && (labelMode === "all" || isFinal || wasVisited)
         : isHighlighted; // mini: only the explicitly highlighted runner-ups get a label
-    if (showLabel && !isFinal) {
+    // The winner normally gets its own bigger pill-boxed callout below
+    // (gated by showFinalLabel) instead of this plain per-spoke label — but
+    // when that box is off, finalSimpleLabel lets it read the same as a
+    // highlighted runner-up (e.g. the ID card inset's "top 3" treatment).
+    if ((showLabel && !isFinal) || (isFinal && finalSimpleLabel)) {
       // Regular spokes: readable floor, but still modest — there are up
       // to 32 of these sharing the ring. Shrink-to-fit against the actual
       // canvas edge so a highlighted runner-up near the rim (e.g. on the
@@ -394,15 +417,15 @@ export function renderJourneyMap(
       ctx.save();
       ctx.translate(lab.x, lab.y);
       ctx.rotate(rotation);
-      ctx.fillStyle = wasVisited || isHighlighted ? PAPER : DIM;
+      ctx.fillStyle = isFinal ? BRASS : wasVisited || isHighlighted ? PAPER : DIM;
       ctx.textAlign = west ? "end" : "start";
       ctx.textBaseline = "middle";
 
-      let font = fpx(10, wasVisited || isHighlighted ? 12 : 9);
-      ctx.font = `${font}px monospace`;
+      let font = fpx(10, isFinal ? 13 : wasVisited || isHighlighted ? 12 : 9);
+      ctx.font = `${isFinal ? "700 " : ""}${font}px monospace`;
       while (ctx.measureText(c.title).width > maxTextW && font > 7) {
         font -= 0.5;
-        ctx.font = `${font}px monospace`;
+        ctx.font = `${isFinal ? "700 " : ""}${font}px monospace`;
       }
       ctx.fillText(c.title, 0, 0);
       ctx.restore();
@@ -474,7 +497,7 @@ export function renderJourneyMap(
   // the route and every other spoke — same rotated placement as the rest
   // of the ring, just bold, larger, and pill-backed for contrast, with a
   // second line for the romaji name underneath.
-  if (finalC) {
+  if (finalC && showFinalLabel) {
     const west = finalC.angleDeg > 180;
     const rotation = ((west ? finalC.angleDeg + 90 : finalC.angleDeg - 90) * Math.PI) / 180;
     const lab = toXY(finalC.angleDeg, R_LABEL + 14 * u, cx, cy);
