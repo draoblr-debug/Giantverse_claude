@@ -1,6 +1,9 @@
+import { getTranslations } from "next-intl/server";
 import { BirthRitualForm } from "@/components/experience/BirthRitualForm";
 
-export default function BirthRitualPage() {
+export default async function BirthRitualPage() {
+  const t = await getTranslations("birth");
+
   return (
     <div className="legacy-container">
       <div className="head-bdr"></div>
@@ -21,7 +24,7 @@ export default function BirthRitualPage() {
                   <div className="g-title2-cont mb-2">
                     <div className="line line1"></div>
                     <div className="g-title2">
-                      <h1 className="h8 fw-600 txt-center">Birth Ritual</h1>
+                      <h1 className="h8 fw-600 txt-center">{t("heading")}</h1>
                     </div>
                     <div className="line line2"></div>
                   </div>

@@ -8,11 +8,15 @@ import { useVisualStore } from "@/stores/visual.store";
 import { useInviteStore } from "@/stores/invite.store";
 import { ARCHETYPE_DEFINITIONS } from "@/engines/archetype/archetype-definitions";
 import { drawCard } from "@/lib/card-generator";
+import { CharacterPromptBuilder } from "@/components/experience/CharacterPromptBuilder";
+import { REALM_META, pickContinentForRealm, type RealmId } from "@/content/landing-atlas";
 
-// The Dossier is a static preview build (see components/dossier/DossierPreview.tsx)
-// not yet ready for general users — hidden here without touching the route,
-// generator, or the rest of the flow, so it can be switched back on later.
-const SHOW_DOSSIER_CTA = false;
+// The Dossier is a static preview build (see components/dossier/DossierPreview.tsx).
+const SHOW_DOSSIER_CTA = true;
+
+// The AI Art Prompt builder — hidden without touching the route, generator,
+// or the rest of the flow, so it can be switched back on later.
+const SHOW_PROMPT_BUILDER = false;
 
 export function DrawingInvitation() {
   const router = useRouter();
@@ -22,7 +26,7 @@ export function DrawingInvitation() {
   const [downloading, setDownloading] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
 
-  const { birthName, legacyName, archetypeLabel, archetype, order, guidingPromise, traits, firstName, scoreHistory, resetExperience } =
+  const { birthName, legacyName, archetypeLabel, archetype, order, guidingPromise, traits, firstName, scoreHistory, scores, resetExperience } =
     useSessionStore();
   const visualMatches = useVisualStore((s) => s.matches);
   const visualTop = visualMatches?.[0] ?? null;
@@ -60,9 +64,14 @@ export function DrawingInvitation() {
     if (!legacyName || !birthName || !archetypeLabel || !archetype || !order || !guidingPromise || !traits) return;
 
     const profile = ARCHETYPE_DEFINITIONS[archetype];
-    const traitDescriptions = profile?.traitDescriptions ?? ["", "", "", ""] as [string, string, string, string];
     const romaji = profile?.romajiName ?? archetype;
     const gvId = `GV-${String(Date.now()).slice(-6)}`;
+
+    // Birthplace in Giantverse: a personal flavor pick for this one card,
+    // not a fixed archetype→realm fact (see pickContinentForRealm).
+    const realmId = (profile?.realmBias ?? "Maruto") as RealmId;
+    const continentName = pickContinentForRealm(realmId, legacyName);
+    const landType = `${realmId} — ${REALM_META[realmId].epithet}`;
 
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -70,16 +79,18 @@ export function DrawingInvitation() {
     drawCard(canvas, {
       birthName,
       legacyName,
-      archetypeId: archetype,
       archetypeLabel,
       archetypeRomaji: romaji,
       order,
       guidingPromise,
       traits,
-      traitDescriptions,
       realName: firstName,
       gvId,
-      scoreHistory: scoreHistory ?? undefined,
+      continentName,
+      landType,
+      archetypeId: archetype,
+      scoreHistory,
+      scores,
     }).then(() => {
       const display = displayCanvasRef.current;
       if (display) {
@@ -91,7 +102,7 @@ export function DrawingInvitation() {
       }
       setReady(true);
     });
-  }, [legacyName, birthName, archetypeLabel, archetype, order, guidingPromise, traits, firstName, scoreHistory]);
+  }, [legacyName, birthName, archetypeLabel, archetype, order, guidingPromise, traits, firstName, scoreHistory, scores]);
 
   if (!legacyName) return null;
 
@@ -144,14 +155,18 @@ export function DrawingInvitation() {
                   {visualTop.character.series} — {visualTop.character.shape_language}
                 </p>
                 <p className="f-10 mt-2 mb-0 txt-thm-clr-6 italic line-ht-15">
-                  Now create a completely original character inspired by these design principles.
+                  That&apos;s the spark I started from — not the face I&apos;ll wear.
                 </p>
               </div>
             )}
 
             <p className="txt-thm-clr-6 line-ht-24 mxw-320 m-auto mt-3 mb-4 txt-center">
-              Now there&apos;s only one thing I don&apos;t know — what do I look like? In my world, I can&apos;t see my own face. But you can. Would you draw me?
+              {visualTop
+                ? <>Take {visualTop.character.name}&apos;s design language and shape something entirely your own. Would you draw me?</>
+                : <>Now there&apos;s only one thing I don&apos;t know — what do I look like? In my world, I can&apos;t see my own face. But you can. Would you draw me?</>}
             </p>
+
+            {SHOW_PROMPT_BUILDER && <CharacterPromptBuilder />}
 
             {SHOW_DOSSIER_CTA && (
               <div className="txt-center mb-4">

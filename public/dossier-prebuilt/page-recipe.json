@@ -1,0 +1,600 @@
+[
+  {
+    "tier": "dynamic",
+    "id": "cover",
+    "section": "COVER",
+    "cls": "dark"
+  },
+  {
+    "tier": "dynamic",
+    "id": "plate",
+    "section": "COLLECTOR'S PLATE",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "CONTENTS",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "IDENTITY",
+    "cls": "dark",
+    "quote": true
+  },
+  {
+    "tier": "dynamic",
+    "id": "identity-record-1",
+    "section": "IDENTITY",
+    "cls": "dark"
+  },
+  {
+    "tier": "dynamic",
+    "id": "identity-record-2",
+    "section": "IDENTITY",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "IDENTITY",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "PROFESSIONAL SECRET",
+    "cls": "black"
+  },
+  {
+    "tier": "static",
+    "section": "ARCHETYPE ANALYSIS",
+    "cls": "dark",
+    "quote": true
+  },
+  {
+    "tier": "dynamic",
+    "id": "archetype-bars",
+    "section": "ARCHETYPE ANALYSIS",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "ARCHETYPE ANALYSIS",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "ARCHETYPE ANALYSIS",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "ARCHETYPE ANALYSIS",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "ARCHETYPE ANALYSIS",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "ARCHETYPE ANALYSIS",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "ARCHETYPE ANALYSIS",
+    "cls": "dark",
+    "conditional": "has-visual-matches"
+  },
+  {
+    "tier": "character",
+    "slot": 0,
+    "section": "ARCHETYPE ANALYSIS",
+    "cls": "dark"
+  },
+  {
+    "tier": "character",
+    "slot": 1,
+    "section": "ARCHETYPE ANALYSIS",
+    "cls": "dark"
+  },
+  {
+    "tier": "character",
+    "slot": 2,
+    "section": "ARCHETYPE ANALYSIS",
+    "cls": "dark"
+  },
+  {
+    "tier": "character",
+    "slot": 3,
+    "section": "ARCHETYPE ANALYSIS",
+    "cls": "dark"
+  },
+  {
+    "tier": "character",
+    "slot": 4,
+    "section": "ARCHETYPE ANALYSIS",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "ARCHETYPE ANALYSIS",
+    "cls": "dark"
+  },
+  {
+    "tier": "dynamic",
+    "id": "master-study-0",
+    "section": "MASTER STUDY",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "THE WHEEL OF THIRTY-TWO",
+    "cls": "dark",
+    "quote": true
+  },
+  {
+    "tier": "static",
+    "section": "THE WHEEL OF THIRTY-TWO",
+    "cls": "dark",
+    "overlay": "wheel-confidence"
+  },
+  {
+    "tier": "static",
+    "section": "THE WHEEL OF THIRTY-TWO",
+    "cls": "dark"
+  },
+  {
+    "tier": "dynamic",
+    "id": "journey-map",
+    "section": "THE WHEEL OF THIRTY-TWO",
+    "cls": "dark"
+  },
+  {
+    "tier": "dynamic",
+    "id": "journey-map-explainer",
+    "section": "THE WHEEL OF THIRTY-TWO",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "BEHIND THE ENGINE",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "BEHIND THE ENGINE",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "PROFESSIONAL SECRET",
+    "cls": "black"
+  },
+  {
+    "tier": "static",
+    "section": "GIANTVERSE LORE",
+    "cls": "dark",
+    "quote": true
+  },
+  {
+    "tier": "dynamic",
+    "id": "lore-realm-1",
+    "section": "GIANTVERSE LORE",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "GIANTVERSE LORE",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "GIANTVERSE LORE",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "GIANTVERSE LORE",
+    "cls": "dark"
+  },
+  {
+    "tier": "dynamic",
+    "id": "master-study-1",
+    "section": "MASTER STUDY",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "THE CAST AROUND YOU",
+    "cls": "dark",
+    "quote": true
+  },
+  {
+    "tier": "dynamic",
+    "id": "cast-listing",
+    "section": "THE CAST AROUND YOU",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "THE CAST AROUND YOU",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "THE CAST AROUND YOU",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "THE CAST AROUND YOU",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "THE CAST AROUND YOU",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "THE CAST AROUND YOU",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "THE CAST AROUND YOU",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "THE CAST AROUND YOU",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "THE CAST AROUND YOU",
+    "cls": "dark"
+  },
+  {
+    "tier": "dynamic",
+    "id": "cast-perfect-team",
+    "section": "THE CAST AROUND YOU",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "PROFESSIONAL SECRET",
+    "cls": "black"
+  },
+  {
+    "tier": "static",
+    "section": "HERO JOURNEY",
+    "cls": "dark",
+    "quote": true
+  },
+  {
+    "tier": "dynamic",
+    "id": "journey-listing",
+    "section": "HERO JOURNEY",
+    "cls": "dark"
+  },
+  {
+    "tier": "dynamic",
+    "id": "journey-beat-0",
+    "section": "HERO JOURNEY",
+    "cls": "dark"
+  },
+  {
+    "tier": "dynamic",
+    "id": "journey-beat-1",
+    "section": "HERO JOURNEY",
+    "cls": "dark"
+  },
+  {
+    "tier": "dynamic",
+    "id": "journey-beat-2",
+    "section": "HERO JOURNEY",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "HERO JOURNEY",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "HERO JOURNEY",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "HERO JOURNEY",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "HERO JOURNEY",
+    "cls": "dark"
+  },
+  {
+    "tier": "dynamic",
+    "id": "master-study-2",
+    "section": "MASTER STUDY",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "CHARACTER DESIGN BLUEPRINT",
+    "cls": "dark",
+    "quote": true
+  },
+  {
+    "tier": "dynamic",
+    "id": "blueprint-shape",
+    "section": "CHARACTER DESIGN BLUEPRINT",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "CHARACTER DESIGN BLUEPRINT",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "CHARACTER DESIGN BLUEPRINT",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "CHARACTER DESIGN BLUEPRINT",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "CHARACTER DESIGN BLUEPRINT",
+    "cls": "dark"
+  },
+  {
+    "tier": "dynamic",
+    "id": "master-study-3",
+    "section": "MASTER STUDY",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "PROFESSIONAL SECRET",
+    "cls": "black"
+  },
+  {
+    "tier": "static",
+    "section": "DESIGN MASTERCLASS",
+    "cls": "dark",
+    "quote": true
+  },
+  {
+    "tier": "static",
+    "section": "DESIGN MASTERCLASS",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "DESIGN MASTERCLASS",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "DESIGN MASTERCLASS",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "DESIGN MASTERCLASS",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "DESIGN MASTERCLASS",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "DESIGN MASTERCLASS",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "DESIGN MASTERCLASS",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "DESIGN MASTERCLASS",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "DESIGN MASTERCLASS",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "DESIGN MASTERCLASS",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "DESIGN MASTERCLASS",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "DESIGN MASTERCLASS",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "DESIGN MASTERCLASS",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "DESIGN MASTERCLASS",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "DESIGN MASTERCLASS",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "DESIGN MASTERCLASS",
+    "cls": "dark"
+  },
+  {
+    "tier": "dynamic",
+    "id": "master-study-4",
+    "section": "MASTER STUDY",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "PROFESSIONAL SECRET",
+    "cls": "black"
+  },
+  {
+    "tier": "static",
+    "section": "GIANT HUNT WORKBOOK",
+    "cls": "dark",
+    "quote": true
+  },
+  {
+    "tier": "static",
+    "section": "GIANT HUNT WORKBOOK",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "GIANT HUNT WORKBOOK",
+    "cls": "cream"
+  },
+  {
+    "tier": "static",
+    "section": "GIANT HUNT WORKBOOK",
+    "cls": "cream"
+  },
+  {
+    "tier": "static",
+    "section": "GIANT HUNT WORKBOOK",
+    "cls": "cream"
+  },
+  {
+    "tier": "static",
+    "section": "GIANT HUNT WORKBOOK",
+    "cls": "cream"
+  },
+  {
+    "tier": "static",
+    "section": "GIANT HUNT WORKBOOK",
+    "cls": "cream"
+  },
+  {
+    "tier": "static",
+    "section": "GIANT HUNT WORKBOOK",
+    "cls": "cream"
+  },
+  {
+    "tier": "static",
+    "section": "GIANT HUNT WORKBOOK",
+    "cls": "cream"
+  },
+  {
+    "tier": "static",
+    "section": "GIANT HUNT WORKBOOK",
+    "cls": "cream"
+  },
+  {
+    "tier": "static",
+    "section": "GIANT HUNT WORKBOOK",
+    "cls": "cream"
+  },
+  {
+    "tier": "static",
+    "section": "GIANT HUNT WORKBOOK",
+    "cls": "cream"
+  },
+  {
+    "tier": "static",
+    "section": "GIANT HUNT WORKBOOK",
+    "cls": "cream"
+  },
+  {
+    "tier": "static",
+    "section": "GIANT HUNT WORKBOOK",
+    "cls": "cream"
+  },
+  {
+    "tier": "static",
+    "section": "GIANT HUNT WORKBOOK",
+    "cls": "cream"
+  },
+  {
+    "tier": "dynamic",
+    "id": "master-study-5",
+    "section": "MASTER STUDY",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "PROFESSIONAL SECRET",
+    "cls": "black"
+  },
+  {
+    "tier": "static",
+    "section": "THE GIANT HUNT",
+    "cls": "dark",
+    "quote": true
+  },
+  {
+    "tier": "dynamic",
+    "id": "hunt-designing",
+    "section": "THE GIANT HUNT",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "THE GIANT HUNT",
+    "cls": "dark"
+  },
+  {
+    "tier": "static",
+    "section": "THE GIANT HUNT",
+    "cls": "dark"
+  },
+  {
+    "tier": "dynamic",
+    "id": "hunt-world-record",
+    "section": "THE GIANT HUNT",
+    "cls": "dark"
+  },
+  {
+    "tier": "dynamic",
+    "id": "founding-benefits",
+    "section": "FOUNDING CREATOR",
+    "cls": "dark"
+  },
+  {
+    "tier": "dynamic",
+    "id": "founding-go-draw",
+    "section": "FOUNDING CREATOR",
+    "cls": "dark"
+  },
+  {
+    "tier": "dynamic",
+    "id": "colophon",
+    "section": "COLOPHON",
+    "cls": "dark"
+  }
+]

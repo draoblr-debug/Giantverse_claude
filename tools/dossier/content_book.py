@@ -38,7 +38,7 @@ CHAPTER_QUOTES = {
         "author": "paraphrased from Hayao Miyazaki's writings on world-building",
         "kind": "paraphrase",
         "why": "Ghibli films begin with places, not faces: the town teaches you who the "
-               "character must be. Read your Realm and Guild pages the same way — as the "
+               "character must be. Read your Realm pages the same way — as the "
                "childhood your character wears.",
     },
     "cast": {
@@ -236,7 +236,7 @@ DESIGN_LIKE = [
         "blocks": [
             ("SHAPE THESIS", "Every Pixar lead reduces to a sentence of geometry: Carl is a square (stubborn), Russell an egg (unformed), EVE an ellipse (perfect, sealed). Write your character's geometry sentence."),
             ("APPEAL ≠ PRETTY", "Appeal means the eye wants to keep looking. Asymmetry, imperfection and specificity generate appeal faster than beauty does."),
-            ("RESEARCH OBSESSION", "Pixar sends artists to depths and deserts before designing a fish or a car. Your research field is this dossier — realm materials, guild tools, archetype acting notes."),
+            ("RESEARCH OBSESSION", "Pixar sends artists to depths and deserts before designing a fish or a car. Your research field is this dossier — realm materials, archetype acting notes."),
         ],
         "apply": "Write the geometry sentence for your character in the margin of the blueprint page — subject, dominant shape, contradiction. If you cannot write it, you are not ready to draw it.",
     },
@@ -285,8 +285,8 @@ ENGINE_PIPELINE = [
     ("IDENTITY", "Sixteen questions sampled from a 112-question bank, two per psychological dimension, so no two Hunts ask the same paper."),
     ("SIGNALS", "Every answer becomes a weighted signal across eight dimensions — values, fears, dreams, power, people, decisions, leadership, motivation."),
     ("ARCHETYPE", "Thirty-two archetypes score your signal profile; the leader must clear its own confidence threshold to claim you."),
-    ("WHEEL POSITION", "Your archetype's seat fixes neighbours, guild-mates and your opposite — the cast chapter is computed from these adjacencies."),
-    ("REALM & GUILD", "Archetype determines realm bias and guild; realm supplies materials and textures, guild supplies oath and reputation."),
+    ("WHEEL POSITION", "Your archetype's seat fixes neighbours, realm-kin and your opposite — the cast chapter is computed from these adjacencies."),
+    ("REALM", "Archetype determines realm bias; realm supplies the materials, textures, and home ground your character is designed from."),
     ("PSYCHOLOGY", "Dimension weights are re-projected as behavioural facets, stress behaviour and the shadow — your strength with the brakes removed."),
     ("SHAPE LANGUAGE", "Trait families map to classical shape theory: endurance and drive to triangles, order to squares, communion to circles."),
     ("PALETTE", "Realm materials set the 70/25 base; your Order's signal colour is reserved as the 5% accent."),

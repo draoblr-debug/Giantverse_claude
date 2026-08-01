@@ -1,20 +1,28 @@
 import { ARCHETYPE_DEFINITIONS } from "@/engines/archetype/archetype-definitions";
 import type { ArchetypeProfile } from "@/types/archetype.types";
 
-// The 32 archetypes as a 32-point compass rather than 32 isolated boxes.
-// Position i's Opposite sits exactly across the wheel (i + 16) — not an
-// enemy, but someone who answers the same central question differently.
-// Its Allies are its immediate neighbors (i - 1, i + 1) — the archetypes
-// a person naturally drifts toward as they grow. See docs/ARCHETYPE_GUIDE.md.
+// The 32 archetypes as a 32-point relationship wheel — this is the
+// SEMANTIC wheel (compatibility distance, opposites, allies), not the
+// compass's visual layout (see COMPASS_ORDER in src/content/landing-atlas.ts
+// for that — the two are deliberately separate arrays). Every hand-authored
+// opposite pair (OPPOSITE_TENSIONS) sits exactly 16 slots apart here — the
+// Compatibility Checker (compatibility.engine.ts) and the dossier payload
+// (persona-payload.ts) both depend on that invariant for their distance
+// math, and it cannot hold if this array is also forced into the compass's
+// Order/Temperament quadrant grouping (some opposite pairs share an Order or
+// a Temperament, so "straight across the wheel" and "opposite quadrant"
+// aren't the same constraint). Its Allies are its immediate neighbors
+// (i - 1, i + 1) — the archetypes a person naturally drifts toward as they
+// grow; grouped thematically here, but with no independent ground truth to
+// preserve beyond that.
 export const WHEEL_ORDER: string[] = [
-  "minshu", "sabaki", "kanryo", "sosai", "senryaku", "gijutsu", "yogen", "tetsugaku",
-  "kenja", "rekishi", "riso", "kenchiku", "gaiko", "shisha", "hatsumei", "nogyo",
-  "kizoku", "banri", "kaikaku", "kaitaku", "mamori", "iyashi", "kensetsu", "seizon",
-  "teisatsu", "monogatari", "hozon", "tansa", "koro", "yuei", "shokunin", "takumi",
+  "minshu", "kenja", "kanryo", "sabaki", "riso", "yogen", "gijutsu", "hatsumei",
+  "senryaku", "sosai", "kenchiku", "gaiko", "tetsugaku", "rekishi", "shisha", "nogyo",
+  "kizoku", "teisatsu", "kaikaku", "banri", "hozon", "kensetsu", "iyashi", "shokunin",
+  "mamori", "kaitaku", "tansa", "koro", "seizon", "monogatari", "yuei", "takumi",
 ];
 
 const WHEEL_SIZE = WHEEL_ORDER.length;
-const HALF = WHEEL_SIZE / 2;
 
 const POSITION_BY_ID: Record<string, number> = Object.fromEntries(
   WHEEL_ORDER.map((id, i) => [id, i]),
@@ -66,9 +74,30 @@ export function wheelPosition(archetypeId: string): number {
   return pos;
 }
 
-// The archetype 180 degrees across the wheel — same question, opposite answer.
+// Built from OPPOSITE_TENSIONS rather than wheel position: every id maps to
+// whichever other id shares its central-question text (there are always
+// exactly two). A content relationship, not a geometric one — it doesn't
+// assume opposites sit 180° apart, which the compass's Order/Temperament
+// layout can't guarantee for all 16 pairs (see WHEEL_ORDER above).
+const OPPOSITE_BY_ID: Record<string, string> = (() => {
+  const byQuestion = new Map<string, string[]>();
+  for (const [id, question] of Object.entries(OPPOSITE_TENSIONS)) {
+    const pair = byQuestion.get(question) ?? [];
+    pair.push(id);
+    byQuestion.set(question, pair);
+  }
+  const result: Record<string, string> = {};
+  for (const [id, other] of byQuestion.values()) {
+    result[id] = other;
+    result[other] = id;
+  }
+  return result;
+})();
+
+// The archetype that answers the same central question differently.
 export function getOppositeId(archetypeId: string): string {
-  return WHEEL_ORDER[(wheelPosition(archetypeId) + HALF) % WHEEL_SIZE];
+  wheelPosition(archetypeId); // throws for an unknown id, same as before
+  return OPPOSITE_BY_ID[archetypeId];
 }
 
 // The two neighboring archetypes on the wheel — the natural directions of

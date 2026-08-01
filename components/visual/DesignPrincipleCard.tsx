@@ -43,14 +43,16 @@ export function DesignPrincipleCard({ character }: { character: CharacterEntry }
             <p className="f-10 txt-upp mb-0" style={{ color: "#8A8478" }}>Silhouette</p>
             <p className="f-12 mb-0" style={{ color: "#C9C3B6" }}>{character.silhouette}</p>
           </div>
-          <div>
-            <p className="f-10 txt-upp mb-0" style={{ color: "#8A8478" }}>Palette</p>
-            <div className="flex" style={{ gap: 6, marginTop: 4 }}>
-              {character.primary_colors.map((hex) => (
-                <span key={hex} title={hex} style={{ width: 18, height: 18, borderRadius: 3, background: hex, border: "1px solid rgba(255,255,255,0.15)", display: "inline-block" }} />
-              ))}
+          {character.primary_colors.length > 0 && (
+            <div>
+              <p className="f-10 txt-upp mb-0" style={{ color: "#8A8478" }}>Palette</p>
+              <div className="flex" style={{ gap: 6, marginTop: 4 }}>
+                {character.primary_colors.map((hex) => (
+                  <span key={hex} title={hex} style={{ width: 18, height: 18, borderRadius: 3, background: hex, border: "1px solid rgba(255,255,255,0.15)", display: "inline-block" }} />
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
 

@@ -3,19 +3,21 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
+import { useLocale, useTranslations } from "next-intl";
 import { useSessionStore } from "@/stores/session.store";
-import { selectSurveyQuestions } from "@/engines/survey/survey-selection.engine";
+import { getQuestionBank, selectSurveyQuestions } from "@/engines/survey/survey-selection.engine";
 import { answersToSignals, type SurveyAnswers } from "@/engines/survey/survey-scoring.engine";
 import type { Signal } from "@/types/archetype.types";
 import { useAssessmentStore } from "@/stores/assessment.store";
-
-const LIKERT_LABELS = ["Strongly\nDisagree", "Disagree", "Neutral", "Agree", "Strongly\nAgree"];
-
 
 export function SurveyShell() {
   const router = useRouter();
   const { sessionId, birthName, firstName } = useSessionStore();
   const setResult = useAssessmentStore((state) => state.setResult);
+  const t = useTranslations("survey");
+  const tCommon = useTranslations("common");
+  const likertLabels = t.raw("likert") as string[];
+  const locale = useLocale();
 
   // Bumped on "Retake the Survey" so the question sample reshuffles
   // instead of drawing the identical set again.
@@ -23,10 +25,17 @@ export function SurveyShell() {
 
   // Each session draws its own balanced 16-question survey from the
   // 112-question bank, seeded by the session so it's stable across
-  // re-renders but unique per participant.
+  // re-renders but unique per participant. The seed excludes locale so
+  // the same questions (by id) are picked regardless of display language;
+  // only the bank passed in determines which language's text is shown.
   const questions = useMemo(
-    () => selectSurveyQuestions(`${sessionId ?? birthName ?? "giantverse"}-${retake}`),
-    [sessionId, birthName, retake],
+    () =>
+      selectSurveyQuestions(
+        `${sessionId ?? birthName ?? "giantverse"}-${retake}`,
+        2,
+        getQuestionBank(locale),
+      ),
+    [sessionId, birthName, retake, locale],
   );
 
   const [step, setStep] = useState(0);
@@ -66,7 +75,7 @@ export function SurveyShell() {
       setResult({ source: "survey", signals });
       router.push("/reveal");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong.");
+      setError(err instanceof Error ? err.message : tCommon("somethingWentWrong"));
       setSubmitting(false);
       answeredStep.current = -1; // allow retrying the last question
     }
@@ -107,7 +116,7 @@ export function SurveyShell() {
                 <td>
                   <div className="gl-cont">
                     <div className="gl-cirle"></div>
-                    <p className="f-12 mb-0 txt-center">Crystallising your name...</p>
+                    <p className="f-12 mb-0 txt-center">{t("crystallising")}</p>
                   </div>
                 </td>
               </tr>
@@ -173,20 +182,20 @@ export function SurveyShell() {
                             <h1 className="f-16 line-ht-24 txt-center mt-3 mb-4">{question.text}</h1>
                             {question.type === "yesno" ? (
                               <div className="btn-group">
-                                {(["Yes", "No"] as const).map((label) => (
+                                {([1, 0] as const).map((value) => (
                                   <button
-                                    key={label}
+                                    key={value}
                                     type="button"
                                     className="btn-outline mse-2"
-                                    onClick={() => handleAnswer(label === "Yes" ? 1 : 0)}
+                                    onClick={() => handleAnswer(value)}
                                   >
-                                    {label}
+                                    {value === 1 ? t("yes") : t("no")}
                                   </button>
                                 ))}
                               </div>
                             ) : (
                               <div className="btn-group2">
-                                {LIKERT_LABELS.map((label, i) => (
+                                {likertLabels.map((label, i) => (
                                   <button
                                     key={i}
                                     type="button"
@@ -194,14 +203,14 @@ export function SurveyShell() {
                                     onClick={() => handleAnswer(i + 1)}
                                   >
                                     <span className="indicator"></span>
-                                    <span>{label.replace("\n", " ")}</span>
+                                    <span>{label}</span>
                                   </button>
                                 ))}
                               </div>
                             )}
                             {step === 0 && (
                               <p className="f-12 line-ht-15 txt-thm-clr-50-2 txt-center mt-4 mb-0">
-                                {firstName}, answer honestly — there are no right answers.
+                                {t("answerHonestly", { firstName: firstName ?? "" })}
                               </p>
                             )}
                             {error && <p className="f-12 line-ht-15 txt-center mt-4 mb-0 text-red-500">{error}</p>}

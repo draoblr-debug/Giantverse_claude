@@ -5,69 +5,77 @@ import type { SurveyQuestion } from "./survey-questions";
 // Each session samples 2 per dimension (16 total) via
 // survey-selection.engine.ts, so every participant's journey differs
 // while scoring stays balanced across dimensions.
+//
+// Text below is the simplified (grade-8 reading level) rewrite of the
+// question bank — same ids/dimension/type as before, reworded for
+// clarity and to translate more naturally across languages. Translated
+// banks (survey-question-bank.ta.ts, .kn.ts, .hi.ts, .te.ts) mirror this
+// file's exact id order per dimension so the deterministic seeded
+// selection in survey-selection.engine.ts picks the same questions
+// regardless of the participant's language.
 export const QUESTION_BANK: SurveyQuestion[] = [
   // ── VALUES ────────────────────────────────────────────────────────
   {
     id: "val-01", dimension: "VALUES", type: "likert",
-    text: "I would rather lose an advantage than compromise on what I believe is right.",
+    text: "I would rather give up an advantage than do something I think is wrong.",
   },
   {
     id: "val-02", dimension: "VALUES", type: "yesno",
-    text: "Do you have a personal code or set of principles you consciously live by?",
+    text: "Do you have a set of personal rules that you try to live by?",
   },
   {
     id: "val-03", dimension: "VALUES", type: "likert",
-    text: "When everyone around me disagrees, I still find it hard to abandon what I know is fair.",
+    text: "Even when everyone disagrees with me, it's hard for me to give up on what I know is fair.",
   },
   {
     id: "val-04", dimension: "VALUES", type: "yesno",
-    text: "Have you ever walked away from something you wanted because getting it felt wrong?",
+    text: "Have you ever given up something you wanted because getting it felt wrong?",
   },
   {
     id: "val-05", dimension: "VALUES", type: "likert",
-    text: "Keeping a promise matters to me even when the person I made it to would never find out.",
+    text: "Keeping a promise matters to me, even if the other person would never know.",
   },
   {
     id: "val-06", dimension: "VALUES", type: "yesno",
-    text: "Would you defend someone being treated unfairly even if it cost you socially?",
+    text: "Would you stand up for someone treated unfairly, even if it hurt your reputation?",
   },
   {
     id: "val-07", dimension: "VALUES", type: "likert",
-    text: "I judge my own actions by a standard that doesn't move, even when circumstances do.",
+    text: "I judge my own actions by the same standard, even when situations change.",
   },
   {
     id: "val-08", dimension: "VALUES", type: "yesno",
-    text: "Is there a line you are certain you would never cross, no matter the reward?",
+    text: "Is there something you would never do, no matter what you got for it?",
   },
   {
     id: "val-09", dimension: "VALUES", type: "likert",
-    text: "Honesty feels more important to me than harmony, even when the truth is uncomfortable.",
+    text: "Being honest matters more to me than keeping the peace, even when the truth is uncomfortable.",
   },
   {
     id: "val-10", dimension: "VALUES", type: "yesno",
-    text: "Do you find it difficult to respect someone whose principles shift with convenience?",
+    text: "Do you find it hard to respect someone whose values change to suit them?",
   },
   {
     id: "val-11", dimension: "VALUES", type: "likert",
-    text: "I feel a quiet obligation to leave things better than I found them.",
+    text: "I feel a quiet duty to leave things better than I found them.",
   },
   {
     id: "val-12", dimension: "VALUES", type: "yesno",
-    text: "Have you kept a promise long after keeping it stopped being easy?",
+    text: "Have you kept a promise long after it stopped being easy to keep?",
   },
   {
     id: "val-13", dimension: "VALUES", type: "likert",
-    text: "What is fair matters more to me than what is efficient.",
+    text: "Being fair matters more to me than being efficient.",
   },
   {
     id: "val-14", dimension: "VALUES", type: "yesno",
-    text: "Would you tell an uncomfortable truth to someone you care about if staying silent protected them?",
+    text: "Would you tell someone you care about an uncomfortable truth, even if staying quiet would protect them?",
   },
 
   // ── FEARS ─────────────────────────────────────────────────────────
   {
     id: "fear-01", dimension: "FEARS", type: "likert",
-    text: "I often worry about falling short of the standards I set for myself.",
+    text: "I often worry about not living up to my own standards.",
   },
   {
     id: "fear-02", dimension: "FEARS", type: "yesno",
@@ -75,23 +83,23 @@ export const QUESTION_BANK: SurveyQuestion[] = [
   },
   {
     id: "fear-03", dimension: "FEARS", type: "likert",
-    text: "The thought of my efforts being forgotten troubles me more than the effort itself.",
+    text: "It bothers me more to think my work will be forgotten than to do the work itself.",
   },
   {
     id: "fear-04", dimension: "FEARS", type: "yesno",
-    text: "Do you fear becoming irrelevant more than you fear making mistakes?",
+    text: "Do you fear becoming unimportant more than you fear making mistakes?",
   },
   {
     id: "fear-05", dimension: "FEARS", type: "likert",
-    text: "I am more afraid of watching something I care about decay slowly than of losing it suddenly.",
+    text: "I am more afraid of watching something I love fall apart slowly than losing it all at once.",
   },
   {
     id: "fear-06", dimension: "FEARS", type: "yesno",
-    text: "Does the idea of being misunderstood by the people closest to you keep you up at night?",
+    text: "Does the thought of being misunderstood by people close to you keep you up at night?",
   },
   {
     id: "fear-07", dimension: "FEARS", type: "likert",
-    text: "Chaos and disorder unsettle me more deeply than confrontation does.",
+    text: "Chaos and disorder bother me more than conflict does.",
   },
   {
     id: "fear-08", dimension: "FEARS", type: "yesno",
@@ -107,15 +115,15 @@ export const QUESTION_BANK: SurveyQuestion[] = [
   },
   {
     id: "fear-11", dimension: "FEARS", type: "likert",
-    text: "The possibility that I might stop growing scares me more than any external threat.",
+    text: "The thought that I might stop growing scares me more than any outside threat.",
   },
   {
     id: "fear-12", dimension: "FEARS", type: "yesno",
-    text: "Have you ever stayed in a fight longer than you should have because leaving felt like abandonment?",
+    text: "Have you ever stayed in a fight longer than you should have because leaving felt like giving up on someone?",
   },
   {
     id: "fear-13", dimension: "FEARS", type: "likert",
-    text: "I fear the moment when no one needs me more than the years of being needed too much.",
+    text: "I fear the day no one needs me more than I fear years of being needed too much.",
   },
   {
     id: "fear-14", dimension: "FEARS", type: "yesno",
@@ -125,39 +133,39 @@ export const QUESTION_BANK: SurveyQuestion[] = [
   // ── DREAMS ────────────────────────────────────────────────────────
   {
     id: "drm-01", dimension: "DREAMS", type: "likert",
-    text: "I think often about the kind of impact or legacy I want to leave behind.",
+    text: "I often think about the mark I want to leave on the world.",
   },
   {
     id: "drm-02", dimension: "DREAMS", type: "yesno",
-    text: "Is there a specific future you are actively building towards right now?",
+    text: "Is there a specific future you are working toward right now?",
   },
   {
     id: "drm-03", dimension: "DREAMS", type: "likert",
-    text: "I can picture, in real detail, a world better than this one — and it pulls at me.",
+    text: "I can picture a better world in real detail, and it pulls at me.",
   },
   {
     id: "drm-04", dimension: "DREAMS", type: "yesno",
-    text: "Do you daydream about creating something that outlives you?",
+    text: "Do you dream about creating something that lasts after you're gone?",
   },
   {
     id: "drm-05", dimension: "DREAMS", type: "likert",
-    text: "Unexplored places — physical or intellectual — call to me more than familiar comforts.",
+    text: "New places, whether real or in ideas, call to me more than familiar comforts.",
   },
   {
     id: "drm-06", dimension: "DREAMS", type: "yesno",
-    text: "Have you ever changed your life's direction because of a vision you couldn't shake?",
+    text: "Have you ever changed the direction of your life because of a vision you couldn't let go of?",
   },
   {
     id: "drm-07", dimension: "DREAMS", type: "likert",
-    text: "My ambitions are less about what I will have and more about what I will have made possible.",
+    text: "My goals are less about what I will own and more about what I will make possible.",
   },
   {
     id: "drm-08", dimension: "DREAMS", type: "yesno",
-    text: "Do you keep a private list — written or mental — of things you must do before your time runs out?",
+    text: "Do you keep a private list of things you want to do before you run out of time?",
   },
   {
     id: "drm-09", dimension: "DREAMS", type: "likert",
-    text: "When I imagine my best future, other people's flourishing is part of the picture.",
+    text: "When I imagine my best future, other people are thriving in it too.",
   },
   {
     id: "drm-10", dimension: "DREAMS", type: "yesno",
@@ -165,7 +173,7 @@ export const QUESTION_BANK: SurveyQuestion[] = [
   },
   {
     id: "drm-11", dimension: "DREAMS", type: "likert",
-    text: "I would trade certainty today for the chance of something extraordinary tomorrow.",
+    text: "I would give up certainty today for a chance at something amazing tomorrow.",
   },
   {
     id: "drm-12", dimension: "DREAMS", type: "yesno",
@@ -173,17 +181,17 @@ export const QUESTION_BANK: SurveyQuestion[] = [
   },
   {
     id: "drm-13", dimension: "DREAMS", type: "likert",
-    text: "The horizon interests me more than the ground beneath my feet.",
+    text: "What lies ahead interests me more than where I'm standing now.",
   },
   {
     id: "drm-14", dimension: "DREAMS", type: "yesno",
-    text: "Would you start over somewhere completely new if it meant pursuing what you truly want?",
+    text: "Would you start over somewhere completely new to pursue what you truly want?",
   },
 
   // ── POWER ─────────────────────────────────────────────────────────
   {
     id: "pow-01", dimension: "POWER", type: "likert",
-    text: "I feel most energised when I am directing a situation or setting the course for others.",
+    text: "I feel most energized when I'm in charge or setting the direction for others.",
   },
   {
     id: "pow-02", dimension: "POWER", type: "yesno",
@@ -191,7 +199,7 @@ export const QUESTION_BANK: SurveyQuestion[] = [
   },
   {
     id: "pow-03", dimension: "POWER", type: "likert",
-    text: "Authority sits comfortably on my shoulders; I don't shrink from being the one accountable.",
+    text: "I'm comfortable with authority. I don't shy away from being held accountable.",
   },
   {
     id: "pow-04", dimension: "POWER", type: "yesno",
@@ -199,7 +207,7 @@ export const QUESTION_BANK: SurveyQuestion[] = [
   },
   {
     id: "pow-05", dimension: "POWER", type: "likert",
-    text: "I believe influence should be earned through competence, and I hold myself to that.",
+    text: "I believe influence should be earned by being good at what you do, and I hold myself to that.",
   },
   {
     id: "pow-06", dimension: "POWER", type: "yesno",
@@ -207,7 +215,7 @@ export const QUESTION_BANK: SurveyQuestion[] = [
   },
   {
     id: "pow-07", dimension: "POWER", type: "likert",
-    text: "I am more comfortable being the quiet force behind decisions than the face of them.",
+    text: "I'm more comfortable working quietly behind decisions than being the face of them.",
   },
   {
     id: "pow-08", dimension: "POWER", type: "yesno",
@@ -215,7 +223,7 @@ export const QUESTION_BANK: SurveyQuestion[] = [
   },
   {
     id: "pow-09", dimension: "POWER", type: "likert",
-    text: "When I hold power over someone, I feel its weight more than its privilege.",
+    text: "When I have power over someone, I feel the weight of it more than the perks.",
   },
   {
     id: "pow-10", dimension: "POWER", type: "yesno",
@@ -223,15 +231,15 @@ export const QUESTION_BANK: SurveyQuestion[] = [
   },
   {
     id: "pow-11", dimension: "POWER", type: "likert",
-    text: "Rules feel to me like instruments — worth honoring, but also worth redesigning.",
+    text: "To me, rules are tools. They're worth following, but also worth changing.",
   },
   {
     id: "pow-12", dimension: "POWER", type: "yesno",
-    text: "Do you trust structures and institutions more than charismatic individuals?",
+    text: "Do you trust rules and systems more than one charming leader?",
   },
   {
     id: "pow-13", dimension: "POWER", type: "likert",
-    text: "I would rather empower ten people quietly than command a hundred visibly.",
+    text: "I would rather quietly help ten people gain power than lead a hundred people in public.",
   },
   {
     id: "pow-14", dimension: "POWER", type: "yesno",
@@ -241,7 +249,7 @@ export const QUESTION_BANK: SurveyQuestion[] = [
   // ── PEOPLE ────────────────────────────────────────────────────────
   {
     id: "ppl-01", dimension: "PEOPLE", type: "likert",
-    text: "The mood and wellbeing of those around me significantly shapes how I feel and decide.",
+    text: "The mood and wellbeing of people around me strongly affects how I feel and decide.",
   },
   {
     id: "ppl-02", dimension: "PEOPLE", type: "yesno",
@@ -257,7 +265,7 @@ export const QUESTION_BANK: SurveyQuestion[] = [
   },
   {
     id: "ppl-05", dimension: "PEOPLE", type: "likert",
-    text: "A conflict between people I care about affects me physically, not just emotionally.",
+    text: "When people I care about fight, it affects my body, not just my feelings.",
   },
   {
     id: "ppl-06", dimension: "PEOPLE", type: "yesno",
@@ -269,11 +277,11 @@ export const QUESTION_BANK: SurveyQuestion[] = [
   },
   {
     id: "ppl-08", dimension: "PEOPLE", type: "yesno",
-    text: "When a group splinters, do you find yourself becoming the bridge between its parts?",
+    text: "When a group breaks apart, do you become the bridge that connects its parts?",
   },
   {
     id: "ppl-09", dimension: "PEOPLE", type: "likert",
-    text: "I would rather resolve a disagreement slowly and fully than win it quickly.",
+    text: "I would rather work out a disagreement slowly and fully than win it quickly.",
   },
   {
     id: "ppl-10", dimension: "PEOPLE", type: "yesno",
@@ -281,7 +289,7 @@ export const QUESTION_BANK: SurveyQuestion[] = [
   },
   {
     id: "ppl-11", dimension: "PEOPLE", type: "likert",
-    text: "Watching someone grow because of something I gave them satisfies me more than my own wins.",
+    text: "Watching someone grow because of something I gave them feels better than my own wins.",
   },
   {
     id: "ppl-12", dimension: "PEOPLE", type: "yesno",
@@ -299,7 +307,7 @@ export const QUESTION_BANK: SurveyQuestion[] = [
   // ── DECISIONS ─────────────────────────────────────────────────────
   {
     id: "dec-01", dimension: "DECISIONS", type: "likert",
-    text: "Before committing to something significant, I prefer to gather as much information as possible.",
+    text: "Before committing to something important, I first try to learn all I can.",
   },
   {
     id: "dec-02", dimension: "DECISIONS", type: "yesno",
@@ -323,7 +331,7 @@ export const QUESTION_BANK: SurveyQuestion[] = [
   },
   {
     id: "dec-07", dimension: "DECISIONS", type: "likert",
-    text: "In a crisis, I get calmer and more methodical while others speed up.",
+    text: "In a crisis, I become calmer and more organized while others speed up.",
   },
   {
     id: "dec-08", dimension: "DECISIONS", type: "yesno",
@@ -339,7 +347,7 @@ export const QUESTION_BANK: SurveyQuestion[] = [
   },
   {
     id: "dec-11", dimension: "DECISIONS", type: "likert",
-    text: "Once I decide, I stop looking back — second-guessing feels like a luxury I don't keep.",
+    text: "Once I decide, I stop looking back. I don't have time for second-guessing.",
   },
   {
     id: "dec-12", dimension: "DECISIONS", type: "yesno",
@@ -351,17 +359,17 @@ export const QUESTION_BANK: SurveyQuestion[] = [
   },
   {
     id: "dec-14", dimension: "DECISIONS", type: "yesno",
-    text: "Do you trust processes you've refined over time more than flashes of inspiration?",
+    text: "Do you trust methods you've improved over time more than sudden bursts of inspiration?",
   },
 
   // ── LEADERSHIP ────────────────────────────────────────────────────
   {
     id: "led-01", dimension: "LEADERSHIP", type: "likert",
-    text: "I believe the most effective way to lead is through personal example, not authority.",
+    text: "I believe the best way to lead is by example, not by giving orders.",
   },
   {
     id: "led-02", dimension: "LEADERSHIP", type: "yesno",
-    text: "Do you often find yourself naturally stepping up in group situations without being asked?",
+    text: "In group situations, do you often step up without being asked?",
   },
   {
     id: "led-03", dimension: "LEADERSHIP", type: "likert",
@@ -369,19 +377,19 @@ export const QUESTION_BANK: SurveyQuestion[] = [
   },
   {
     id: "led-04", dimension: "LEADERSHIP", type: "yesno",
-    text: "Have people followed you into something difficult mainly because you went first?",
+    text: "Have people followed you into something hard mainly because you led the way?",
   },
   {
     id: "led-05", dimension: "LEADERSHIP", type: "likert",
-    text: "A good leader absorbs blame and passes on credit; I try to live that way.",
+    text: "A good leader takes the blame and gives away the credit. I try to live that way.",
   },
   {
     id: "led-06", dimension: "LEADERSHIP", type: "yesno",
-    text: "Would you rather develop ten quiet leaders than be one celebrated one?",
+    text: "Would you rather train ten quiet leaders than become one famous leader yourself?",
   },
   {
     id: "led-07", dimension: "LEADERSHIP", type: "likert",
-    text: "When a group loses direction, I feel personally responsible for finding it again.",
+    text: "When a group loses its way, I feel it's my job to find it again.",
   },
   {
     id: "led-08", dimension: "LEADERSHIP", type: "yesno",
@@ -393,11 +401,11 @@ export const QUESTION_BANK: SurveyQuestion[] = [
   },
   {
     id: "led-10", dimension: "LEADERSHIP", type: "yesno",
-    text: "Have you ever stepped back from leading because someone else was better suited — even though you wanted it?",
+    text: "Have you ever stepped back from leading, even though you wanted it, because someone else was better suited?",
   },
   {
     id: "led-11", dimension: "LEADERSHIP", type: "likert",
-    text: "People seem to trust me most in exactly the moments when everything is uncertain.",
+    text: "People seem to trust me most in the moments when everything feels uncertain.",
   },
   {
     id: "led-12", dimension: "LEADERSHIP", type: "yesno",
@@ -415,11 +423,11 @@ export const QUESTION_BANK: SurveyQuestion[] = [
   // ── MOTIVATION ────────────────────────────────────────────────────
   {
     id: "mot-01", dimension: "MOTIVATION", type: "likert",
-    text: "The process of getting better at something drives me more than the reward at the end.",
+    text: "Getting better at something drives me more than the reward at the end.",
   },
   {
     id: "mot-02", dimension: "MOTIVATION", type: "yesno",
-    text: "Is there a pursuit or goal you find yourself thinking about almost every day?",
+    text: "Is there a goal you find yourself thinking about almost every day?",
   },
   {
     id: "mot-03", dimension: "MOTIVATION", type: "likert",
@@ -427,11 +435,11 @@ export const QUESTION_BANK: SurveyQuestion[] = [
   },
   {
     id: "mot-04", dimension: "MOTIVATION", type: "yesno",
-    text: "Do you return to refine work that everyone else already considers finished?",
+    text: "Do you go back to improve work that everyone else thinks is already done?",
   },
   {
     id: "mot-05", dimension: "MOTIVATION", type: "likert",
-    text: "An unanswered question will quietly occupy my mind for days until I resolve it.",
+    text: "An unanswered question will stay in my mind for days until I solve it.",
   },
   {
     id: "mot-06", dimension: "MOTIVATION", type: "yesno",
@@ -447,11 +455,11 @@ export const QUESTION_BANK: SurveyQuestion[] = [
   },
   {
     id: "mot-09", dimension: "MOTIVATION", type: "likert",
-    text: "Repetition doesn't bore me when each repetition makes the thing slightly better.",
+    text: "Repeating a task doesn't bore me when each time makes it a little better.",
   },
   {
     id: "mot-10", dimension: "MOTIVATION", type: "yesno",
-    text: "Do you feel restless when too much time passes without meaningful progress?",
+    text: "Do you feel restless when a lot of time passes without real progress?",
   },
   {
     id: "mot-11", dimension: "MOTIVATION", type: "likert",

@@ -4,8 +4,10 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSessionStore } from "@/stores/session.store";
 import { useAssessmentStore } from "@/stores/assessment.store";
+import { useVisualStore } from "@/stores/visual.store";
 import { buildScoreHistory } from "@/engines/archetype/journey-history";
 import { ArchetypeJourneyPlayer } from "@/components/experience/ArchetypeJourneyPlayer";
+import { GiantverseShareCard } from "@/components/visual/GiantverseShareCard";
 import { ARCHETYPE_DEFINITIONS } from "@/engines/archetype/archetype-definitions";
 import { REALMS } from "@/engines/realms";
 import type { TurnSnapshot } from "@/lib/journey-renderer";
@@ -31,13 +33,15 @@ type RevealedResult = {
   signals: Signal[];
   scoreMap: Record<string, number>;
   scoreHistory: TurnSnapshot[];
-  source: "survey" | "chat";
+  source: "survey" | "chat" | "visual";
 };
 
 export default function SharedRevealPage() {
   const router = useRouter();
   const { birthName, acceptLegacyName } = useSessionStore();
   const result = useAssessmentStore((state) => state.result);
+  const visualMatches = useVisualStore((state) => state.matches);
+  const visualPhoto = useVisualStore((state) => state.photoDataUrl);
 
   const [revealed, setRevealed] = useState<RevealedResult | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -75,29 +79,55 @@ export default function SharedRevealPage() {
 
     async function processResult() {
       try {
-        let archetypeRes;
+        let topArchetype: { id: string; label: string; romajiName: string; order: "GIANT" | "HUNTER"; normalized: number };
+        let scores: { id: string; normalized: number }[];
+        let apiScoreHistory: TurnSnapshot[] | undefined;
+
         if (result!.source === "chat" && result!.currentVector) {
-          archetypeRes = await fetch("/api/scenario-chat/archetype", {
+          const archetypeRes = await fetch("/api/scenario-chat/archetype", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ 
+            body: JSON.stringify({
               currentVector: result!.currentVector,
               vectorHistory: result!.vectorHistory,
-              chatThemes: result!.chatThemes
+              chatThemes: result!.chatThemes,
             }),
           });
+          if (!archetypeRes.ok) throw new Error("Could not determine your archetype.");
+          const data = await archetypeRes.json();
+          topArchetype = data.topArchetype;
+          scores = data.scores;
+          apiScoreHistory = data.scoreHistory;
+        } else if (result!.source === "visual" && result!.archetypeId) {
+          // Archetype already decided by summing similarity across the top-5
+          // character matches (see archetype-vote.engine.ts) — the same
+          // mechanism the reference app uses. No signals-based scoring pass
+          // for this source; the vote result is the ground truth.
+          const profile = ARCHETYPE_DEFINITIONS[result!.archetypeId];
+          if (!profile) throw new Error("Could not determine your archetype.");
+          const voteScoreMap = result!.archetypeScoreMap ?? {};
+          topArchetype = {
+            id: profile.id,
+            label: profile.label,
+            romajiName: profile.romajiName,
+            order: profile.order,
+            normalized: voteScoreMap[profile.id] ?? 1,
+          };
+          scores = Object.keys(ARCHETYPE_DEFINITIONS).map((id) => ({ id, normalized: voteScoreMap[id] ?? 0 }));
         } else {
-          archetypeRes = await fetch("/api/archetype", {
+          const archetypeRes = await fetch("/api/archetype", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ signals: result!.signals }),
           });
+          if (!archetypeRes.ok) throw new Error("Could not determine your archetype.");
+          const data = await archetypeRes.json();
+          topArchetype = data.topArchetype;
+          scores = data.scores;
         }
 
-        if (!archetypeRes.ok) throw new Error("Could not determine your archetype.");
-        const { topArchetype, scores, scoreHistory: apiScoreHistory } = await archetypeRes.json();
         const scoreMap: Record<string, number> = Object.fromEntries(
-          (scores as { id: string; normalized: number }[]).map((s) => [s.id, s.normalized]),
+          scores.map((s) => [s.id, s.normalized]),
         );
 
         const legacyRes = await fetch("/api/legacy-name", {
@@ -137,6 +167,10 @@ export default function SharedRevealPage() {
     if (!revealed) return;
     const { legacyName, archetype, scoreMap, scoreHistory } = revealed;
     acceptLegacyName(legacyName, archetype.id, archetype.order, archetype.label, archetype.guidingPromise, archetype.traits, scoreMap, scoreHistory);
+    // The selfie was kept alive only so the share card above could use it —
+    // drop it now that the ritual is finishing (retaking already clears it
+    // via reset() in the branch below).
+    if (revealed.source === "visual") useVisualStore.getState().clearPhoto();
     router.push("/ending");
   }
 
@@ -145,10 +179,13 @@ export default function SharedRevealPage() {
     // Don't clear assessment.store's result here — this page's own effect
     // redirects to /choose the instant result is falsy, which raced the
     // navigation below. Retaking naturally overwrites the old result once
-    // the survey/chat is completed again, so nothing needs clearing early.
+    // the survey/chat/photo is completed again, so nothing needs clearing early.
     if (revealed.source === "chat") {
       import("@/stores/scenario.store").then((m) => m.useScenarioStore.getState().reset());
       router.push("/scenario-chat");
+    } else if (revealed.source === "visual") {
+      import("@/stores/visual.store").then((m) => m.useVisualStore.getState().reset());
+      router.push("/visual-discovery");
     } else {
       router.push("/survey");
     }
@@ -213,7 +250,7 @@ export default function SharedRevealPage() {
                     scoreHistory={revealed.scoreHistory}
                     finalArchetypeId={archetype.id}
                     scoreMap={revealed.scoreMap}
-                    hideSurveyProgression={revealed.source === "chat"}
+                    hideSurveyProgression={revealed.source === "chat" || revealed.source === "visual"}
                     highlightArchetypeIds={invisibleArchetypes.map((a) => a.id)}
                   />
                 </div>
@@ -267,10 +304,22 @@ export default function SharedRevealPage() {
             </div>
           )}
 
+          {revealed.source === "visual" && visualMatches && (
+            <div className="mxw-450 m-auto wht-cont pse-3 mt-3 pb-3">
+              <p className="f-10 txt-upp txt-thm-clr-50-2 mb-2 txt-center">Your Giantverse Identity Card</p>
+              <GiantverseShareCard
+                matches={visualMatches}
+                photoDataUrl={visualPhoto}
+                legacyName={revealed.legacyName}
+                romajiName={archetype.romajiName}
+              />
+            </div>
+          )}
+
           <div className="txt-center mt-4 mb-4">
             <button type="button" className="btn pse-3 bdr-rds2 me-2" onClick={handleConfirm}>This Is Me</button>
             <button type="button" className="btn-outline pse-3 bdr-rds2 me-2" onClick={handleRetake}>
-              Retake the {revealed.source === "chat" ? "Chat" : "Survey"}
+              Retake the {revealed.source === "chat" ? "Chat" : revealed.source === "visual" ? "Photo" : "Survey"}
             </button>
           </div>
         </div>

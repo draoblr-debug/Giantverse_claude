@@ -81,6 +81,31 @@ export type CharacterEntry = {
     communicates: string[];
     through: string[];
   };
+  // Real tie into the 32-archetype wheel (archetype-definitions.ts ids) +
+  // Order — present on the 182 characters ported from Lens-Hunt-anime,
+  // undefined on the older 200-entry seed authored before that mapping
+  // existed. The participant's own archetype is derived from these tags —
+  // summed by similarity across their top-5 character matches, same as the
+  // reference app's MainViewModel.generateUserIdentity — so only
+  // archetypeId-tagged characters are eligible for visual-discovery
+  // matching (see CharacterDatabase.archetypeEligible()).
+  archetypeId?: string;
+  order?: "GIANT" | "HUNTER";
+  // One of Lens-Hunt-anime's 5 hand-authored design clusters (Clean & Stoic,
+  // Sharp & Cool, Mature & Structured, Highly Stylized, Non Human/Fantasy).
+  // Narrows the matching candidate pool to the cluster(s) the user's own
+  // axes best fit, same as the reference app's ClusterManager.
+  cluster?: string;
+  // Real, verified links about the character's actual creator — for the
+  // dossier's visual-match pages. Populated for a first batch of the most
+  // iconic, well-documented characters only; deliberately left undefined
+  // everywhere else rather than guessing a URL that might not exist or
+  // might point to the wrong person. Add more as they're researched.
+  creatorLinks?: {
+    youtube?: string;
+    imdb?: string;
+    articles?: { label: string; url: string }[];
+  };
 };
 
 export type CharacterMatch = {
