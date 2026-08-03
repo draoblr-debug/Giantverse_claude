@@ -273,5 +273,14 @@ export async function computeVisualEmbedding(imageSrc: string): Promise<VisualEm
     glasses, warmth,
   };
 
-  return { axes: axesOut, faceConfidence: 0.95 };
+  // Coarse presentation read for the optional gender filter's AUTO mode —
+  // jaw + brow + shape angularity, the same three axes the reference app's
+  // detectVisualPresentation uses, so AUTO behaves consistently.
+  const presentationScore = (axesOut.jawSharpness + axesOut.browWeight + axesOut.angularity) / 3;
+  const visualPresentation: VisualEmbedding["visualPresentation"] =
+    presentationScore > 0.55 ? "male" : presentationScore < 0.45 ? "female" : "unknown";
+  const presentationConfidence =
+    visualPresentation === "unknown" ? 0.5 : clamp01(visualPresentation === "male" ? presentationScore : 1 - presentationScore);
+
+  return { axes: axesOut, faceConfidence: 0.95, visualPresentation, presentationConfidence };
 }

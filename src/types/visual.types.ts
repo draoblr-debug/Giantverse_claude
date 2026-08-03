@@ -44,11 +44,25 @@ export const AXIS_LABELS: Record<keyof VisualAxes, string> = {
   warmth: "Colour temperature",
 };
 
+// Coarse visual-presentation read used only to steer the optional gender
+// filter's AUTO mode — never shown as a claim about the person, and easily
+// overridden by the user via MALE/FEMALE/ANY.
+export type VisualPresentation = "male" | "female" | "unknown";
+
 export type VisualEmbedding = {
   axes: VisualAxes;
   // raw quality signals — used to warn on bad crops, never stored
   faceConfidence: number; // how confident the face-region detection was
+  visualPresentation: VisualPresentation;
+  presentationConfidence: number; // 0..1
 };
+
+export type CharacterGender = "male" | "female" | "nonbinary";
+
+// AUTO reads the photo's coarse presentation (only above a confidence
+// floor); MALE/FEMALE pin the candidate pool to that gender plus nonbinary
+// characters; ANY leaves the pool open.
+export type GenderFilter = "AUTO" | "MALE" | "FEMALE" | "ANY";
 
 export type CharacterCollection =
   | "anime" | "games" | "movies" | "animation" | "comics"
@@ -57,6 +71,7 @@ export type CharacterCollection =
 export type CharacterEntry = {
   id: string;
   name: string;
+  gender: CharacterGender;
   series: string;
   designer: string;
   studio: string;

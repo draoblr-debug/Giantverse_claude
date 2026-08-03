@@ -21,16 +21,54 @@ import { visualAxesToSignals } from "@/engines/visual/visual-scoring.engine";
 import { deriveArchetypeFromMatches } from "@/engines/visual/archetype-vote.engine";
 import { CharacterResultCard } from "@/components/visual/CharacterResultCard";
 import { DesignPrincipleCard } from "@/components/visual/DesignPrincipleCard";
+import type { GenderFilter } from "@/types/visual.types";
 
 type Stage = "intro" | "camera" | "preview" | "analyzing" | "results" | "error";
 
 const PRIVACY_LINE = "Your photo is only used to generate visual similarity and your share card — it's never uploaded, and is cleared as soon as you finish this ritual.";
 
+// Matches the reference app's control: AUTO reads the photo, MALE/FEMALE
+// pin the pool to that gender (plus nonbinary characters), ANY leaves it open.
+const GENDER_FILTER_OPTIONS: { value: GenderFilter; label: string }[] = [
+  { value: "AUTO", label: "Auto" },
+  { value: "MALE", label: "Male" },
+  { value: "FEMALE", label: "Female" },
+  { value: "ANY", label: "Any" },
+];
+
+function GenderFilterControl({ value, onChange }: { value: GenderFilter; onChange: (v: GenderFilter) => void }) {
+  return (
+    <div className="txt-center mb-3">
+      <p className="f-10 txt-upp mb-2" style={{ color: "#6E695F", letterSpacing: "0.15em" }}>Match Filter</p>
+      <div className="flex m-auto" style={{ gap: 6, justifyContent: "center", flexWrap: "wrap" }}>
+        {GENDER_FILTER_OPTIONS.map((opt) => (
+          <button
+            key={opt.value}
+            type="button"
+            onClick={() => onChange(opt.value)}
+            className="bdr-rds2"
+            style={{
+              padding: "6px 16px",
+              fontSize: 12,
+              cursor: "pointer",
+              border: opt.value === value ? "1px solid #C9A24B" : "1px solid #3a2f12",
+              background: opt.value === value ? "rgba(201,162,75,0.12)" : "transparent",
+              color: opt.value === value ? "#C9A24B" : "#8A8478",
+            }}
+          >
+            {opt.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function VisualCharacterDiscovery() {
   const router = useRouter();
   const birthName = useSessionStore((state) => state.birthName);
   const setResult = useAssessmentStore((state) => state.setResult);
-  const { photoDataUrl, matches, signals, archetypeId, archetypeScoreMap, setPhoto, clearPhoto, setMatches, reset } = useVisualStore();
+  const { photoDataUrl, matches, signals, archetypeId, archetypeScoreMap, genderFilter, setPhoto, clearPhoto, setMatches, setGenderFilter, reset } = useVisualStore();
   const [stage, setStage] = useState<Stage>(matches ? "results" : "intro");
   const [error, setError] = useState<string | null>(null);
   const [continuing, setContinuing] = useState(false);
@@ -122,7 +160,12 @@ export function VisualCharacterDiscovery() {
       // small pause so the stage reads; analysis itself is near-instant
       await new Promise((r) => setTimeout(r, 900));
       const embedding = await computeVisualEmbedding(photoDataUrl);
-      const results = matchCharacters(embedding.axes, { count: 5 });
+      const results = matchCharacters(embedding.axes, {
+        count: 5,
+        genderFilter,
+        visualPresentation: embedding.visualPresentation,
+        presentationConfidence: embedding.presentationConfidence,
+      });
       const derivedSignals = visualAxesToSignals(embedding.axes);
       const { archetypeId: votedArchetypeId, scoreMap } = deriveArchetypeFromMatches(results);
       setMatches(results, derivedSignals, votedArchetypeId, scoreMap, embedding.axes, embedding.faceConfidence);
@@ -170,6 +213,7 @@ export function VisualCharacterDiscovery() {
                   comparison against a curated library of legendary designs, not face recognition — and
                   your Giantverse archetype, drawn directly from the archetypes those matched designs carry.
                 </p>
+                <GenderFilterControl value={genderFilter} onChange={setGenderFilter} />
                 <div className="flex m-auto" style={{ gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
                   <button type="button" className="btn bdr-rds2" onClick={startCamera}>📷 Take Selfie</button>
                   <button type="button" className="btn bdr-rds2" onClick={() => fileRef.current?.click()}>⬆ Upload Image</button>

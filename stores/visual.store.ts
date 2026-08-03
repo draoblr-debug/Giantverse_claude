@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { CharacterMatch, VisualAxes } from "@/types/visual.types";
+import type { CharacterMatch, GenderFilter, VisualAxes } from "@/types/visual.types";
 import type { Signal } from "@/types/archetype.types";
 
 // Visual Character Discovery state — one of three ways (alongside survey
@@ -30,6 +30,9 @@ type VisualStore = {
   axes: VisualAxes | null;
   faceConfidence: number | null;
   analyzedAt: number | null;
+  // Persists across retakes/resets (not privacy-sensitive) so the user
+  // doesn't have to reselect it every time.
+  genderFilter: GenderFilter;
 
   setPhoto: (dataUrl: string) => void;
   clearPhoto: () => void;
@@ -41,6 +44,7 @@ type VisualStore = {
     axes?: VisualAxes,
     faceConfidence?: number,
   ) => void;
+  setGenderFilter: (filter: GenderFilter) => void;
   reset: () => void;
 };
 
@@ -53,6 +57,7 @@ export const useVisualStore = create<VisualStore>((set) => ({
   axes: null,
   faceConfidence: null,
   analyzedAt: null,
+  genderFilter: "AUTO",
 
   setPhoto: (dataUrl) => set({ photoDataUrl: dataUrl }),
   clearPhoto: () => set({ photoDataUrl: null }),
@@ -62,6 +67,7 @@ export const useVisualStore = create<VisualStore>((set) => ({
       axes: axes ?? null, faceConfidence: faceConfidence ?? null,
       analyzedAt: Date.now(),
     }),
+  setGenderFilter: (genderFilter) => set({ genderFilter }),
   reset: () => set({
     photoDataUrl: null, matches: null, signals: null, archetypeId: null, archetypeScoreMap: null,
     axes: null, faceConfidence: null, analyzedAt: null,
