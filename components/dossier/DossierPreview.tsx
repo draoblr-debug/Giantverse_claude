@@ -227,6 +227,9 @@ export function DossierPreview() {
                   <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", marginTop: 12 }}>
                     <button type="button" className="btn bdr-rds2" onClick={handleDownload}>⬇ Download PDF</button>
                     <button type="button" className="btn-outline bdr-rds2" onClick={handleOpenNewTab}>Open in New Tab</button>
+                    <button type="button" className="btn-outline bdr-rds2" onClick={() => router.push("/design-studio")}>
+                      Open Design Studio →
+                    </button>
                   </div>
                 </div>
               )}
