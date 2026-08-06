@@ -38,13 +38,15 @@ type RevealedResult = {
 
 export default function SharedRevealPage() {
   const router = useRouter();
-  const { birthName, acceptLegacyName } = useSessionStore();
+  const { birthName } = useSessionStore();
   const result = useAssessmentStore((state) => state.result);
   const visualMatches = useVisualStore((state) => state.matches);
   const visualPhoto = useVisualStore((state) => state.photoDataUrl);
 
   const [revealed, setRevealed] = useState<RevealedResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [briefStatus, setBriefStatus] = useState<"idle" | "generating" | "error">("idle");
+  const [briefError, setBriefError] = useState<string | null>(null);
 
   // The 3 next-highest scoring archetypes, dropping the winner — present
   // in the answers, close enough that a slightly different run could have
@@ -163,15 +165,44 @@ export default function SharedRevealPage() {
     };
   }, [birthName, result, router]);
 
-  function handleConfirm() {
+  // Free, single-click "Character Design Brief" — a ≤5-page PDF built from
+  // this same reveal (final archetype + the 3 invisible ones already
+  // computed above), fetched fresh from the server and downloaded straight
+  // to the browser. Distinct from the paid 111-page Dossier further down
+  // the ritual — no payment gate, no navigation away from this page.
+  async function handleDownloadBrief() {
     if (!revealed) return;
-    const { legacyName, archetype, scoreMap, scoreHistory } = revealed;
-    acceptLegacyName(legacyName, archetype.id, archetype.order, archetype.label, archetype.guidingPromise, archetype.traits, scoreMap, scoreHistory);
-    // The selfie was kept alive only so the share card above could use it —
-    // drop it now that the ritual is finishing (retaking already clears it
-    // via reset() in the branch below).
-    if (revealed.source === "visual") useVisualStore.getState().clearPhoto();
-    router.push("/ending");
+    setBriefStatus("generating");
+    setBriefError(null);
+    try {
+      const { legacyName, archetype, scoreMap, scoreHistory } = revealed;
+      const res = await fetch("/api/design-brief/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          birthName,
+          legacyName,
+          archetypeId: archetype.id,
+          invisibleArchetypeIds: invisibleArchetypes.map((a) => a.id),
+          order: archetype.order,
+          guidingPromise: archetype.guidingPromise,
+          scores: scoreMap,
+          scoreHistory,
+        }),
+      });
+      if (!res.ok) throw new Error("Could not build your design brief.");
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${legacyName.replace(/[^a-z0-9]+/gi, "-")}-design-brief.pdf`;
+      a.click();
+      URL.revokeObjectURL(url);
+      setBriefStatus("idle");
+    } catch (err) {
+      setBriefError(err instanceof Error ? err.message : "Something went wrong.");
+      setBriefStatus("error");
+    }
   }
 
   function handleRetake() {
@@ -317,10 +348,15 @@ export default function SharedRevealPage() {
           )}
 
           <div className="txt-center mt-4 mb-4">
-            <button type="button" className="btn pse-3 bdr-rds2 me-2" onClick={handleConfirm}>This Is Me</button>
+            <button type="button" className="btn pse-3 bdr-rds2 me-2" onClick={handleDownloadBrief} disabled={briefStatus === "generating"}>
+              {briefStatus === "generating" ? "Building Your Brief…" : "Resonates, Download the Brief"}
+            </button>
             <button type="button" className="btn-outline pse-3 bdr-rds2 me-2" onClick={handleRetake}>
               Retake the {revealed.source === "chat" ? "Chat" : revealed.source === "visual" ? "Photo" : "Survey"}
             </button>
+            {briefStatus === "error" && briefError && (
+              <p className="f-12 mt-2" style={{ color: "#B4543F" }}>{briefError}</p>
+            )}
           </div>
         </div>
       </div>

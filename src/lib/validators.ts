@@ -109,3 +109,20 @@ export const dossierGenerateSchema = z.object({
   // Absent for identities from a path that never recorded turn history.
   scoreHistory: z.array(turnSnapshotSchema).max(40).nullable().optional(),
 });
+
+// The free, single-click "Character Design Brief" — a ≤5-page PDF offered
+// directly on the reveal page, distinct from the paid 111-page Dossier
+// above. invisibleArchetypeIds is computed client-side by the reveal page
+// (same selection reveal/page.tsx already does for its own "Invisible
+// Archetypes" panel) and passed through rather than re-derived here, so
+// there's exactly one place that decides which 3 archetypes those are.
+export const designBriefGenerateSchema = z.object({
+  birthName: z.string().trim().min(1).max(50),
+  legacyName: z.string().trim().min(1).max(80),
+  archetypeId: z.string().trim().min(1).max(40),
+  invisibleArchetypeIds: z.array(z.string().trim().min(1).max(40)).max(3),
+  order: z.enum(["GIANT", "HUNTER"]),
+  guidingPromise: z.string().trim().min(1).max(300),
+  scores: z.record(z.string(), z.number()).nullable().optional(),
+  scoreHistory: z.array(turnSnapshotSchema).max(40).nullable().optional(),
+});
