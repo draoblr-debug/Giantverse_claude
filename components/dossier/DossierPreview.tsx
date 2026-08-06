@@ -1,43 +1,37 @@
 "use client";
 
 // Dossier Preview + paywall — shown after identity generation. Presents
-// the 105-page "Dossier 2.0" sample as a flip-through double-page-spread
-// magazine (see DossierBook): a curiosity-driving ~10% of pages (cover,
-// contents, chapter-opening legendary quotes) are fully visible, the rest
-// show a locked page you can still flip past. Paying (currently a mock
-// gateway, see lib/payment/gateway) unlocks every page for in-browser
-// reading and download.
+// the participant's own 111-page "Dossier 2.0" book as a flip-through
+// double-page-spread magazine (see DossierBook): a curiosity-driving ~10%
+// of pages (cover, contents, chapter-opening legendary quotes) are fully
+// visible, the rest show a locked page you can still flip past. Paying
+// (currently a mock gateway, see lib/payment/gateway) unlocks every page
+// for in-browser reading and download.
 //
-// STATIC SAMPLE, NOT LIVE GENERATION: production runs on Vercel's Node
-// serverless functions, which have no Python runtime and can't run the
-// WeasyPrint-based generator in tools/dossier/ (that pipeline only works
-// where Python + WeasyPrint's native libs are installed, e.g. local dev).
-// Rather than ship a page that silently fails in production, this build
-// serves one pre-rendered sample PDF (public/dossier-sample.pdf) for
-// management preview and approval of the book itself. The live
-// /api/dossier/generate route and the whole Python pipeline are left
-// intact for when a Vercel-compatible rendering path replaces this.
-//
-// The dossier's content — name, archetype, realm, traits — normally comes
-// entirely from the participant's already-decided Giantverse identity;
-// this sample build doesn't touch that logic, it just doesn't call it yet.
+// LIVE, PER-PARTICIPANT GENERATION: POSTs the participant's already-decided
+// Giantverse identity (name, archetype, realm, traits — this component
+// never computes any of that itself) to /api/dossier/generate, which
+// assembles the PDF entirely in Node (src/engines/dossier/pdf-assembler.ts)
+// from pre-built pieces — no Python/WeasyPrint at request time, so this
+// runs on Vercel's serverless functions.
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSessionStore } from "@/stores/session.store";
 import { usePaymentStore } from "@/stores/payment.store";
+import { useVisualStore } from "@/stores/visual.store";
 import { PaymentModal } from "./PaymentModal";
 import { DossierBook } from "./DossierBook";
 import type { PDFDocumentProxy } from "pdfjs-dist";
 
 type Stage = "loading" | "ready" | "error";
 const PREVIEW_FRACTION = 0.1;
-const SAMPLE_PDF_URL = "/dossier-sample.pdf";
-const SAMPLE_MANIFEST_URL = "/dossier-sample.manifest.json";
 
 export function DossierPreview() {
   const router = useRouter();
-  const legacyName = useSessionStore((s) => s.legacyName);
+  const session = useSessionStore((s) => s);
+  const legacyName = session.legacyName;
+  const visualMatches = useVisualStore((s) => s.matches);
   const unlocked = usePaymentStore((s) => s.status === "unlocked");
 
   const [stage, setStage] = useState<Stage>("loading");
@@ -53,17 +47,42 @@ export function DossierPreview() {
     setStage("loading");
     setError(null);
     try {
-      const [manifestRes, pdfRes] = await Promise.all([
-        fetch(SAMPLE_MANIFEST_URL),
-        fetch(SAMPLE_PDF_URL),
-      ]);
-      if (!manifestRes.ok || !pdfRes.ok) throw new Error("load failed");
+      const res = await fetch("/api/dossier/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          realName: session.firstName,
+          birthName: session.birthName,
+          legacyName: session.legacyName,
+          archetypeId: session.archetype,
+          order: session.order,
+          guidingPromise: session.guidingPromise,
+          scores: session.scores,
+          scoreHistory: session.scoreHistory,
+          visualMatches: visualMatches?.length
+            ? visualMatches.map((m) => ({
+                name: m.character.name,
+                series: m.character.series,
+                designer: m.character.designer,
+                studio: m.character.studio,
+                franchise: m.character.franchise,
+                similarity: m.similarity,
+                description: m.character.description,
+                shapeLanguage: m.character.shape_language,
+                communicates: m.character.design_breakdown.communicates,
+                through: m.character.design_breakdown.through,
+                creatorLinks: m.character.creatorLinks,
+              }))
+            : undefined,
+        }),
+      });
+      if (!res.ok) throw new Error("generate failed");
 
-      const manifest = await manifestRes.json();
-      const pages: number = manifest.pages ?? 0;
-      const quotePages: number[] = Array.isArray(manifest.quote_pages) ? manifest.quote_pages : [];
+      const pages = Number(res.headers.get("X-Dossier-Pages") ?? 0);
+      const quotePagesHeader = res.headers.get("X-Dossier-Quote-Pages") ?? "";
+      const quotePages = quotePagesHeader ? quotePagesHeader.split(",").map(Number) : [];
 
-      const buf = new Uint8Array(await pdfRes.arrayBuffer());
+      const buf = new Uint8Array(await res.arrayBuffer());
       const cap = Math.max(3, Math.round(pages * PREVIEW_FRACTION));
       const candidates = Array.from(new Set([1, 3, 5, ...quotePages])).sort((a, b) => a - b);
 
@@ -75,7 +94,7 @@ export function DossierPreview() {
       setError("Your dossier couldn't be loaded — please try again.");
       setStage("error");
     }
-  }, []);
+  }, [session, visualMatches]);
 
   useEffect(() => {
     if (!legacyName) { router.replace("/birth"); return; }
@@ -104,14 +123,18 @@ export function DossierPreview() {
     if (!docPromise) return null;
     const doc = await docPromise;
     const page = await doc.getPage(pageNum);
-    const viewport = page.getViewport({ scale: 1.6 });
+    // Scaled up for the edge-to-edge reader (DossierBook now displays pages
+    // at up to ~560px wide, on retina screens up to 2-3x that in device
+    // pixels) — render high enough that body text stays crisp at that size
+    // instead of upscaled from a thumbnail-sized canvas.
+    const viewport = page.getViewport({ scale: 2.4 });
     const canvas = document.createElement("canvas");
     canvas.width = viewport.width;
     canvas.height = viewport.height;
     const ctx = canvas.getContext("2d");
     if (!ctx) return null;
     await page.render({ canvasContext: ctx, viewport, canvas }).promise;
-    return canvas.toDataURL("image/jpeg", 0.85);
+    return canvas.toDataURL("image/jpeg", 0.92);
   }, [getDoc]);
 
   const previewSet = useMemo(() => new Set(previewPages), [previewPages]);
@@ -125,7 +148,7 @@ export function DossierPreview() {
     const url = URL.createObjectURL(new Blob([pdfBytes.slice()], { type: "application/pdf" }));
     const a = document.createElement("a");
     a.href = url;
-    a.download = "giantverse-dossier-sample.pdf";
+    a.download = `${(legacyName || "giantverse").replace(/[^a-z0-9]+/gi, "-")}-dossier.pdf`;
     a.click();
     URL.revokeObjectURL(url);
   }
@@ -141,18 +164,19 @@ export function DossierPreview() {
   return (
     <div className="legacy-container container2" style={{ minHeight: "100vh" }}>
       <div className="head-bdr"></div>
-      <div className="container-fluid" style={{ paddingBottom: 48 }}>
-        <div className="content" style={{ maxWidth: 820, margin: "0 auto", paddingTop: 40 }}>
-          <p className="f-12 txt-center txt-thm-clr-50-2 txt-upp letter-spacing2 mb-1">Giantverse Dossier — Preview Edition</p>
+      {/* .container-fluid's own stylesheet rule caps it at 550px (app/legacy-ui.css) —
+          fine for the rest of the narrow, mobile-first ritual flow, but the dossier
+          reader needs real room to be readable, so it's overridden inline here only. */}
+      <div className="container-fluid" style={{ paddingBottom: 48, maxWidth: 1280 }}>
+        <div className="content" style={{ maxWidth: 1240, margin: "0 auto", paddingTop: 40, paddingLeft: 16, paddingRight: 16 }}>
+          <p className="f-12 txt-center txt-thm-clr-50-2 txt-upp letter-spacing2 mb-1">Giantverse Dossier</p>
           <h1 className="txt-center h2 fw-600 mb-2" style={{ color: "#EFE9DA", fontFamily: "Georgia, serif" }}>
             The Character Genesis Dossier
           </h1>
-          <p className="mxw-450 m-auto txt-center f-13 txt-thm-clr-70-2 line-ht-20 mb-1">
-            A 105-page premium collector's-edition book — legendary-creator master studies, a full character-design
-            blueprint, and a personalized Hero Journey. Flip through it below — locked pages open the way in.
-          </p>
-          <p className="mxw-450 m-auto txt-center f-10 line-ht-15 mb-4" style={{ color: "#6E695F" }}>
-            Sample edition shown for preview — live, per-participant generation is in development.
+          <p className="mxw-450 m-auto txt-center f-13 txt-thm-clr-70-2 line-ht-20 mb-4">
+            A 111-page premium collector's-edition book, personalized to {legacyName} — legendary-creator master
+            studies, a full character-design blueprint, and a personalized Hero Journey. Flip through it below —
+            locked pages open the way in.
           </p>
 
           {stage === "loading" && (
@@ -194,7 +218,7 @@ export function DossierPreview() {
                     character design blueprint, the Hero Journey and the drawing workbook are still locked.
                   </p>
                   <button type="button" className="btn bdr-rds2 mt-2" onClick={() => setShowPayment(true)}>
-                    Unlock Full Dossier — ₹499
+                    Register to Giant Hunt at ₹999 to unlock the full Dossier
                   </button>
                 </div>
               ) : (
@@ -203,6 +227,9 @@ export function DossierPreview() {
                   <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", marginTop: 12 }}>
                     <button type="button" className="btn bdr-rds2" onClick={handleDownload}>⬇ Download PDF</button>
                     <button type="button" className="btn-outline bdr-rds2" onClick={handleOpenNewTab}>Open in New Tab</button>
+                    <button type="button" className="btn-outline bdr-rds2" onClick={() => router.push("/design-studio")}>
+                      Open Design Studio →
+                    </button>
                   </div>
                 </div>
               )}

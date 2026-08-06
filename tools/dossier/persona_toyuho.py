@@ -24,8 +24,6 @@ PERSONA = {
     "realm_name": "The Broken Heart",
     "realm_jp": "Harai",
     "realm_desc": "Where survival becomes renewal. Not a fixed place, but what Maruto becomes when civilization falls out of balance. Harai is temporary by nature — when balance returns, it transforms back into Maruto, a cycle called The Great Turning.",
-    "guild": "Guild of Survivors",
-    "guild_tagline": "Those who endure, adapt, and begin again.",
     "symbol": "The Relit Hearth",
     "symbol_meaning": "Endurance is not the absence of ash — it is the second fire.",
     "traits": [
@@ -46,7 +44,7 @@ PERSONA = {
     "wheel": {
         "position_note": "Position 24 of 32 — the Survivor (Seizon).",
         "neighbours": "Builder (Kensetsu) · Scout (Teisatsu) — the directions of natural drift as your answers evolve.",
-        "compatible": "Reformer · Pathfinder — your fellow members of the Guild of Survivors.",
+        "compatible": "Reformer · Pathfinder — fellow travelers of The Broken Heart.",
         "opposite": "Philosopher (Tetsugaku) — not an enemy: the other answer to your shared question.",
         "question": "Should we understand first, or endure first?",
         "growth": "Toward the Builder — the neighbour your scores already lean into.",
@@ -54,7 +52,7 @@ PERSONA = {
                     "Judge", "Bureaucrat", "Chancellor", "Strategist", "Technocrat", "Oracle", "Philosopher", "Sage",
                     "Historian", "Visionary", "Architect", "Diplomat", "Messenger", "Inventor", "Warden", "Farmer",
                     "Aristocrat", "Reformer", "Pathfinder", "Guardian", "Healer", "Builder", "Explorer", "Custodian"],
-        "you_idx": 0, "neighbour_idxs": [29, 1], "guild_idxs": [25, 26], "opposite_idx": 14,
+        "you_idx": 0, "neighbour_idxs": [29, 1], "realmmate_idxs": [25, 26], "opposite_idx": 14,
     },
     "lore_realm": [
         ("ANCIENT HISTORY", "Harai has no founding date because Harai is not a place — it is what Maruto becomes when balance fails. Every continent's histories record its visits: the drought years, the siege years, the years the ledgers burned. And every history records the same ending: The Great Turning, when Harai becomes Maruto again."),
@@ -69,15 +67,6 @@ PERSONA = {
     "lore_legend": [
         "They speak of the Ash Registrar, who walks ruined districts recording not what was lost but what was saved, and whose ledger — read aloud at the Great Turning — is said to be the longest poem in the world.",
         "Every child of The Broken Heart grows up on this story. Whether Toyuho Kagemori believes it, resents it, or is quietly trying to live up to it — that choice is character design, and it is yours to make.",
-    ],
-    "lore_guild": [
-        ("ORIGIN", "Chartered in the ashes of the Third Harai, when the relief crews who had improvised the recovery refused to disband, arguing — correctly — that they would be needed again."),
-        ("THE OATH", "“I endure, I adapt, and I leave a path behind me.”"),
-        ("THE HALL", "The Seam Hall, rebuilt in every generation from the salvage of the most recent disaster, its walls a visible chronology of everything the continents have withstood."),
-    ],
-    "lore_guild2": [
-        ("THE RITE OF ENTRY", "Initiates are given a ruined thing — tool, map, plan, reputation — and one season to return it to service. Perfection is not required; function is."),
-        ("REPUTATION", "The Guild everyone hopes never to need and everyone eventually thanks. Survivors are famously impossible to insult and impossible to stop."),
     ],
     "lore_story": {
         "title": "The Inventory of What Was Saved",
@@ -95,10 +84,10 @@ PERSONA = {
          "A quarter-turn across the wheel: close enough to understand you, far enough to surprise you.",
          "Where your instinct says \"Endure what breaks others\", theirs says \"Chase perfect in the detail\" — and the story lives in the negotiation.",
          "Precision — the strength you respect most because it costs you the most to practise."),
-        ("THE MENTOR", "The Elder Reformer of the Guild of Survivors", "Reformer · Kaikaku · Order of Giants", "THE BROKEN CIRCLE REDRAWN",
-         "Your own Guild, the other Order — proof your Calling can be answered a different way.",
+        ("THE MENTOR", "The Elder Reformer of The Broken Heart", "Reformer · Kaikaku · Order of Giants", "THE BROKEN CIRCLE REDRAWN",
+         "Your own Realm, the other Order — proof your Calling can be answered a different way.",
          "They will not correct your path; they will show you the map of theirs and let the difference teach.",
-         "\"I will not accept a broken world when a better one is possible.\" — a promise you were never asked to make, kept by someone who shares your hall."),
+         "\"I will not accept a broken world when a better one is possible.\" — a promise you were never asked to make, kept by someone who shares your ground."),
         ("THE RIVAL", "The Philosopher Across the Wheel", "Philosopher · Tetsugaku · Order of Giants", "THE HALF-CLOSED EYE",
          "You answer the same question differently: Should we understand first, or endure first?",
          "Every plan you make, they counter — not from malice, but from a whole life of the other answer. Beating them requires understanding them.",
@@ -123,7 +112,7 @@ PERSONA = {
     "team": [
         ("KENSETSU", "The Builder", "Momentum — the Builder converts your grit into motion."),
         ("KAIKAKU", "The Reformer", "Perspective — the Reformer has already paid for the lessons you're about to buy."),
-        ("KAITAKU", "The Pathfinder", "Depth — a fellow member of the Guild of Survivors, fluent in your Calling's craft."),
+        ("KAITAKU", "The Pathfinder", "Depth — a fellow child of your Realm, fluent in your Calling's craft."),
     ],
     "journey": [
         ("Why You Were Chosen", "Toyuho Kagemori was not chosen for being flawless. The Order of Hunters marked them because, of everyone in The Broken Heart, they alone answered the old question the way a Survivor must — endures; resilience is the value they hold above all others. The Giant Hunt does not summon the strongest. It summons the necessary."),
@@ -156,7 +145,7 @@ PERSONA = {
         ],
         "head_note": "A character's shadow belongs in the acting long before it enters the plot.",
         "wardrobe": [
-            ("COSTUME", "Base layers in The Broken Heart materials (see palette), cut in triangle-family blocks; one field layer carrying the Guild of Survivors insignia at chest or shoulder."),
+            ("COSTUME", "Base layers in The Broken Heart materials (see palette), cut in triangle-family blocks; one field layer carrying the Order of Hunters sigil at chest or shoulder."),
             ("ACCESSORIES", "A worn, personal token referencing \"The Relit Hearth\" — small enough for close-ups, distinctive enough for merchandise."),
             ("WEAPON / TOOL", "Whatever is at hand, maintained obsessively."),
             ("TEXTURES", "Visible repairs: seams, patches, re-stitched panels. Damage kept legible, per Harai building tradition."),
@@ -177,6 +166,56 @@ PERSONA = {
         ("Thorfinn", "Vinland Saga", "Wound: revenge consumed his youth. True survival begins after the goal dies — rebuilding a self without an enemy. Posture: from crouched aggression to open-handed calm, the arc drawn in stance alone."),
     ],
     "screen_synthesis": "Five Survivors, five different wounds — and notice: none of them is designed around strength. Each is designed around WHAT SURVIVAL COSTS. Their costumes carry the bill: Tanjiro's inherited haori, Lee's bandaged hands, Levi's cravat (the one soft thing), Violet's gloves, Thorfinn's scarred bare arms.",
+    # Demo data for the "Your Visual Discovery Matches" pages — Toyuho's
+    # actual top-5 from a sample selfie run. Every designer/studio/link
+    # below is real, pulled straight from src/data/character-database.ts.
+    "visual_matches": [
+        {
+            "name": "Guts", "series": "Berserk", "designer": "Kentaro Miura", "studio": "OLM / Millepensee",
+            "franchise": "Berserk", "similarity": 91,
+            "description": "The sword is bigger than physically reasonable on purpose — the design argues survival itself required becoming disproportionate.",
+            "shape_language": "Heavy jagged verticals",
+            "communicates": ["Grim endurance", "Trauma worn openly"],
+            "through": ["oversized sword breaking realistic proportion", "facial and body scarring left visible", "heavy dark armor", "permanently tense, ready stance"],
+            "creator_links": {"youtube": "https://www.youtube.com/watch?v=VpBmjiUojrk", "imdb": None, "articles": []},
+        },
+        {
+            "name": "Levi Ackerman", "series": "Attack on Titan", "designer": "Hajime Isayama", "studio": "Wit Studio / MAPPA",
+            "franchise": "Attack on Titan", "similarity": 84,
+            "description": "A design built on subtraction: nothing decorative, nothing loose, nothing wasted.",
+            "shape_language": "Triangles and rectangles",
+            "communicates": ["Precision", "Control", "Calmness", "Efficiency"],
+            "through": ["narrow eyes", "compact silhouette", "muted palette", "clean geometry"],
+            "creator_links": {"youtube": "https://www.youtube.com/watch?v=OFmaKyWk1HQ", "imdb": None, "articles": []},
+        },
+        {
+            "name": "Edward Elric", "series": "Fullmetal Alchemist", "designer": "Hiromu Arakawa", "studio": "Bones",
+            "franchise": "Fullmetal Alchemist", "similarity": 79,
+            "description": "A short silhouette flared into largeness by the coat — stature as psychology.",
+            "shape_language": "Compact triangles",
+            "communicates": ["Defiance of limits", "Visible cost of ambition"],
+            "through": ["flamboyant coat compensating scale", "metal arm kept visible", "golden braid as signature break", "red/black/gold triad"],
+            "creator_links": {"youtube": "https://www.youtube.com/watch?v=DpghTkatzgo", "imdb": None, "articles": []},
+        },
+        {
+            "name": "Naruto Uzumaki", "series": "Naruto", "designer": "Masashi Kishimoto", "studio": "Pierrot",
+            "franchise": "Naruto", "similarity": 73,
+            "description": "Orange is the argument: a shunned child dressed in the colour that cannot be overlooked.",
+            "shape_language": "Triangles on circles",
+            "communicates": ["Unignorable optimism", "Motion", "Approachability"],
+            "through": ["maximum-warmth costume colour", "triangular hair over round face", "open-mouth default expression", "high-energy silhouette"],
+            "creator_links": {"youtube": "https://www.youtube.com/watch?v=tQzSgx6el1E", "imdb": "https://www.imdb.com/name/nm1618263/", "articles": []},
+        },
+        {
+            "name": "Gojo Satoru", "series": "Jujutsu Kaisen", "designer": "Gege Akutami", "studio": "MAPPA",
+            "franchise": "Jujutsu Kaisen", "similarity": 68,
+            "description": "Covered eyes force the design to act through posture and mouth — confidence drawn without pupils.",
+            "shape_language": "Vertical rectangles with triangular hair",
+            "communicates": ["Effortless power", "Unreadability", "Charisma"],
+            "through": ["hidden eyes", "high-contrast palette", "loose posture over tall frame", "a smile doing the acting"],
+            "creator_links": {"youtube": "https://www.youtube.com/watch?v=JDnmg149frU", "imdb": None, "articles": []},
+        },
+    ],
     "wound_page": {
         "title": "Writing the Wound",
         "intro": "Your record already contains the raw material — read it as a psychologist, then draw it as a designer.",

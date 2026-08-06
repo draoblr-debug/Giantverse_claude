@@ -8,6 +8,12 @@
 // flipping through the whole book is always possible, but most pages read
 // "🔒" until payment.
 //
+// Page size is measured, not fixed: the book fills the available width of
+// its wrapping card (edge to edge) up to a comfortable reading cap, and
+// shrinks to fit the viewport height too, so the free-preview pages are
+// actually legible before someone decides whether to pay — see pageW/pageH
+// state below, recomputed on resize via ResizeObserver.
+//
 // Page turns are grabbed from the bottom corner — bottom-right to go
 // forward, bottom-left to go back — like turning a physical page. The
 // flipping leaf is split into three horizontal strips, each hinged at the
@@ -28,10 +34,15 @@ type Spread = { left: number | null; right: number | null };
 type FlipState = { dir: "next" | "prev"; img: string | null; locked: boolean; pageNum: number } | null;
 
 const FLIP_DURATION = 0.9;
-const PAGE_W = 220;
-const PAGE_H = 311; // A4-ish ratio, ~1:1.414
+// A4-ish ratio, ~1:1.414 — page pixel size is measured at runtime (see
+// pageW/pageH state), this is just the shape.
+const PAGE_RATIO = 297 / 210;
+const MIN_PAGE_W = 168;
+const MAX_PAGE_W = 640;
+const NAV_BTN = 44;
+const ROW_GAP = 16;
 const STRIP_COUNT = 3;
-const STRIP_H = PAGE_H / STRIP_COUNT;
+const PREFETCH_RADIUS = 4;
 // Bottom strip flies fastest (fast start), top strip lags (slow start) —
 // all three still start and end together, so the leaf never looks torn.
 const STRIP_EASES: [number, number, number, number][] = [
@@ -39,7 +50,6 @@ const STRIP_EASES: [number, number, number, number][] = [
   [0.62, 0.05, 0.38, 1],
   [0.12, 0.7, 0.3, 1],
 ];
-const PREFETCH_RADIUS = 4;
 
 export function DossierBook({
   totalPages,
@@ -53,19 +63,40 @@ export function DossierBook({
   onLockedClick: () => void;
 }) {
   const [perSpread, setPerSpread] = useState(2);
+  const [pageW, setPageW] = useState(MIN_PAGE_W);
   const [spreadIndex, setSpreadIndex] = useState(0);
   const [thumbs, setThumbs] = useState<Record<number, string>>({});
   const [flip, setFlip] = useState<FlipState>(null);
   const requestedRef = useRef<Set<number>>(new Set());
+  const wrapRef = useRef<HTMLDivElement>(null);
   const stripRotations = [useMotionValue(0), useMotionValue(0), useMotionValue(0)];
 
+  const pageH = pageW * PAGE_RATIO;
+  const stripH = pageH / STRIP_COUNT;
+
+  // Sizes the book to the actual space it has: as wide as the wrapping
+  // card allows (edge to edge, up to MAX_PAGE_W per page so it doesn't
+  // sprawl on ultra-wide screens), then capped by viewport height so a
+  // tall two-page spread never forces the page off-screen.
   useEffect(() => {
-    function update() {
-      setPerSpread(window.innerWidth < 720 ? 1 : 2);
+    function measure() {
+      const spread = window.innerWidth < 720 ? 1 : 2;
+      setPerSpread(spread);
+      const containerW = wrapRef.current?.clientWidth ?? window.innerWidth;
+      const availableForPages = containerW - 2 * (NAV_BTN + ROW_GAP);
+      let w = Math.floor((spread === 2 ? availableForPages / 2 : availableForPages));
+
+      const maxHByViewport = window.innerHeight * 0.62;
+      const maxWByHeight = Math.floor(maxHByViewport / PAGE_RATIO);
+      w = Math.min(w, maxWByHeight, MAX_PAGE_W);
+      w = Math.max(w, MIN_PAGE_W);
+      setPageW(w);
     }
-    update();
-    window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
+    measure();
+    const ro = new ResizeObserver(measure);
+    if (wrapRef.current) ro.observe(wrapRef.current);
+    window.addEventListener("resize", measure);
+    return () => { ro.disconnect(); window.removeEventListener("resize", measure); };
   }, []);
 
   const spreads = useMemo(() => {
@@ -141,12 +172,12 @@ export function DossierBook({
   }
 
   function PageFace({ pageNum, tilt }: { pageNum: number | null; tilt: number }) {
-    if (!pageNum) return <div style={{ ...pageStyle, transform: `rotateY(${tilt}deg)` }} />;
+    if (!pageNum) return <div style={{ ...pageStyle(pageW, pageH), transform: `rotateY(${tilt}deg)` }} />;
     const locked = !isPageUnlocked(pageNum);
     if (locked) {
       return (
         <div
-          style={{ ...pageStyle, ...lockedPageStyle, transform: `rotateY(${tilt}deg)` }}
+          style={{ ...pageStyle(pageW, pageH), ...lockedPageStyle, transform: `rotateY(${tilt}deg)` }}
           onClick={onLockedClick}
           role="button"
           tabIndex={0}
@@ -161,7 +192,7 @@ export function DossierBook({
     }
     const src = thumbs[pageNum];
     return (
-      <div style={{ ...pageStyle, transform: `rotateY(${tilt}deg)` }}>
+      <div style={{ ...pageStyle(pageW, pageH), transform: `rotateY(${tilt}deg)` }}>
         {src ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={src} alt={`Dossier page ${pageNum}`} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
@@ -184,8 +215,11 @@ export function DossierBook({
   const canNext = idx < spreads.length - 1;
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 14 }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", justifyContent: "center" }}>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 14, width: "100%" }}>
+      <div
+        ref={wrapRef}
+        style={{ display: "flex", alignItems: "center", gap: ROW_GAP, width: "100%", justifyContent: "center" }}
+      >
         <button
           type="button"
           onClick={() => go("prev")}
@@ -202,13 +236,21 @@ export function DossierBook({
             boxShadow: "0 24px 70px rgba(0,0,0,0.55)", borderRadius: 4,
           }}
         >
-          {perSpread === 2 && <div style={spineShadowStyle} />}
+          {perSpread === 2 && <div style={spineShadowStyle(pageH)} />}
           {perSpread === 2 && <PageFace pageNum={currentSpread.left} tilt={1.5} />}
           <PageFace pageNum={currentSpread.right} tilt={perSpread === 2 ? -1.5 : 0} />
 
           <AnimatePresence>
             {flip && (
-              <FlipLeaf flip={flip} perSpread={perSpread} rotations={stripRotations} onLockedClick={onLockedClick} />
+              <FlipLeaf
+                flip={flip}
+                perSpread={perSpread}
+                rotations={stripRotations}
+                onLockedClick={onLockedClick}
+                pageW={pageW}
+                pageH={pageH}
+                stripH={stripH}
+              />
             )}
           </AnimatePresence>
 
@@ -254,9 +296,9 @@ export function DossierBook({
   );
 }
 
-function LockedSliceContent() {
+function LockedSliceContent({ pageH }: { pageH: number }) {
   return (
-    <div style={{ ...lockedPageStyle, width: "100%", height: PAGE_H, display: "flex" }}>
+    <div style={{ ...lockedPageStyle, width: "100%", height: pageH, display: "flex" }}>
       <span style={{ fontSize: 26 }}>🔒</span>
       <span style={{ fontSize: 10, color: "#8A8478", marginTop: 8, letterSpacing: 1 }}>LOCKED</span>
     </div>
@@ -268,11 +310,17 @@ function FlipLeaf({
   perSpread,
   rotations,
   onLockedClick,
+  pageW,
+  pageH,
+  stripH,
 }: {
   flip: NonNullable<FlipState>;
   perSpread: number;
   rotations: ReturnType<typeof useMotionValue<number>>[];
   onLockedClick: () => void;
+  pageW: number;
+  pageH: number;
+  stripH: number;
 }) {
   const hinge = flip.dir === "next" ? "left" : "right";
   const leftPos = flip.dir === "next" ? (perSpread === 2 ? "50%" : 0) : 0;
@@ -306,12 +354,13 @@ function FlipLeaf({
           index={i}
           hinge={hinge}
           rotate={rotations[i]}
+          stripH={stripH}
           content={
             flip.locked
-              ? <LockedSliceContent />
+              ? <LockedSliceContent pageH={pageH} />
               : flip.img
                 ? // eslint-disable-next-line @next/next/no-img-element
-                  <img src={flip.img} alt="" style={{ position: "absolute", top: -i * STRIP_H, left: 0, width: "100%", height: PAGE_H, objectFit: "cover" }} />
+                  <img src={flip.img} alt="" style={{ position: "absolute", top: -i * stripH, left: 0, width: "100%", height: pageH, objectFit: "cover" }} />
                 : null
           }
           locked={flip.locked}
@@ -331,6 +380,7 @@ function FlipStrip({
   content,
   locked,
   onLockedClick,
+  stripH,
 }: {
   index: number;
   hinge: "left" | "right";
@@ -338,10 +388,11 @@ function FlipStrip({
   content: ReactNode;
   locked: boolean;
   onLockedClick: () => void;
+  stripH: number;
 }) {
   const origin = hinge === "left" ? "left center" : "right center";
   return (
-    <div style={{ height: STRIP_H, width: "100%", position: "relative", overflow: "hidden" }}>
+    <div style={{ height: stripH, width: "100%", position: "relative", overflow: "hidden" }}>
       <motion.div
         style={{
           position: "absolute", inset: 0, transformStyle: "preserve-3d",
@@ -366,14 +417,16 @@ function FlipStrip({
   );
 }
 
-const pageStyle: CSSProperties = {
-  width: PAGE_W, height: PAGE_H,
-  background: "#12100E",
-  border: "1px solid #3a2f12",
-  display: "flex", alignItems: "center", justifyContent: "center",
-  overflow: "hidden",
-  transformStyle: "preserve-3d",
-};
+function pageStyle(pageW: number, pageH: number): CSSProperties {
+  return {
+    width: pageW, height: pageH,
+    background: "#12100E",
+    border: "1px solid #3a2f12",
+    display: "flex", alignItems: "center", justifyContent: "center",
+    overflow: "hidden",
+    transformStyle: "preserve-3d",
+  };
+}
 
 const leafFaceStyle: CSSProperties = {
   position: "absolute", inset: 0,
@@ -388,11 +441,13 @@ const lockedPageStyle: CSSProperties = {
   alignItems: "center", justifyContent: "center",
 };
 
-const spineShadowStyle: CSSProperties = {
-  position: "absolute", left: "50%", top: 0, bottom: 0, width: 20, marginLeft: -10,
-  background: "linear-gradient(90deg, rgba(0,0,0,0.4), rgba(0,0,0,0) 50%, rgba(0,0,0,0.4))",
-  pointerEvents: "none", zIndex: 3,
-};
+function spineShadowStyle(pageH: number): CSSProperties {
+  return {
+    position: "absolute", left: "50%", top: 0, height: pageH, width: 20, marginLeft: -10,
+    background: "linear-gradient(90deg, rgba(0,0,0,0.4), rgba(0,0,0,0) 50%, rgba(0,0,0,0.4))",
+    pointerEvents: "none", zIndex: 3,
+  };
+}
 
 const directionalShadeStyle: CSSProperties = {
   position: "absolute", inset: 0,
@@ -425,8 +480,8 @@ function cornerFoldStyle(side: "left" | "right"): CSSProperties {
 
 function navBtnStyle(disabled: boolean): CSSProperties {
   return {
-    width: 36, height: 36, borderRadius: "50%", border: "1px solid #3a2f12",
+    width: NAV_BTN, height: NAV_BTN, borderRadius: "50%", border: "1px solid #3a2f12",
     background: "transparent", color: disabled ? "#3a2f12" : "#C9A24B",
-    fontSize: 18, cursor: disabled ? "default" : "pointer", flexShrink: 0,
+    fontSize: 20, cursor: disabled ? "default" : "pointer", flexShrink: 0,
   };
 }

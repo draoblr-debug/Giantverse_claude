@@ -8,7 +8,7 @@
 import { useState } from "react";
 import { usePaymentStore } from "@/stores/payment.store";
 
-const AMOUNT_MINOR_UNITS = 49900; // ₹499.00, placeholder demo price
+const AMOUNT_MINOR_UNITS = 99900; // ₹999.00, placeholder demo price
 const CURRENCY = "INR";
 
 export function PaymentModal({
@@ -65,9 +65,9 @@ export function PaymentModal({
           Unlock Your Full Dossier
         </h3>
         <p className="f-12" style={{ color: "#8A8478", marginTop: 4 }}>
-          105-page Character Genesis Dossier · Premium Collector's Edition
+          111-page Character Genesis Dossier · Premium Collector's Edition
         </p>
-        <p className="f-18 fw-700" style={{ color: "#C9A24B", marginTop: 8 }}>₹499.00</p>
+        <p className="f-18 fw-700" style={{ color: "#C9A24B", marginTop: 8 }}>₹999.00</p>
 
         <div style={{ display: "flex", gap: 8, marginTop: 16, marginBottom: 16 }}>
           {(["upi", "card"] as const).map((m) => (

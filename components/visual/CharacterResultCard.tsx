@@ -2,6 +2,7 @@
 
 import type { CharacterMatch } from "@/types/visual.types";
 import { AXIS_LABELS } from "@/types/visual.types";
+import { ARCHETYPE_DEFINITIONS } from "@/engines/archetype/archetype-definitions";
 
 // Monogram avatar — we bundle no copyrighted artwork, so each character is
 // represented by an initial in a frame shaped by their shape-language.
@@ -39,6 +40,11 @@ export function CharacterResultCard({ match, rank, expanded = false }: { match: 
         <div className="flex-1 text-left" style={{ minWidth: 0 }}>
           <p className="mb-0 fw-600" style={{ color: "#E8E2D5", fontSize: rank === 1 ? 17 : 14 }}>{c.name}</p>
           <p className="f-10 mb-0" style={{ color: "#8A8478" }}>{c.series} · {c.collection}</p>
+          {c.archetypeId && (
+            <p className="f-10 mb-0" style={{ color: "#8A7FBF" }}>
+              Archetype: {ARCHETYPE_DEFINITIONS[c.archetypeId]?.label ?? c.archetype}
+            </p>
+          )}
         </div>
         {rank === 1 && (
           <span className="f-10 txt-upp" style={{ color: "#C9A24B", letterSpacing: "0.15em", flexShrink: 0 }}>Top Match</span>
