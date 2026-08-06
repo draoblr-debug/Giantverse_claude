@@ -126,3 +126,20 @@ export const designBriefGenerateSchema = z.object({
   scores: z.record(z.string(), z.number()).nullable().optional(),
   scoreHistory: z.array(turnSnapshotSchema).max(40).nullable().optional(),
 });
+
+// Classroom roster logging — fired once a Character Design Brief download
+// actually succeeds (see reveal/page.tsx), forwarded server-side to a
+// Google Sheets Apps Script webhook (tools/sheets-logger/character-log.gs).
+// Deliberately thin: just enough to identify who made what, not the full
+// identity payload the brief/dossier routes need.
+export const characterLogSchema = z.object({
+  birthName: z.string().trim().min(1).max(50),
+  legacyName: z.string().trim().min(1).max(80),
+  archetypeId: z.string().trim().min(1).max(40),
+  archetypeLabel: z.string().trim().min(1).max(80),
+  romajiName: z.string().trim().min(1).max(80),
+  order: z.enum(["GIANT", "HUNTER"]),
+  guidingPromise: z.string().trim().min(1).max(300),
+  invisibleArchetypeLabels: z.array(z.string().trim().max(80)).max(3).optional(),
+  source: z.enum(["survey", "chat", "visual"]),
+});

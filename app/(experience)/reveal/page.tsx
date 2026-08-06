@@ -199,6 +199,27 @@ export default function SharedRevealPage() {
       a.click();
       URL.revokeObjectURL(url);
       setBriefStatus("idle");
+
+      // Classroom roster log — fired only once the brief actually
+      // downloaded, as the clearest signal of a finished character.
+      // Fire-and-forget: a logging sink being down must never surface as
+      // an error on what was, from the participant's side, a successful
+      // download.
+      fetch("/api/characters/log", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          birthName,
+          legacyName,
+          archetypeId: archetype.id,
+          archetypeLabel: archetype.label,
+          romajiName: archetype.romajiName,
+          order: archetype.order,
+          guidingPromise: archetype.guidingPromise,
+          invisibleArchetypeLabels: invisibleArchetypes.map((a) => a.label),
+          source: revealed.source,
+        }),
+      }).catch(() => {});
     } catch (err) {
       setBriefError(err instanceof Error ? err.message : "Something went wrong.");
       setBriefStatus("error");
