@@ -2,17 +2,19 @@
 
 // Standalone "redownload your brief" page — for anyone who already went
 // through the ritual (in a previous session, on another day) and wants
-// their Character Design Brief PDF again without repeating it. Reads
-// whatever it can off a saved ID card image via OCR (src/lib/id-card-
-// ocr.ts), then hands the participant an editable review form before
-// calling the same /api/design-brief/generate route the reveal page uses.
+// their Character Design Brief PDF again without repeating it. Two ways
+// in: upload a saved ID card image and let OCR (src/lib/id-card-ocr.ts)
+// read what it can off it, or skip straight to picking everything by
+// hand. Either way lands on the same editable review form before calling
+// the same /api/design-brief/generate route the reveal page uses.
 //
 // OCR of a small, stylized card is genuinely noisy — nothing extracted
-// here is trusted blind. Every field is editable, and the archetype is a
-// dropdown of all 32 rather than free text, so a misread can't silently
-// produce a brief for the wrong archetype.
+// there is trusted blind. The archetype fields are dropdowns of all 32
+// rather than free text (same pattern as CompatibilityChecker.tsx), so a
+// misread — or a mistyped manual entry — can't silently produce a brief
+// for the wrong archetype.
 
-import { useRef, useState } from "react";
+import { useRef, useState, type CSSProperties } from "react";
 import { ARCHETYPE_DEFINITIONS } from "@/engines/archetype/archetype-definitions";
 import { extractIdCardData } from "@/lib/id-card-ocr";
 
@@ -29,8 +31,12 @@ export default function BriefLookupPage() {
   const [legacyName, setLegacyName] = useState("");
   const [birthName, setBirthName] = useState("");
   const [archetypeId, setArchetypeId] = useState("");
-  const [invisibleIds, setInvisibleIds] = useState<string[]>([]);
+  const [invisibleId1, setInvisibleId1] = useState("");
+  const [invisibleId2, setInvisibleId2] = useState("");
+  const [invisibleId3, setInvisibleId3] = useState("");
   const [ocrNote, setOcrNote] = useState<string | null>(null);
+
+  const invisibleIds = [invisibleId1, invisibleId2, invisibleId3].filter(Boolean);
 
   async function onFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -42,7 +48,9 @@ export default function BriefLookupPage() {
       setLegacyName(extracted.legacyName);
       setBirthName(extracted.birthName);
       setArchetypeId(extracted.archetypeId ?? "");
-      setInvisibleIds(extracted.invisibleArchetypeIds);
+      setInvisibleId1(extracted.invisibleArchetypeIds[0] ?? "");
+      setInvisibleId2(extracted.invisibleArchetypeIds[1] ?? "");
+      setInvisibleId3("");
       setOcrNote(
         extracted.archetypeId
           ? "Everything below was read off your card automatically — double-check it before downloading."
@@ -57,12 +65,22 @@ export default function BriefLookupPage() {
     }
   }
 
-  function toggleInvisible(id: string) {
-    setInvisibleIds((cur) => {
-      if (cur.includes(id)) return cur.filter((x) => x !== id);
-      if (cur.length >= 3) return cur;
-      return [...cur, id];
-    });
+  function handleManualEntry() {
+    setError(null);
+    setOcrNote(null);
+    setLegacyName("");
+    setBirthName("");
+    setArchetypeId("");
+    setInvisibleId1("");
+    setInvisibleId2("");
+    setInvisibleId3("");
+    setStage("review");
+  }
+
+  function handleStartOver() {
+    setStage("upload");
+    setError(null);
+    setOcrNote(null);
   }
 
   async function handleDownload() {
@@ -108,6 +126,15 @@ export default function BriefLookupPage() {
     }
   }
 
+  // Each invisible-archetype dropdown excludes the primary archetype and
+  // whichever ids are already chosen in the OTHER two dropdowns — but never
+  // its own current value, so re-rendering doesn't blank out a selection.
+  function invisibleOptionsFor(ownValue: string) {
+    const taken = new Set([archetypeId, invisibleId1, invisibleId2, invisibleId3].filter(Boolean));
+    taken.delete(ownValue);
+    return ARCHETYPE_OPTIONS.filter((p) => !taken.has(p.id));
+  }
+
   return (
     <div className="legacy-container">
       <div className="head-bdr"></div>
@@ -116,14 +143,17 @@ export default function BriefLookupPage() {
           <p className="txt-thm-clr-50-2 txt-center txt-upp mb-0">Already Have a Giantverse Name?</p>
           <h1 className="h5 txt-center fw-700">Redownload Your Design Brief</h1>
           <p className="f-12 txt-center txt-thm-clr-70-2 line-ht-20 mb-4">
-            Upload the ID card image you saved from your reveal, and we&rsquo;ll read what we can off it — you can
-            review and correct everything before downloading.
+            Upload the ID card image you saved from your reveal and we&rsquo;ll read what we can off it, or pick your
+            archetypes by hand below — either way, review and correct everything before downloading.
           </p>
 
           {stage === "upload" && (
             <div className="mxw-450 m-auto wht-cont pse-3 mt-3 pb-3 txt-center">
-              <button type="button" className="btn bdr-rds2" onClick={() => fileRef.current?.click()}>
+              <button type="button" className="btn bdr-rds2 me-2" onClick={() => fileRef.current?.click()}>
                 ⬆ Upload Your ID Card
+              </button>
+              <button type="button" className="btn-outline bdr-rds2 mt-2" onClick={handleManualEntry}>
+                ✎ Enter Manually
               </button>
               <input ref={fileRef} type="file" accept="image/*" onChange={onFile} style={{ display: "none" }} />
               <p className="f-10 mt-3" style={{ color: "#6E695F" }}>
@@ -155,8 +185,9 @@ export default function BriefLookupPage() {
                 type="text"
                 value={legacyName}
                 onChange={(e) => setLegacyName(e.target.value)}
+                placeholder="e.g. Rajeev the Aristocrat"
                 className="f-13 mb-3"
-                style={{ width: "100%", padding: "10px 12px", background: "transparent", border: "1px solid #3a2f12", borderRadius: 6, color: "#EFE9DA" }}
+                style={inputStyle}
               />
 
               <label className="f-10 txt-upp txt-thm-clr-50-2 mb-1" style={{ display: "block" }}>Birth Name</label>
@@ -164,16 +195,19 @@ export default function BriefLookupPage() {
                 type="text"
                 value={birthName}
                 onChange={(e) => setBirthName(e.target.value)}
+                placeholder="e.g. Rajeev"
                 className="f-13 mb-3"
-                style={{ width: "100%", padding: "10px 12px", background: "transparent", border: "1px solid #3a2f12", borderRadius: 6, color: "#EFE9DA" }}
+                style={inputStyle}
               />
 
-              <label className="f-10 txt-upp txt-thm-clr-50-2 mb-1" style={{ display: "block" }}>Archetype</label>
+              <label className="f-10 txt-upp txt-thm-clr-50-2 mb-1" style={{ display: "block" }}>
+                Primary Archetype
+              </label>
               <select
                 value={archetypeId}
                 onChange={(e) => setArchetypeId(e.target.value)}
                 className="f-13 mb-3"
-                style={{ width: "100%", padding: "10px 12px", background: "transparent", border: "1px solid #3a2f12", borderRadius: 6, color: "#EFE9DA" }}
+                style={inputStyle}
               >
                 <option value="" style={{ color: "#000" }}>Select your archetype…</option>
                 {ARCHETYPE_OPTIONS.map((p) => (
@@ -184,29 +218,36 @@ export default function BriefLookupPage() {
               </select>
 
               <label className="f-10 txt-upp txt-thm-clr-50-2 mb-1" style={{ display: "block" }}>
-                Invisible Archetypes ({invisibleIds.length}/3)
+                Invisible Archetypes
               </label>
               <p className="f-10 mb-2" style={{ color: "#6E695F" }}>
-                Your card&rsquo;s journey map only ever labels up to 2 of your 3 invisible archetypes — check/uncheck
-                to correct.
+                The three archetypes that moved beneath your answers — optional, up to three.
               </p>
-              <div className="mb-3" style={{ maxHeight: 180, overflowY: "auto", border: "1px solid #3a2f12", borderRadius: 6, padding: 8 }}>
-                {ARCHETYPE_OPTIONS.filter((p) => p.id !== archetypeId).map((p) => (
-                  <label key={p.id} className="f-12" style={{ display: "flex", alignItems: "center", gap: 8, padding: "3px 0", color: "#C9C3B6" }}>
-                    <input
-                      type="checkbox"
-                      checked={invisibleIds.includes(p.id)}
-                      disabled={!invisibleIds.includes(p.id) && invisibleIds.length >= 3}
-                      onChange={() => toggleInvisible(p.id)}
-                    />
-                    {p.label} ({p.romajiName})
-                  </label>
-                ))}
-              </div>
+              {[
+                { value: invisibleId1, set: setInvisibleId1, label: "Invisible Archetype 1" },
+                { value: invisibleId2, set: setInvisibleId2, label: "Invisible Archetype 2" },
+                { value: invisibleId3, set: setInvisibleId3, label: "Invisible Archetype 3" },
+              ].map((row, i) => (
+                <select
+                  key={row.label}
+                  value={row.value}
+                  onChange={(e) => row.set(e.target.value)}
+                  className="f-13 mb-2"
+                  style={inputStyle}
+                  aria-label={row.label}
+                >
+                  <option value="" style={{ color: "#000" }}>{`— None (slot ${i + 1}) —`}</option>
+                  {invisibleOptionsFor(row.value).map((p) => (
+                    <option key={p.id} value={p.id} style={{ color: "#000" }}>
+                      {p.label} ({p.romajiName})
+                    </option>
+                  ))}
+                </select>
+              ))}
 
               <button
                 type="button"
-                className="btn bdr-rds2"
+                className="btn bdr-rds2 mt-2"
                 style={{ width: "100%" }}
                 onClick={handleDownload}
                 disabled={stage === "downloading"}
@@ -218,10 +259,10 @@ export default function BriefLookupPage() {
                 type="button"
                 className="btn-outline bdr-rds2 mt-2"
                 style={{ width: "100%" }}
-                onClick={() => { setStage("upload"); setError(null); }}
+                onClick={handleStartOver}
                 disabled={stage === "downloading"}
               >
-                Upload a Different Card
+                Start Over
               </button>
             </div>
           )}
@@ -233,3 +274,8 @@ export default function BriefLookupPage() {
     </div>
   );
 }
+
+const inputStyle: CSSProperties = {
+  width: "100%", padding: "10px 12px", background: "transparent",
+  border: "1px solid #3a2f12", borderRadius: 6, color: "#EFE9DA",
+};
