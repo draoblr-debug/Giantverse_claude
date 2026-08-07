@@ -72,11 +72,11 @@ export default async function LandingPage() {
           </div>
           <div className="txt-center mb-3">
             <Link
-              href="/visual-discovery"
+              href="/brief"
               className="btn bdr-rds2"
               style={{ background: "transparent", color: "#C9A24B", border: "1px solid #C9A24B" }}
             >
-              {t("discoverVisual")}
+              {t("downloadBrief")}
             </Link>
           </div>
           <div className="txt-center mb-3">
