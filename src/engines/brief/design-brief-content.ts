@@ -1,6 +1,7 @@
 import { CHARACTER_DATABASE } from "@/data/character-database";
 import type { CharacterEntry } from "@/types/visual.types";
-import { QUADRANTS, type QuadrantId } from "@/content/landing-atlas";
+import { QUADRANTS, REALM_ORDER, pickContinentForRealm, type QuadrantId, type RealmId } from "@/content/landing-atlas";
+import { REALMS, type Realm } from "@/engines/realms";
 import type { Order, Temperament } from "@/types/archetype.types";
 
 // Character references for the free "Character Design Brief" — up to 5
@@ -63,4 +64,21 @@ export const QUADRANT_ORDER: QuadrantId[] = QUADRANTS.map((q) => q.id);
 // invisible archetypes' single-line rows.
 export function designLanguageLine(c: CharacterEntry): string {
   return c.design_language.join(", ");
+}
+
+// All 5 Giantverse realms, in a fixed display order — same REALM_ORDER the
+// landing atlas uses, independent of which one this particular character
+// was born in.
+export function realmGuideEntries(): Realm[] {
+  return REALM_ORDER.map((id) => REALMS[id]);
+}
+
+// This character's specific birthplace: a cosmetic continent (deterministic
+// per identity, same seeding the ID card's "Birthplace in Giantverse" field
+// uses — see pickContinentForRealm) plus the realm it belongs to. realmId
+// is untyped (comes off ArchetypeProfile.realmBias, a plain string) so it's
+// defensively checked against REALM_ORDER rather than cast blind.
+export function birthplaceFor(realmId: string, seed: string): { continentName: string; realm: Realm } {
+  const id = (REALM_ORDER as readonly string[]).includes(realmId) ? (realmId as RealmId) : "Maruto";
+  return { continentName: pickContinentForRealm(id, seed), realm: REALMS[id] };
 }

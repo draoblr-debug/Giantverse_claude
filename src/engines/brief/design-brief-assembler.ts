@@ -8,7 +8,7 @@ import {
   CONTENT_WIDTH, MM, COLOR,
 } from "@/engines/dossier/pdf-kit";
 import {
-  pickCharactersForArchetype, quadrantIdFor, designLanguageLine,
+  pickCharactersForArchetype, quadrantIdFor, designLanguageLine, realmGuideEntries, birthplaceFor,
   QUADRANT_BLURBS, QUADRANT_COLOR, QUADRANT_ORDER,
 } from "@/engines/brief/design-brief-content";
 import type { ArchetypeProfile } from "@/types/archetype.types";
@@ -23,7 +23,11 @@ type DossierPayload = ReturnType<typeof buildPersonaPayload>;
 //   2. Your Archetype Journey (reuses journey-map-page.ts's own page unmodified)
 //   3. Action & Thought — the rationale, plus the Relationship Chart
 //   4. Character references for the final archetype (up to 5)
-//   5. Character references for the 3 invisible archetypes (up to 5 each)
+//   5. The Realm Guide (all 5 realms + this character's birthplace) +
+//      character references for the 3 invisible archetypes (up to 3 each —
+//      trimmed from 5 to make room for the Realm Guide on the same page,
+//      keeping the brief at 5 pages total)
+const INVISIBLE_CAST_CHAR_COUNT = 3;
 
 function joinNames(names: string[]): string {
   if (names.length === 0) return "";
@@ -50,7 +54,7 @@ function drawCoverPage(doc: PDFDocument, fonts: DossierFonts, payload: DossierPa
   y = drawLab(page, fonts, y, "Inside This Brief");
   y = drawBody(
     page, fonts, "dark", y,
-    "Your Archetype Journey · the Relationship Chart · your Archetype's Cast · the Invisible Cast — " +
+    "Your Archetype Journey · the Relationship Chart · your Archetype's Cast · the Realm Guide · the Invisible Cast — " +
     "four pages built fresh from your own answers, not a template.",
   ) - 6 * MM;
 
@@ -223,32 +227,59 @@ function drawFinalCastPage(doc: PDFDocument, fonts: DossierFonts, payload: Dossi
   );
 }
 
-function drawInvisibleCastPage(doc: PDFDocument, fonts: DossierFonts, invisible: ArchetypeProfile[]): void {
+function drawRealmGuideSection(page: PDFPage, fonts: DossierFonts, cursorY: number, payload: DossierPayload): number {
+  const { continentName, realm: bornRealm } = birthplaceFor(payload.realm_id, payload.legacy_name);
+
+  let y = drawLab(page, fonts, cursorY, "The Realm Guide");
+  y = drawBody(
+    page, fonts, "dark", y,
+    `${payload.legacy_name} was born of ${continentName}, in ${bornRealm.name} (${bornRealm.japanese}) — one of ` +
+    "Giantverse's five realms. All five are listed below; yours is marked.",
+  ) - 1.5 * MM;
+
+  for (const realm of realmGuideEntries()) {
+    const isBorn = realm.id === bornRealm.id;
+    const size = 8.5;
+    const nameText = safeText(`${realm.name.toUpperCase()}${isBorn ? " ★ YOUR REALM" : ""}`);
+    page.drawText(nameText, { x: MARGIN_LEFT, y: y - size, size, font: fonts.sansBold, color: isBorn ? COLOR.gold : COLOR.sub });
+    const nameWidth = fonts.sansBold.widthOfTextAtSize(nameText, size);
+    y = drawParagraph(page, MARGIN_LEFT + nameWidth + 2 * MM, y, `${realm.tagline} ${realm.description}`, {
+      font: fonts.sans, size, color: isBorn ? COLOR.bodyDark : COLOR.dim, maxWidth: CONTENT_WIDTH - nameWidth - 2 * MM, lineHeight: 1.4,
+    }) - 1.3 * MM;
+  }
+
+  return y;
+}
+
+function drawRealmAndInvisibleCastPage(doc: PDFDocument, fonts: DossierFonts, payload: DossierPayload, invisible: ArchetypeProfile[]): void {
   const { page, cursorY } = newSheet(doc, "dark");
 
-  let y = drawKicker(page, fonts, "dark", cursorY, "CHARACTER REFERENCES", "THE INVISIBLE THREE");
-  y = drawHeading(page, fonts, "dark", y, "The Cast of the Undercurrent");
+  let y = drawKicker(page, fonts, "dark", cursorY, "THE WORLD & THE UNDERCURRENT", "REALMS & THE INVISIBLE THREE");
+  y = drawHeading(page, fonts, "dark", y, "Where You Were Born, Who Else You Carry");
   y = drawSub(
     page, fonts, y,
-    "Character references for the three archetypes that shaped the Thought behind your Action — never your identity, but part of how it was reasoned out.",
+    "Giantverse's five realms, and character references for the three archetypes that shaped the Thought behind your Action.",
   );
   y = drawRule(page, y);
 
+  y = drawRealmGuideSection(page, fonts, y, payload) - 3 * MM;
+
+  y = drawLab(page, fonts, y, "The Invisible Cast");
   if (invisible.length === 0) {
     y = drawBody(page, fonts, "dark", y, "Your answers were unusually decisive — no other archetype registered strongly enough to list here.", { dim: true });
   }
 
   for (const a of invisible) {
-    y = drawLab(page, fonts, y, `${a.label} (${a.romajiName})`);
-    const chars = pickCharactersForArchetype(a.id);
+    y = drawBody(page, fonts, "dark", y, `${a.label} (${a.romajiName})`) - 0.5 * MM;
+    const chars = pickCharactersForArchetype(a.id, INVISIBLE_CAST_CHAR_COUNT);
     if (chars.length === 0) {
-      y = drawBody(page, fonts, "dark", y, "No verified character references tagged yet.", { dim: true }) - 1.8 * MM;
+      y = drawBody(page, fonts, "dark", y, "No verified character references tagged yet.", { dim: true }) - 1.5 * MM;
       continue;
     }
     for (const c of chars) {
       y = drawBody(page, fonts, "dark", y, `${c.name} (${c.series}) — ${c.designer} — ${designLanguageLine(c)}`, { dim: true }) - 0.3 * MM;
     }
-    y -= 1.8 * MM;
+    y -= 1.5 * MM;
   }
 
   drawFineprint(
@@ -275,9 +306,9 @@ export async function assembleDesignBriefPdf(
   }
   drawRationalePage(doc, fonts, payload, invisible);
   drawFinalCastPage(doc, fonts, payload);
-  drawInvisibleCastPage(doc, fonts, invisible);
+  drawRealmAndInvisibleCastPage(doc, fonts, payload, invisible);
 
-  const sections = ["", "The Journey", "The Relationship Chart", "Your Archetype's Cast", "The Invisible Cast"];
+  const sections = ["", "The Journey", "The Relationship Chart", "Your Archetype's Cast", "Realms & The Invisible Cast"];
   const pages = doc.getPages();
   for (let i = 1; i < pages.length; i++) {
     const page = pages[i];
