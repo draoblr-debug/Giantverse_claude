@@ -161,51 +161,54 @@ export function InteractiveWorldMap() {
   };
 
   return (
-    <div ref={containerRef} className="atlas-map-wrap unity-3dmap-container">
-      <canvas
-        ref={canvasRef}
-        id="unity-canvas"
-        className="unity-3dmap-canvas"
-        tabIndex={-1}
-      />
+    <div className="atlas-map-wrapper-block">
+      {/* 3D Map Frame */}
+      <div ref={containerRef} className="atlas-map-wrap unity-3dmap-container">
+        <canvas
+          ref={canvasRef}
+          id="unity-canvas"
+          className="unity-3dmap-canvas"
+          tabIndex={-1}
+        />
 
-      {/* Loading Overlay */}
-      {loading && (
-        <div className="unity-loading-overlay">
-          <div className="unity-loading-glow" />
-          <div className="unity-loading-icon">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-              <circle cx="12" cy="12" r="10" stroke="#C9A84C" strokeDasharray="60" strokeDashoffset="20" />
-              <path d="M12 2a10 10 0 0 1 10 10" stroke="#FFE182" />
-              <circle cx="12" cy="12" r="4" fill="#C9A84C" />
-            </svg>
+        {/* Loading Overlay */}
+        {loading && (
+          <div className="unity-loading-overlay">
+            <div className="unity-loading-glow" />
+            <div className="unity-loading-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <circle cx="12" cy="12" r="10" stroke="#C9A84C" strokeDasharray="60" strokeDashoffset="20" />
+                <path d="M12 2a10 10 0 0 1 10 10" stroke="#FFE182" />
+                <circle cx="12" cy="12" r="4" fill="#C9A84C" />
+              </svg>
+            </div>
+            <div className="unity-loading-title">Summoning 3D Realm Map</div>
+            <div className="unity-loading-sub">
+              {progress < 100 ? `Loading World Assets (${progress}%)` : "Initializing Engine..."}
+            </div>
+            <div className="unity-progress-track">
+              <div
+                className="unity-progress-fill"
+                style={{ width: `${Math.max(5, progress)}%` }}
+              />
+            </div>
           </div>
-          <div className="unity-loading-title">Summoning 3D Realm Map</div>
-          <div className="unity-loading-sub">
-            {progress < 100 ? `Loading World Assets (${progress}%)` : "Initializing Engine..."}
-          </div>
-          <div className="unity-progress-track">
-            <div
-              className="unity-progress-fill"
-              style={{ width: `${Math.max(5, progress)}%` }}
-            />
-          </div>
-        </div>
-      )}
+        )}
 
-      {/* Error Banner */}
-      {loadError && (
-        <div className="unity-error-overlay">
-          <p>{loadError}</p>
-          <button type="button" onClick={initUnity} className="unity-control-btn">
-            Retry Loading
-          </button>
-        </div>
-      )}
+        {/* Error Banner */}
+        {loadError && (
+          <div className="unity-error-overlay">
+            <p>{loadError}</p>
+            <button type="button" onClick={initUnity} className="unity-control-btn">
+              Retry Loading
+            </button>
+          </div>
+        )}
+      </div>
 
-      {/* Controls Overlay */}
+      {/* Controls Bar Rendered Cleanly BELOW the 3D Map Frame */}
       {!loading && !loadError && (
-        <div className="unity-controls-bar">
+        <div className="unity-controls-footer">
           <div className="unity-controls-badge">
             <span className="unity-pulse-dot" />
             <span>Interactive 3D Map · Drag to Rotate · Scroll to Zoom</span>
