@@ -269,6 +269,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: none !important;
 }
 
 .unity-3dmap-canvas {
@@ -277,11 +278,117 @@
   display: block;
   outline: none;
   border-radius: 15px;
-  cursor: grab;
+  cursor: none !important;
   touch-action: none;
 }
-.unity-3dmap-canvas:active {
-  cursor: grabbing;
+
+/* ── Golden Animated Map Cursor (Exclusive to Map Frame) ─────── */
+
+.golden-map-cursor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 50;
+  width: 36px;
+  height: 36px;
+  margin-left: -18px;
+  margin-top: -18px;
+  opacity: 0;
+  transform: translate3d(-100px, -100px, 0);
+  transition: opacity 0.25s ease;
+  will-change: transform;
+}
+
+.golden-map-cursor.active {
+  opacity: 1;
+}
+
+/* Central glowing golden jewel */
+.golden-cursor-core {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 7px;
+  height: 7px;
+  margin-left: -3.5px;
+  margin-top: -3.5px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #FFF4CC 0%, #ECC66B 60%, #C9A84C 100%);
+  box-shadow: 0 0 10px #FFE182, 0 0 20px rgba(201, 168, 76, 0.9);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+/* Outer rotating celestial ring */
+.golden-cursor-ring {
+  position: absolute;
+  inset: 2px;
+  border-radius: 50%;
+  border: 1.5px dashed rgba(201, 168, 76, 0.85);
+  box-shadow: 0 0 12px rgba(201, 168, 76, 0.35), inset 0 0 6px rgba(201, 168, 76, 0.2);
+  animation: golden-cursor-rotate 6s linear infinite;
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.2s ease;
+}
+
+@keyframes golden-cursor-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Orbiting satellite particle */
+.golden-cursor-orbit {
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  animation: golden-cursor-counter-rotate 3s linear infinite;
+}
+.golden-cursor-orbit::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 4px;
+  height: 4px;
+  margin-left: -2px;
+  margin-top: -2px;
+  border-radius: 50%;
+  background: #FFE182;
+  box-shadow: 0 0 6px #FFE182, 0 0 12px #C9A84C;
+}
+
+@keyframes golden-cursor-counter-rotate {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+/* Glowing golden aura pulse */
+.golden-cursor-halo {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201, 168, 76, 0.28) 0%, transparent 70%);
+  animation: golden-cursor-pulse 2.2s ease-in-out infinite;
+}
+
+@keyframes golden-cursor-pulse {
+  0%, 100% { transform: scale(0.9); opacity: 0.4; }
+  50% { transform: scale(1.35); opacity: 0.9; }
+}
+
+/* Active drag / rotate visual feedback */
+.golden-map-cursor.dragging .golden-cursor-core {
+  transform: scale(1.6);
+  background: radial-gradient(circle, #FFFFFF 0%, #FFE182 60%, #E6A122 100%);
+  box-shadow: 0 0 16px #FFE182, 0 0 30px #E6A122;
+}
+.golden-map-cursor.dragging .golden-cursor-ring {
+  transform: scale(0.72) rotate(180deg);
+  border-color: #FFE182;
+  border-style: solid;
+}
+.golden-map-cursor.dragging .golden-cursor-halo {
+  transform: scale(1.6);
+  opacity: 1;
 }
 
 .unity-loading-overlay {

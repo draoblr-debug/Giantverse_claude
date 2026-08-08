@@ -37,12 +37,15 @@ export function InteractiveWorldMap() {
   const t = useTranslations("landing");
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const cursorRef = useRef<HTMLDivElement>(null);
   const unityInstanceRef = useRef<UnityInstance | null>(null);
 
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isCursorInside, setIsCursorInside] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
 
   const initUnity = useCallback(() => {
     const canvas = canvasRef.current;
@@ -59,7 +62,6 @@ export function InteractiveWorldMap() {
       if (!window.createUnityInstance || !canvasRef.current) return;
 
       const buildUrl = "/3dMap/Build";
-      // Primary configuration using compressed Brotli assets with fallback support
       const config: UnityConfig = {
         arguments: [],
         dataUrl: `${buildUrl}/3dMap.data.br`,
@@ -86,7 +88,6 @@ export function InteractiveWorldMap() {
         })
         .catch((err) => {
           console.warn("Retrying with uncompressed fallback assets...", err);
-          // Fallback to uncompressed binaries if Brotli decompression fails in browser
           const fallbackConfig: UnityConfig = {
             ...config,
             dataUrl: `${buildUrl}/3dMap.data`,
@@ -130,6 +131,16 @@ export function InteractiveWorldMap() {
     }
   }, []);
 
+  // Handle high-performance golden cursor movement
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!containerRef.current || !cursorRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    cursorRef.current.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+  };
+
   useEffect(() => {
     initUnity();
 
@@ -137,10 +148,16 @@ export function InteractiveWorldMap() {
       setIsFullscreen(!!document.fullscreenElement);
     };
 
+    const handleGlobalMouseUp = () => {
+      setIsDragging(false);
+    };
+
     document.addEventListener("fullscreenchange", handleFullscreenChange);
+    window.addEventListener("mouseup", handleGlobalMouseUp);
 
     return () => {
       document.removeEventListener("fullscreenchange", handleFullscreenChange);
+      window.removeEventListener("mouseup", handleGlobalMouseUp);
       if (unityInstanceRef.current?.Quit) {
         unityInstanceRef.current.Quit().catch(() => {});
         unityInstanceRef.current = null;
@@ -162,14 +179,41 @@ export function InteractiveWorldMap() {
 
   return (
     <div className="atlas-map-wrapper-block">
-      {/* 3D Map Frame */}
-      <div ref={containerRef} className="atlas-map-wrap unity-3dmap-container">
+      {/* 3D Map Frame with Exclusive Golden Custom Cursor */}
+      <div
+        ref={containerRef}
+        className="atlas-map-wrap unity-3dmap-container"
+        onMouseEnter={() => setIsCursorInside(true)}
+        onMouseLeave={() => {
+          setIsCursorInside(false);
+          setIsDragging(false);
+        }}
+        onMouseMove={handleMouseMove}
+        onMouseDown={() => setIsDragging(true)}
+        onMouseUp={() => setIsDragging(false)}
+      >
         <canvas
           ref={canvasRef}
           id="unity-canvas"
           className="unity-3dmap-canvas"
           tabIndex={-1}
         />
+
+        {/* Animated Golden Cursor (Active exclusively on the map frame) */}
+        <div
+          ref={cursorRef}
+          className={`golden-map-cursor ${isCursorInside ? "active" : ""} ${isDragging ? "dragging" : ""}`}
+          aria-hidden="true"
+        >
+          {/* Inner pulsating core */}
+          <div className="golden-cursor-core" />
+          {/* Rotating celestial ring */}
+          <div className="golden-cursor-ring" />
+          {/* Orbital golden particle */}
+          <div className="golden-cursor-orbit" />
+          {/* Glowing pulse halo */}
+          <div className="golden-cursor-halo" />
+        </div>
 
         {/* Loading Overlay */}
         {loading && (
@@ -206,7 +250,7 @@ export function InteractiveWorldMap() {
         )}
       </div>
 
-      {/* Controls Bar Rendered Cleanly BELOW the 3D Map Frame */}
+      {/* Controls Bar Rendered Below the 3D Map Frame */}
       {!loading && !loadError && (
         <div className="unity-controls-footer">
           <div className="unity-controls-badge">
