@@ -10,10 +10,36 @@
 // between measured axes and a hand-authored design profile. It is not
 // recognition and carries no identity claim.
 
-import type { CharacterEntry, CharacterMatch, VisualAxes } from "@/types/visual.types";
+import type { CharacterEntry, CharacterMatch, GenderFilter, VisualAxes, VisualPresentation } from "@/types/visual.types";
 import { VISUAL_AXES } from "@/types/visual.types";
 import { CharacterDatabase } from "@/data/character-database";
 import { determineUserCluster, getNearestClusters } from "@/lib/visual/cluster-manager";
+
+// Gender-filter mechanism ported from the reference app's
+// AppRepository.findMatches: MALE/FEMALE keep that gender plus nonbinary
+// characters, ANY keeps everyone, and AUTO defers to the detected visual
+// presentation only when it's confident enough — otherwise it's a no-op.
+function applyGenderFilter(
+  pool: CharacterEntry[],
+  filter: GenderFilter,
+  presentation?: VisualPresentation,
+  presentationConfidence = 0,
+): CharacterEntry[] {
+  const byPresentation = (p: "male" | "female") =>
+    pool.filter((c) => c.gender === p || c.gender === "nonbinary");
+
+  switch (filter) {
+    case "MALE": return byPresentation("male");
+    case "FEMALE": return byPresentation("female");
+    case "ANY": return pool;
+    case "AUTO":
+    default:
+      if (presentationConfidence >= 0.6 && (presentation === "male" || presentation === "female")) {
+        return byPresentation(presentation);
+      }
+      return pool;
+  }
+}
 
 // Exact weights from the reference's SimilarityCalculator — shape language
 // (angularity, eye shape, jawline) is what people mean when they say two
@@ -65,15 +91,23 @@ function distanceBetween(a: VisualAxes, b: VisualAxes): DistanceResult {
  */
 export function matchCharacters(
   user: VisualAxes,
-  opts: { count?: number; collection?: CharacterEntry["collection"] } = {},
+  opts: {
+    count?: number;
+    collection?: CharacterEntry["collection"];
+    genderFilter?: GenderFilter;
+    visualPresentation?: VisualPresentation;
+    presentationConfidence?: number;
+  } = {},
 ): CharacterMatch[] {
-  const { count = 5, collection } = opts;
+  const { count = 5, collection, genderFilter = "AUTO", visualPresentation, presentationConfidence } = opts;
   const basePool = collection ? CharacterDatabase.byCollection(collection) : CharacterDatabase.archetypeEligible();
+  const genderFiltered = applyGenderFilter(basePool, genderFilter, visualPresentation, presentationConfidence);
+  const pool = genderFiltered.length > 0 ? genderFiltered : basePool;
 
   const { cluster: primaryCluster, confidence } = determineUserCluster(user);
   const targetClusters = confidence < 0.7 ? [primaryCluster, ...getNearestClusters(primaryCluster)] : [primaryCluster];
-  const clusterFiltered = basePool.filter((c) => c.cluster && targetClusters.includes(c.cluster));
-  const candidates = clusterFiltered.length > 0 ? clusterFiltered : basePool;
+  const clusterFiltered = pool.filter((c) => c.cluster && targetClusters.includes(c.cluster));
+  const candidates = clusterFiltered.length > 0 ? clusterFiltered : pool;
 
   const rawResults = candidates.map((character) => ({
     character,
