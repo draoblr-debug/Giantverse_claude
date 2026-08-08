@@ -250,56 +250,170 @@
   transform: translate(0, 0);
 }
 
-/* ── World map ───────────────────────────────────────────────── */
+/* ── World map (3D Unity WebGL Map) ──────────────────────────── */
 
 .atlas-map-wrap {
   position: relative;
-  border: 1px solid rgba(201, 168, 76, 0.22);
+  border: 1px solid rgba(201, 168, 76, 0.28);
   border-radius: 16px;
-  /* No overflow:hidden — the cursor tooltip must be able to hang past
-     the frame. The img clips itself to match via its own border-radius. */
   background: radial-gradient(ellipse 90% 80% at 50% 40%, #10151c 0%, #0a0d12 60%, #07090c 100%);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.65), 0 0 30px rgba(201, 168, 76, 0.08);
 }
-.atlas-map-img {
-  display: block;
+
+.unity-3dmap-container {
   width: 100%;
-  height: auto;
-  border-radius: 15px;
-  pointer-events: none;
-  user-select: none;
+  aspect-ratio: 16 / 10;
+  min-height: 480px;
+  max-height: 760px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.atlas-map-hotspot {
-  position: absolute;
-  aspect-ratio: 1;
-  /* Zones are precisely sized in %, but that shrinks under ~15px on
-     narrow viewports (24 zones packed onto one detailed image) — the
-     min guarantees a real touch target without enlarging desktop. */
-  min-width: 26px;
-  min-height: 26px;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  border: none;
-  background: transparent;
-  padding: 0;
-  cursor: pointer;
+
+.unity-3dmap-canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
   outline: none;
+  border-radius: 15px;
+  cursor: grab;
+  touch-action: none;
 }
-.atlas-map-hotspot-ring {
+.unity-3dmap-canvas:active {
+  cursor: grabbing;
+}
+
+.unity-loading-overlay {
   position: absolute;
   inset: 0;
-  border-radius: 50%;
-  background: radial-gradient(circle, color-mix(in srgb, var(--bs-thm-clr-5) 32%, transparent) 0%, transparent 70%);
-  border: 1px solid transparent;
-  opacity: 0;
-  transform: scale(0.85);
-  transition: opacity 250ms ease, transform 250ms ease, border-color 250ms ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(8, 10, 14, 0.95);
+  backdrop-filter: blur(10px);
+  z-index: 20;
+  border-radius: 15px;
 }
-.atlas-map-hotspot:hover .atlas-map-hotspot-ring,
-.atlas-map-hotspot:focus-visible .atlas-map-hotspot-ring,
-.atlas-map-hotspot[data-active="true"] .atlas-map-hotspot-ring {
-  opacity: 1;
-  transform: scale(1);
-  border-color: rgba(201, 168, 76, 0.55);
+
+.unity-loading-icon {
+  animation: unity-spin 3s linear infinite;
+  margin-bottom: 18px;
+}
+@keyframes unity-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.unity-loading-title {
+  font-family: var(--bs-body-font-family2);
+  font-size: 22px;
+  color: rgb(var(--bs-thm-clr-2));
+  margin-bottom: 6px;
+  letter-spacing: 1.5px;
+}
+
+.unity-loading-sub {
+  font-size: 11px;
+  color: rgba(201, 168, 76, 0.85);
+  margin-bottom: 22px;
+  text-transform: uppercase;
+  letter-spacing: 2.2px;
+}
+
+.unity-progress-track {
+  width: 240px;
+  height: 4px;
+  background: rgba(201, 168, 76, 0.18);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+
+.unity-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #C9A84C, #FFE182);
+  border-radius: 2px;
+  transition: width 0.25s ease;
+  box-shadow: 0 0 12px rgba(201, 168, 76, 0.8);
+}
+
+.unity-error-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(14, 14, 12, 0.96);
+  z-index: 20;
+  gap: 16px;
+  color: #ff9b9b;
+  font-size: 14px;
+  border-radius: 15px;
+}
+
+.unity-controls-bar {
+  position: absolute;
+  bottom: 14px;
+  left: 14px;
+  right: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.unity-controls-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: rgba(10, 13, 18, 0.86);
+  border: 1px solid rgba(201, 168, 76, 0.35);
+  color: rgba(237, 237, 237, 0.82);
+  font-size: 11px;
+  letter-spacing: 0.8px;
+  backdrop-filter: blur(8px);
+  pointer-events: auto;
+}
+
+.unity-pulse-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #C9A84C;
+  box-shadow: 0 0 8px #C9A84C;
+  animation: unity-pulse 2s infinite;
+}
+@keyframes unity-pulse {
+  0%, 100% { opacity: 0.5; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.3); }
+}
+
+.unity-control-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: rgba(10, 13, 18, 0.86);
+  border: 1px solid rgba(201, 168, 76, 0.4);
+  color: rgb(var(--bs-thm-clr-2));
+  font-size: 12px;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  pointer-events: auto;
+  transition: all 0.2s ease;
+}
+.unity-control-btn:hover {
+  background: rgba(201, 168, 76, 0.2);
+  border-color: rgba(201, 168, 76, 0.85);
+  color: #fff;
+  transform: translateY(-1px);
 }
 
 /* ── Compass ─────────────────────────────────────────────────── */
