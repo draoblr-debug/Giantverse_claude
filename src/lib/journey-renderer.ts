@@ -183,17 +183,27 @@ function assertKnown(turns: TurnSnapshot[]) {
   }
 }
 
-// GEOMETRIC DIMENSION MODEL radial vector (spec section 13). Each turn's
-// scores are already the cumulative signed archetype evidence clamped to
-// >=0 (buildScoreHistory's positiveScore[k] = max(0, cumulativeScore[k])
-// — see journey-history.ts); this turns that into a normalized positive
-// distribution p[k] = positiveScore[k] / totalPositive, used ONLY here,
-// for the visualization. It is a pure visualization of already-settled
-// evidence and never feeds back into the psychological score itself —
-// there is deliberately no sharpening exponent (the old gamma=1+i*0.22
-// mechanism) and no rank-based spread: the plotted radius is exactly
-// certainty = |Σ p[k]·unit(archetypeAngle[k])|, clamped to [0,1] only for
-// floating-point safety.
+// GEOMETRIC DIMENSION MODEL radial vector (spec section 13), split into
+// two independent parts. Each turn's scores are already the cumulative
+// signed archetype evidence clamped to >=0 (buildScoreHistory's
+// positiveScore[k] = max(0, cumulativeScore[k]) — see journey-history.ts);
+// this turns that into a normalized positive distribution
+// p[k] = positiveScore[k] / totalPositive, used ONLY here, for the
+// visualization — it never feeds back into the psychological score.
+//
+// DIRECTION comes straight from that distribution: the certainty-weighted
+// unit-vector average, unchanged in spirit from spec section 13 (no
+// sharpening exponent — no gamma=1+i*0.22).
+//
+// RADIUS does not: |Σ p[k]·unit(angle)| stays small basically always (it's
+// an average of unit vectors spread across up to 32 archetypes, most
+// contributing near-zero share), so plotting it directly reads as flat —
+// every turn lands near the center regardless of how far into the quiz it
+// is. What the journey map is meant to show is progression: early answers
+// tentative and close to center, later answers — more evidence accumulated
+// — pushed further out, docking on the edge at the end. So radius is
+// turn-index/turn-count instead: turn i of N plots at R*(i+1)/N, in
+// whatever direction that turn's evidence actually leans.
 export function computeRadialTrajectory(
   turns: TurnSnapshot[],
   R: number,
@@ -202,7 +212,7 @@ export function computeRadialTrajectory(
 ): Waypoint[] {
   assertKnown(turns);
 
-  return turns.map((turn) => {
+  return turns.map((turn, i) => {
     let totalPositive = 0;
     const positive: Array<[string, number]> = [];
     for (const [id, s] of Object.entries(turn.scores)) {
@@ -229,11 +239,12 @@ export function computeRadialTrajectory(
         leaderId = id;
       }
     }
-    const certainty = Math.min(1, Math.max(0, Math.hypot(vx, vy)));
-    if (certainty <= 0) return { x: cx, y: cy, leaderId, category: turn.category };
-    const dirX = vx / certainty;
-    const dirY = vy / certainty;
-    return { x: cx + dirX * certainty * R, y: cy + dirY * certainty * R, leaderId, category: turn.category };
+    const magnitude = Math.hypot(vx, vy);
+    if (magnitude <= 0) return { x: cx, y: cy, leaderId, category: turn.category };
+    const dirX = vx / magnitude;
+    const dirY = vy / magnitude;
+    const progress = (i + 1) / turns.length; // 0 (exclusive) .. 1, turn 1 nearest center, last turn at the rim
+    return { x: cx + dirX * progress * R, y: cy + dirY * progress * R, leaderId, category: turn.category };
   });
 }
 

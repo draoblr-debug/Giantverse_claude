@@ -523,20 +523,30 @@ The turn-by-turn radial map (`computeRadialTrajectory` in
 feeds back into the score above. Per turn, the cumulative signed scores
 are clamped to non-negative (`positiveScore[k] = max(0, cumulativeScore[k])`,
 done once in `journey-history.ts`'s `buildScoreHistory`), then normalized
-into a distribution purely for plotting:
+into a distribution purely for plotting. Direction and radius are computed
+separately:
 
 ```
 p[k] = positiveScore[k] / Σ positiveScore
 vx = Σ p[k] · cos(archetypeAngle[k])
 vy = Σ p[k] · sin(archetypeAngle[k])
-certainty = clamp01(√(vx² + vy²))       // plotted radius = R × certainty
-trajectoryAngle = atan2(vy, vx), normalized to 0–360°
+direction = (vx, vy) / |(vx, vy)|                    // which way this turn's evidence leans
+progress  = (turnIndex + 1) / turnCount               // 0 (exclusive) .. 1
+plotted point = center + direction × progress × R
 ```
 
-There is deliberately no sharpening exponent here any more — the old
-`gamma = 1 + turnIndex × 0.22` mechanism (and the rank-based radius spread
-that compensated for it) has been removed. The point is now exactly where
-the accumulated evidence geometrically points, nothing exaggerated.
+There is deliberately no sharpening exponent on the score itself — the old
+`gamma = 1 + turnIndex × 0.22` mechanism is gone from the underlying
+psychological score. But plotting radius as raw evidence *magnitude*
+(`|(vx, vy)|` alone) reads as flat in practice: that magnitude is an
+average of unit vectors spread across up to 32 archetypes, so it stays
+small basically throughout the quiz regardless of how far along it is.
+What the map is meant to show is progression — early answers tentative
+and near the center, later answers (more accumulated evidence) pushed
+toward the rim — so radius instead tracks **turn progress**
+(`(turnIndex + 1) / turnCount`), while the *direction* the point moves in
+each step still comes entirely from that turn's real evidence, not a fixed
+schedule.
 
 Reading `trajectoryAngle` against the dimension map above gives it a real
 interpretation:
