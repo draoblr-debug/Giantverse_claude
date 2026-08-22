@@ -410,42 +410,145 @@ The **Reveal My Legacy Name** button appears when:
 
 ## 6. Archetype Engine Design
 
-### Scoring Model
+### Scoring Model — the Geometric Dimension Model
 
-Each archetype is defined with a weighted dimension profile. The engine scores all 20 archetypes against the accumulated signals and returns the top match with a confidence score.
+Archetype scoring no longer reads from a hand-authored per-archetype weight
+table. Instead, every archetype's relationship to every dimension is
+**derived geometrically** from two angles that already exist in the
+codebase (or are now centrally defined):
+
+- **archetypeAngle[k]** — each archetype's position on the 360° wheel.
+  This is the same angle the journey-map renderer has always used
+  (`SPOKES`/`getSpokeAngle()` in `src/lib/journey-renderer.ts`) — it was
+  **not** changed by this model; the geometric formulas were built to read
+  it, not the other way around.
+- **dimensionAngle[d]** — each of the 8 dimensions' fixed position on that
+  same wheel, defined once in `src/engines/archetype/dimension-geometry.ts`
+  (`DIMENSION_AXES`), the single source of truth other code should import
+  rather than re-declaring these numbers:
+
+  | Dimension | Angle |
+  |---|---|
+  | DREAMS | 0° |
+  | LEADERSHIP | 45° |
+  | MOTIVATION | 90° |
+  | PEOPLE | 135° |
+  | FEARS | 180° |
+  | VALUES | 225° |
+  | DECISIONS | 270° |
+  | POWER | 315° |
+
+The `ArchetypeProfile.weights`/`.antiWeights` fields from the old model
+still exist (kept as legacy data — `convergence.ts` still reads `.weights`
+to explain *why* a close runner-up nearly won), but **neither drives
+scoring any more**.
 
 ```typescript
 type ArchetypeProfile = {
   id: string               // "kanryo"
   label: string            // "Bureaucrat"
-  order: Order             // GIANT | HUNTER
+  order: Order              // GIANT | HUNTER
+  temperament: Temperament  // ACTIVE | PASSIVE
   japaneseName: string     // "官僚" — authentic
   romajiName: string       // "Kanryō"
-  weights: {
-    [K in Dimension]: number  // 0.0 – 2.0, how strongly this dimension defines the archetype
-  }
-  antiWeights: {
-    [K in Dimension]: number  // Signals that argue against this archetype
-  }
-  description: string      // Internal use only
-  confidenceThreshold: number  // Min score to propose this archetype
+  weights: { [K in Dimension]: number }      // legacy — narrative use only
+  antiWeights: { [K in Dimension]: number }  // legacy — unused
+  description: string
+  confidenceThreshold: number  // still used, against a rescaled score — see below
 }
 ```
 
 ### Scoring Algorithm
 
 ```
-For each archetype A:
-  score = 0
-  for each Dimension D where signal exists:
-    dimensionScore = signal.confidence × A.weights[D]
-    antiScore = signal.confidence × A.antiWeights[D]
-    score += (dimensionScore - antiScore)
-  normalised = score / maxPossibleScore
-  
-Sort all archetypes by normalised score descending.
-Winner = archetypes[0] if normalised > confidenceThreshold
+delta(k, d)     = normalizeAngle(archetypeAngle[k] - dimensionAngle[d])   // (-180°, 180°]
+W(k, d)         = 2.0 * cos(delta(k, d) * π / 180)                        // +2 aligned … 0 orthogonal … -2 opposed
+
+responseSignal(q):
+  likert (1..5)   → (value - 3) / 2            // 1→-1.0 … 3→0.0 … 5→+1.0
+  yes/no          → YES=+1, NO=-1               // every yes/no question in the bank is a directional
+                                                 // statement ("Do you have a personal code…?"), so this
+                                                 // is unambiguous — see survey-scoring.engine.ts
+  chat/photo signal (no natural direction)       → falls back to signal.confidence (always ≥0); the sign
+                                                    still comes from W(k,d) itself, same as a "strongly
+                                                    agree" survey answer on that dimension
+
+questionScore(k, q) = responseSignal(q) * W(k, question.dimension)
+
+cumulativeScore(k) = Σ questionScore(k, q)   // raw signed sum, never divided — positive and negative
+                                              // evidence can cancel; this IS "the psychological score"
+
+Sort all archetypes by cumulativeScore (raw) descending.
+Winner = archetypes[0] if rescaled(cumulativeScore) ≥ confidenceThreshold
+  where rescaled(raw) = raw / (2.0 × signalCount)   — a fixed linear rescale for threshold/margin
+                                                        comparisons only, not a probability
 ```
+
+No `gamma`/progressive-sharpening exponent and no `antiWeights` are
+involved anywhere in this pipeline — see `src/engines/archetype/archetype.engine.ts`
+and `src/engines/archetype/dimension-geometry.ts`.
+
+### Wheel Quadrants
+
+The same 360° wheel is also divided into four 90° quadrants (GIANTS =
+Builders, HUNTERS = Explorers):
+
+| Quadrant | Range | Name | Core dimension | Edges |
+|---|---|---|---|---|
+| Q1 | 0°–90° | Active Builders (GIANT/ACTIVE) | LEADERSHIP (45°) | DREAMS (0°) · MOTIVATION (90°) |
+| Q2 | 90°–180° | Active Explorers (HUNTER/ACTIVE) | PEOPLE (135°) | MOTIVATION (90°) · FEARS (180°) |
+| Q3 | 180°–270° | Passive Explorers (HUNTER/PASSIVE) | VALUES (225°) | FEARS (180°) · DECISIONS (270°) |
+| Q4 | 270°–360° | Passive Builders (GIANT/PASSIVE) | POWER (315°) | DECISIONS (270°) · DREAMS (0°/360°) |
+
+An edge dimension (a multiple of 90°) is shared between its two adjacent
+quadrants — e.g. MOTIVATION (90°) is simultaneously Q1's right edge and
+Q2's left edge. See `getQuadrant()`, `QUADRANTS`, and `getQuadrantsForDimension()`
+in `dimension-geometry.ts`.
+
+**Known mismatch (documented, not "fixed"):** the archetype angles this
+model reuses (`SPOKES`) were laid out for the journey-map renderer's own
+Agency×Communion quadrant grouping (NE/SE/SW/NW), predating this
+Builder/Explorer wheel. Consequently `getQuadrant(archetypeAngle[k])` does
+**not** always agree with that archetype's own `order`/`temperament`
+fields — roughly half of Q1 and Q3 land archetypes whose real identity is
+the opposite Order. Per the wheel-model spec, existing archetype angles
+were preserved rather than reassigned to resolve this; `getQuadrant()`
+should be read as "which quadrant this angle geometrically falls in", not
+as a restatement of that archetype's Order/Temperament.
+
+### Journey Map Radial Vector
+
+The turn-by-turn radial map (`computeRadialTrajectory` in
+`src/lib/journey-renderer.ts`) is a **visualization only** — it never
+feeds back into the score above. Per turn, the cumulative signed scores
+are clamped to non-negative (`positiveScore[k] = max(0, cumulativeScore[k])`,
+done once in `journey-history.ts`'s `buildScoreHistory`), then normalized
+into a distribution purely for plotting:
+
+```
+p[k] = positiveScore[k] / Σ positiveScore
+vx = Σ p[k] · cos(archetypeAngle[k])
+vy = Σ p[k] · sin(archetypeAngle[k])
+certainty = clamp01(√(vx² + vy²))       // plotted radius = R × certainty
+trajectoryAngle = atan2(vy, vx), normalized to 0–360°
+```
+
+There is deliberately no sharpening exponent here any more — the old
+`gamma = 1 + turnIndex × 0.22` mechanism (and the rank-based radius spread
+that compensated for it) has been removed. The point is now exactly where
+the accumulated evidence geometrically points, nothing exaggerated.
+
+Reading `trajectoryAngle` against the dimension map above gives it a real
+interpretation:
+
+- **45°** — strongly Active Builder / Leadership territory.
+- **90°** — transitioning Active Builder → Active Explorer, through Motivation.
+- **135°** — strongly Active Explorer / People territory.
+- **180°** — transitioning Active Explorer → Passive Explorer, through Fears.
+- **225°** — strongly Passive Explorer / Values territory.
+- **270°** — transitioning Passive Explorer → Passive Builder, through Decisions.
+- **315°** — strongly Passive Builder / Power territory.
+- **0°/360°** — transitioning Passive Builder → Active Builder, through Dreams.
 
 ### Archetype Definitions (All 20)
 
@@ -885,7 +988,7 @@ Reflective emotional conversations can occasionally surface genuine distress.
 ## Appendix — Open Decisions Requiring Approval
 
 1. **Syllable tables** — the tables above are illustrative. Final tables need a euphony pass and native Japanese review.
-2. **Archetype weights** — dimension weights in the scoring model are placeholders. They need calibration through testing.
+2. **Archetype wheel angles** — `SPOKES` in `journey-renderer.ts` predates the Geometric Dimension Model's quadrant scheme (see §6), so `getQuadrant()` on an archetype's angle doesn't always match its own Order/Temperament. Angles were preserved rather than reassigned; revisit if the mismatch proves confusing in practice.
 3. **Confidence thresholds** — the 0.6 threshold and 6-turn minimum are starting points. They should be tuned in staging.
 4. **AI model selection** — GPT-4o is the assumed model. Cost/quality trade-off to confirm. Secondary signal-extraction call could use a smaller model.
 5. **Analytics provider** — no analytics vendor specified. Options: Vercel Analytics, PostHog, or custom Supabase events.

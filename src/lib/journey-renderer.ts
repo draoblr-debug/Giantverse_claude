@@ -23,7 +23,6 @@ export interface JourneyRenderOptions {
   background?: string; // used when transparent=false
   labelMode?: "visited" | "all" | "none"; // default "visited"
   detail?: "full" | "mini"; // "mini" = glyph only, for the card inset
-  gammaStep?: number; // sharpening per turn, default 0.22
   accentColor?: string; // tints the traced path
   // Archetype ids to label even in "mini" detail (which otherwise shows no
   // text at all) — e.g. the card inset labels the winner plus a few
@@ -184,71 +183,57 @@ function assertKnown(turns: TurnSnapshot[]) {
   }
 }
 
+// GEOMETRIC DIMENSION MODEL radial vector (spec section 13). Each turn's
+// scores are already the cumulative signed archetype evidence clamped to
+// >=0 (buildScoreHistory's positiveScore[k] = max(0, cumulativeScore[k])
+// — see journey-history.ts); this turns that into a normalized positive
+// distribution p[k] = positiveScore[k] / totalPositive, used ONLY here,
+// for the visualization. It is a pure visualization of already-settled
+// evidence and never feeds back into the psychological score itself —
+// there is deliberately no sharpening exponent (the old gamma=1+i*0.22
+// mechanism) and no rank-based spread: the plotted radius is exactly
+// certainty = |Σ p[k]·unit(archetypeAngle[k])|, clamped to [0,1] only for
+// floating-point safety.
 export function computeRadialTrajectory(
   turns: TurnSnapshot[],
   R: number,
   cx: number,
   cy: number,
-  gammaStep = 0.22,
 ): Waypoint[] {
   assertKnown(turns);
 
-  // Pass 1: raw certainty per turn. vx,vy is a weighted average of unit
-  // vectors, so its magnitude (0..1) is how strongly that turn's signals
-  // agreed on one direction — but in practice, with scores spread across
-  // many archetypes, this rarely gets anywhere near 1, so every point
-  // ends up compressed near the center regardless of how the quiz
-  // actually progressed.
-  const raw = turns.map((turn, i) => {
-    const gamma = 1 + i * gammaStep;
-    let wSum = 0;
-    const sharp: Array<[string, number, number]> = [];
+  return turns.map((turn) => {
+    let totalPositive = 0;
+    const positive: Array<[string, number]> = [];
     for (const [id, s] of Object.entries(turn.scores)) {
       if (!SPOKES[id] || s <= 0) continue;
-      const w = Math.pow(s, gamma);
-      sharp.push([id, w, s]);
-      wSum += w;
+      positive.push([id, s]);
+      totalPositive += s;
     }
-    if (!wSum) return { vx: 0, vy: 0, certainty: 0, leaderId: null as string | null, category: turn.category };
+    if (!totalPositive) return { x: cx, y: cy, leaderId: null, category: turn.category };
+
     let vx = 0;
     let vy = 0;
     let leaderId: string | null = null;
     let best = -Infinity;
-    for (const [id, w, s] of sharp) {
+    for (const [id, s] of positive) {
+      const p = s / totalPositive;
+      // Unit vector via the same compass bearing convention toXY() uses
+      // (0°=N, clockwise) so the plotted point stays aligned with that
+      // archetype's own spoke on the rendered wheel.
       const a = ((SPOKES[id].angleDeg - 90) * Math.PI) / 180;
-      vx += (w / wSum) * Math.cos(a);
-      vy += (w / wSum) * Math.sin(a);
+      vx += p * Math.cos(a);
+      vy += p * Math.sin(a);
       if (s > best) {
         best = s;
         leaderId = id;
       }
     }
-    return { vx, vy, certainty: Math.min(1, Math.hypot(vx, vy)), leaderId, category: turn.category };
-  });
-
-  // Pass 2: linearize by RANK, not raw value. Min-max normalization still
-  // crowds most points near the center whenever certainty is skewed (a
-  // couple of confident turns pull the max up while everything else stays
-  // low relative to it) — exactly the case here, since early/mid-quiz
-  // scores are usually spread across several archetypes at once. Ranking
-  // guarantees the turns are spread evenly across the full 0..1 radius
-  // regardless of how bunched up the underlying values are.
-  const rank = new Array<number>(raw.length);
-  raw
-    .map((r, i) => ({ i, certainty: r.certainty }))
-    .sort((a, b) => a.certainty - b.certainty)
-    .forEach(({ i }, position) => {
-      rank[i] = position;
-    });
-  const lastRank = Math.max(1, raw.length - 1);
-
-  return raw.map((r, i) => {
-    if (r.certainty <= 0) return { x: cx, y: cy, leaderId: null, category: r.category };
-    const dirX = r.vx / r.certainty;
-    const dirY = r.vy / r.certainty;
-    const linearized = rank[i] / lastRank; // 0 = least certain turn, 1 = most certain
-    const radius = R * linearized;
-    return { x: cx + dirX * radius, y: cy + dirY * radius, leaderId: r.leaderId, category: r.category };
+    const certainty = Math.min(1, Math.max(0, Math.hypot(vx, vy)));
+    if (certainty <= 0) return { x: cx, y: cy, leaderId, category: turn.category };
+    const dirX = vx / certainty;
+    const dirY = vy / certainty;
+    return { x: cx + dirX * certainty * R, y: cy + dirY * certainty * R, leaderId, category: turn.category };
   });
 }
 
@@ -263,7 +248,6 @@ export function renderJourneyMap(
     background = INK,
     labelMode = "visited",
     detail = "full",
-    gammaStep = 0.22,
     accentColor = BRASS,
     highlightArchetypeIds = [],
     showFinalLabel = true,
@@ -296,7 +280,7 @@ export function renderJourneyMap(
     ctx.fillRect(0, 0, S, S);
   }
 
-  const trajectory = computeRadialTrajectory(turns, R_TRAVEL, cx, cy, gammaStep);
+  const trajectory = computeRadialTrajectory(turns, R_TRAVEL, cx, cy);
   const requestedFinal = opts.finalArchetypeId ?? null;
   if (requestedFinal && !SPOKES[requestedFinal]) {
     throw new Error(`journey-renderer: finalArchetypeId "${requestedFinal}" is not in canonical data`);

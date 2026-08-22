@@ -22,6 +22,15 @@ export type Signal = {
   value: string;
   confidence: number; // 0.0 – 1.0
   turnIndex: number;
+  // Signed directional evidence in [-1, +1] for the GEOMETRIC DIMENSION
+  // MODEL's scoring formula (see src/engines/archetype/archetype.engine.ts):
+  // -1 = strongly against this dimension's direction, +1 = strongly for
+  // it. Only survey answers can express this (a Likert/Yes-No response has
+  // a real "for or against" direction); chat- and photo-derived signals
+  // have no such direction, so they're scored with a positive-only
+  // fallback (their `confidence`) instead — see answersToSignals() for
+  // where this is actually computed.
+  responseSignal?: number;
 };
 
 export type ArchetypeProfile = {
@@ -46,5 +55,11 @@ export type ArchetypeProfile = {
 
 export type ArchetypeScore = {
   archetype: ArchetypeProfile;
+  // Raw signed cumulative score under the GEOMETRIC DIMENSION MODEL —
+  // unbounded, positive/negative evidence can cancel. See
+  // src/engines/archetype/archetype.engine.ts.
+  raw: number;
+  // `raw` linearly rescaled for threshold/margin comparisons — not a
+  // probability, doesn't sum to anything across archetypes.
   normalized: number;
 };

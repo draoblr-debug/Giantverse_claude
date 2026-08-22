@@ -98,16 +98,20 @@ describe("detectTension", () => {
   });
 
   it("surfaces the tension when the opposite is pulling almost as hard as the leader", () => {
-    // Philosopher (VALUES/DREAMS/MOTIVATION) leads, but its opposite Survivor
-    // (FEARS/VALUES/MOTIVATION) shares enough weight to trail closely.
+    // Under the GEOMETRIC DIMENSION MODEL, archetype scores come from wheel
+    // angle vs. dimension angle, not hand-authored weights — so which pair
+    // ends up in near-tension is itself geometric, not designed the way
+    // the old model's example was. Craftsman (takumi) and Farmer (nogyo)
+    // are semantic opposites (see OPPOSITE_TENSIONS) whose wheel angles
+    // put them within TENSION_MARGIN of each other for this signal set.
     const signals: Signal[] = [
-      { dimension: "VALUES", value: "seeks truth", confidence: 0.9, turnIndex: 0 },
-      { dimension: "FEARS", value: "must endure", confidence: 0.9, turnIndex: 1 },
-      { dimension: "DREAMS", value: "chases understanding", confidence: 0.9, turnIndex: 2 },
+      { dimension: "VALUES", value: "x", confidence: 0.9, turnIndex: 0 },
+      { dimension: "PEOPLE", value: "x", confidence: 0.9, turnIndex: 1 },
+      { dimension: "MOTIVATION", value: "x", confidence: 0.9, turnIndex: 2 },
     ];
     const tension = detectTension(signals);
     expect(tension).not.toBeNull();
-    expect([tension?.core.id, tension?.opposite.id].sort()).toEqual(["seizon", "tetsugaku"]);
-    expect(tension?.centralQuestion).toBe(OPPOSITE_TENSIONS.tetsugaku);
+    expect([tension?.core.id, tension?.opposite.id].sort()).toEqual(["nogyo", "takumi"]);
+    expect(tension?.centralQuestion).toBe(OPPOSITE_TENSIONS.takumi);
   });
 });

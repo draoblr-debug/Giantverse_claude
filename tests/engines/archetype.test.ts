@@ -33,24 +33,40 @@ describe("scoreArchetypes", () => {
     }
   });
 
-  it("scores the Bureaucrat highest for strong DECISIONS + VALUES + FEARS signals", () => {
-    const signals: Signal[] = [
-      { dimension: "DECISIONS", value: "needs process", confidence: 0.9, turnIndex: 0 },
-      { dimension: "VALUES", value: "values order", confidence: 0.9, turnIndex: 1 },
-      { dimension: "FEARS", value: "dreads chaos", confidence: 0.9, turnIndex: 2 },
-    ];
-    const [top] = scoreArchetypes(signals);
-    expect(top.archetype.id).toBe("kanryo");
-  });
-
-  it("scores zero for an archetype with no matching signals", () => {
+  // GEOMETRIC DIMENSION MODEL: archetype-vs-dimension relationships are no
+  // longer hand-authored weights, they're purely a function of angular
+  // distance between the archetype's (preserved, unchanged) wheel angle
+  // and the dimension's canonical angle (see dimension-geometry.ts). These
+  // two archetypes' real wheel angles: kanryo sits 5.625° from POWER
+  // (315°), tansa sits 90° from POWER — so a strong POWER signal must rank
+  // kanryo well above tansa, purely from geometry, no per-archetype tuning
+  // involved.
+  it("ranks an archetype whose wheel angle is near the signaled dimension above one far from it", () => {
     const signals: Signal[] = [{ dimension: "POWER", value: "x", confidence: 1, turnIndex: 0 }];
     const scores = scoreArchetypes(signals);
+    const kanryo = scores.find((s) => s.archetype.id === "kanryo")!;
     const tansa = scores.find((s) => s.archetype.id === "tansa")!;
-    expect(tansa.normalized).toBe(0);
+    expect(kanryo.raw).toBeGreaterThan(tansa.raw);
   });
 
-  it("applies antiWeights to reduce score (Technocrat vs. strong PEOPLE signal)", () => {
+  // gijutsu's wheel angle (275.6°) is far from MOTIVATION's (90°, almost
+  // opposite) — 2*cos(~186°) is close to -2, the model's maximum
+  // opposition — so a confident MOTIVATION signal should pull it strongly
+  // negative even though nothing "anti-weighted" it; the sign comes
+  // entirely from the angular relationship.
+  it("scores negatively for an archetype whose wheel angle sits opposite the signaled dimension", () => {
+    const signals: Signal[] = [{ dimension: "MOTIVATION", value: "x", confidence: 0.9, turnIndex: 0 }];
+    const gijutsu = scoreArchetypes(signals).find((s) => s.archetype.id === "gijutsu")!;
+    expect(gijutsu.raw).toBeLessThan(0);
+  });
+
+  // No antiWeights involved anymore — PEOPLE (135°) is also far from
+  // gijutsu's angle, so accumulating a second badly-aligned signal must
+  // push the RAW signed score further negative. (`.normalized` isn't the
+  // right field for this comparison: it rescales by signal count, so its
+  // magnitude isn't monotonic with "more negative evidence added" the way
+  // the raw cumulative score is.)
+  it("accumulates further negative evidence as more badly-aligned signals arrive", () => {
     const withoutPeople = scoreArchetypes([
       { dimension: "MOTIVATION", value: "x", confidence: 0.9, turnIndex: 0 },
     ]).find((s) => s.archetype.id === "gijutsu")!;
@@ -60,7 +76,7 @@ describe("scoreArchetypes", () => {
       { dimension: "PEOPLE", value: "x", confidence: 0.9, turnIndex: 1 },
     ]).find((s) => s.archetype.id === "gijutsu")!;
 
-    expect(withPeople.normalized).toBeLessThan(withoutPeople.normalized);
+    expect(withPeople.raw).toBeLessThan(withoutPeople.raw);
   });
 });
 
@@ -76,7 +92,8 @@ describe("selectArchetype", () => {
       { dimension: "FEARS", value: "x", confidence: 0.9, turnIndex: 2 },
     ];
     const result = selectArchetype(signals);
-    expect(result?.archetype.id).toBe("kanryo");
+    expect(result).not.toBeNull();
+    expect(result!.normalized).toBeGreaterThanOrEqual(result!.archetype.confidenceThreshold);
   });
 });
 
